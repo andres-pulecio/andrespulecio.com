@@ -1,8 +1,4 @@
-import App from './App.js';
-// import Checkers from './Checkers.js';
+import Car from './Car.js';
 
-const app = new App();
-app.init();
-
-// const checkers = new Checkers();
-// checkers.init();
+const car = new Car();
+car.init();
