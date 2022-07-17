@@ -1,12 +1,5 @@
-// import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js';
-// import * as CANNON from "https://cdn.jsdelivr.net/npm/cannon-es@0.18.0/dist/cannon-es.js";
-
 import * as THREE from 'three';
 import * as CANNON from "cannon-es";
-
-// import * as CANNON from 'cannon';
-// import * as CANNON from '../node_modules/cannon/build/cannon.min.js';
-// import {World} from 'cannon';
 
 let World, SAPBroadphase, vehicle;
 
@@ -161,7 +154,7 @@ class CarStackoverflow {
         shape: new CANNON.Plane(),
         quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
         });
-        // world.add(planeBody)
+        world.addBody(planeBody)
 
         /**
         * Main
