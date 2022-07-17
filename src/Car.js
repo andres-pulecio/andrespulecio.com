@@ -3,7 +3,7 @@ import * as CANNON from "cannon-es";
 
 let World, SAPBroadphase, vehicle;
 
-class CarStackoverflow {
+class Car {
 
 	init() {
 
@@ -14,7 +14,7 @@ class CarStackoverflow {
             camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
             renderConfig = {antialias: true, alpha: true},
             renderer = new THREE.WebGLRenderer(renderConfig);
-        camera.position.set(0, 1, -10);
+        camera.position.set(5, 5, 10);
         camera.lookAt(0,0,0);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
@@ -214,4 +214,4 @@ class CarStackoverflow {
         render();
     }
 }
-export default CarStackoverflow;
+export default Car;
