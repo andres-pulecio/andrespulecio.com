@@ -129,6 +129,7 @@ class CarStackoverflow {
             flatShading: true,
         });
         var cylinder = new THREE.Mesh(geometry, material);
+        cylinder.geometry.rotateZ(Math.PI/2);
         wheelVisuals.push(cylinder);
         scene.add(cylinder);
         });
