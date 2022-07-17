@@ -1,8 +1,4 @@
-import CarStackoverflow from './CarStackoverflow.js';
+import Car from './Car.js';
 
-const carStackoverflow = new CarStackoverflow();
-carStackoverflow.init();
-// import Car from './Car.js';
-
-// const car = new Car();
-// car.init();
+const car = new Car();
+car.init();
