@@ -166,15 +166,22 @@ class Car {
             });
             world.addBody(planeBody)
             
+            // import models from blender
             const loader = new GLTFLoader();
-            loader.load('../models/checker.glb', 
+            loader.load('../models/tree-poly.glb', 
             (gltf) => {
-                const checkerMesh = gltf.scene;
-                checkerMesh.scale.set(checkerMesh.scale.x * 0.4, checkerMesh.scale.y * 0.4, checkerMesh.scale.z * 0.4);
-                checkerMesh.position.y += checkerMesh.scale.y - 0.3;
-                scene.add(checkerMesh);
-                // addCheckers(checkerMesh);
+                const treePolyMesh = gltf.scene;
+                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.4, treePolyMesh.scale.y * 0.4, treePolyMesh.scale.z * 0.4);
+                treePolyMesh.position.set(5, 0.1, -7);
+                scene.add(treePolyMesh);
+                // addCheckers(treePolyMesh);
             });
+
+            //light or sun
+            const light= new THREE.PointLight(0xffffff,2,200);
+            light.position.set(4.5,10,4.5);
+            scene.add(light);
+
 
             /**
              * Main
@@ -186,7 +193,7 @@ class Car {
                 box.position.copy(chassisBody.position);
                 box.quaternion.copy(chassisBody.quaternion);
                 box.getWorldPosition(objectPosition);
-                console.log(objectPosition);
+                // console.log(objectPosition);
                 camera.position.copy(objectPosition).add(cameraOffset);
             }
             
