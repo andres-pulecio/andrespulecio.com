@@ -27,6 +27,7 @@
     "three": "^0.142.0"
   },
   "dependencies": {
-    "cannon": "^0.6.2"
+    "cannon": "^0.6.2",
+    "three-gltf-loader": "^1.111.0"
   }
 }

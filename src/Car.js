@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import * as CANNON from "cannon-es";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
 
 // let World, SAPBroadphase, vehicle;
 let vehicle, objectPosition,cameraOffset;
@@ -67,7 +69,7 @@ class Car {
             var chassisShape = new CANNON.Box(new CANNON.Vec3(1, 0.3, 2));
             var chassisBody = new CANNON.Body({mass: 150});
             chassisBody.addShape(chassisShape);
-            chassisBody.position.set(0, 0.2, 0);
+            chassisBody.position.set(0, 1, 0);
             chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
             
             // car visual body
@@ -164,6 +166,16 @@ class Car {
             });
             world.addBody(planeBody)
             
+            const loader = new GLTFLoader();
+            loader.load('../models/checker.glb', 
+            (gltf) => {
+                const checkerMesh = gltf.scene;
+                checkerMesh.scale.set(checkerMesh.scale.x * 0.4, checkerMesh.scale.y * 0.4, checkerMesh.scale.z * 0.4);
+                checkerMesh.position.y += checkerMesh.scale.y - 0.3;
+                scene.add(checkerMesh);
+                // addCheckers(checkerMesh);
+            });
+
             /**
              * Main
              **/
