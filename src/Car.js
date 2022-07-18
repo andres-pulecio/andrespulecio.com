@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 
 // let World, SAPBroadphase, vehicle;
-let vehicle, objectPosition,cameraOffset;
+let vehicle, objectPosition,cameraOffset,vehicle1;
 
 class Car {
 	init() {
@@ -25,8 +25,6 @@ class Car {
             renderer.setSize(w, h);
             container.appendChild(renderer.domElement);
             
-            // object.getWorldPosition(objectPosition);
-
             window.addEventListener('resize', function() {
                 w = container.clientWidth;
                 h = container.clientHeight;
@@ -34,11 +32,9 @@ class Car {
                 camera.updateProjectionMatrix();
                 renderer.setSize(w, h);
             })
-                        
-            // camera.position.copy(objectPosition).add(cameraOffset);
-            
-            var geometry = new THREE.PlaneGeometry(10, 10, 10);
-            var material = new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide});
+                                    
+            var geometry = new THREE.PlaneGeometry(100, 100, 100);
+            var material = new THREE.MeshBasicMaterial({color: 0x6FE25D, side: THREE.DoubleSide});
             var plane = new THREE.Mesh(geometry, material);
             plane.rotation.x = Math.PI/2;
             scene.add(plane);
@@ -71,13 +67,14 @@ class Car {
             chassisBody.addShape(chassisShape);
             chassisBody.position.set(0, 1, 0);
             chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
+            world.addBody(chassisBody)
             
             // car visual body
             var geometry = new THREE.BoxGeometry(2, 0.6, 4); // double chasis shape
             var material = new THREE.MeshBasicMaterial({color: 0x5DADE2, side: THREE.DoubleSide});
             var box = new THREE.Mesh(geometry, material);
             scene.add(box);
-            
+
             // parent vehicle object
             vehicle = new CANNON.RaycastVehicle({
                 chassisBody: chassisBody,
@@ -85,7 +82,7 @@ class Car {
                 indexUpAxis: 1, // y
                 indexForwardAxis: 2, // z
             });
-            
+
             // wheel options
             var options = {
                 radius: 0.3,
@@ -132,7 +129,7 @@ class Car {
                 // wheel visual body
                 var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.4, 32 );
                 var material = new THREE.MeshPhongMaterial({
-                    color: 0xd0901d,
+                    color: 0x6FE25D,
                     emissive: 0xaa0000,
                     side: THREE.DoubleSide,
                     flatShading: true,
@@ -199,6 +196,27 @@ class Car {
             light.position.set(4.5,10,4.5);
             scene.add(light);
 
+            //box
+            const normalMaterial = new THREE.MeshNormalMaterial()
+            const cubeGeometry = new THREE.BoxGeometry(3, 3, 3)
+            const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
+            cubeMesh.position.x = -5
+            cubeMesh.position.y = 1
+            cubeMesh.position.z = -3
+            cubeMesh.castShadow = true
+            scene.add(cubeMesh)
+            const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
+            const cubeBody = new CANNON.Body({
+                mass: 0, // mass = 0 makes the body static
+                material: groundMaterial,
+                shape: new CANNON.Plane(),
+                quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
+            })
+            cubeBody.addShape(cubeShape)
+            cubeBody.position.x = cubeMesh.position.x
+            cubeBody.position.y = cubeMesh.position.y
+            cubeBody.position.z = cubeMesh.position.z
+            world.addBody(cubeBody)
 
             /**
              * Main
