@@ -169,27 +169,24 @@ class Car {
             (gltf) => {
                 const treePolyMesh = gltf.scene;
                 treePolyMesh.scale.set(treePolyMesh.scale.x * 0.4, treePolyMesh.scale.y * 0.4, treePolyMesh.scale.z * 0.4);
-                treePolyMesh.position.set(5, 0.1, -7);
-                scene.add(treePolyMesh);
-            });
-            const loaderTree2 = new GLTFLoader();
-            loaderTree2.load('../models/tree-poly.glb', 
-            (gltf) => {
-                const treePolyMesh = gltf.scene;
-                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.2, treePolyMesh.scale.y * 0.2, treePolyMesh.scale.z * 0.2);
-                treePolyMesh.position.set(6, 0.1, 4);
+                treePolyMesh.position.set(5, 0, -7);
                 treePolyMesh.rotateY(Math.PI/2);
                 scene.add(treePolyMesh);
+                //hit box trees
+                const cubeShapeTree = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))//must be the double from gemoetry
+                const cubeBodyTree = new CANNON.Body({
+                    mass: 0, // mass = 0 makes the body static
+                    material: groundMaterial,
+                    shape: new CANNON.Plane(),
+                    quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
+                })
+                cubeBodyTree.addShape(cubeShapeTree)
+                cubeBodyTree.position.x = treePolyMesh.position.x 
+                cubeBodyTree.position.y = treePolyMesh.position.y
+                cubeBodyTree.position.z = treePolyMesh.position.z
+                world.addBody(cubeBodyTree)
             });
-            const loaderTree3 = new GLTFLoader();
-            loaderTree2.load('../models/tree-poly.glb', 
-            (gltf) => {
-                const treePolyMesh = gltf.scene;
-                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.3, treePolyMesh.scale.y * 0.3, treePolyMesh.scale.z * 0.3);
-                treePolyMesh.position.set(-6, 0.1, 4);
-                treePolyMesh.rotateY(Math.PI/8);
-                scene.add(treePolyMesh);
-            });
+
 
             //light or sun
             const light= new THREE.PointLight(0xffffff,2,200);
@@ -198,14 +195,14 @@ class Car {
 
             //box
             const normalMaterial = new THREE.MeshNormalMaterial()
-            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+            const cubeGeometry = new THREE.BoxGeometry(2, 2, 2)
             const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
-            cubeMesh.position.x = -5
+            cubeMesh.position.x = 0
             cubeMesh.position.y = 1
-            cubeMesh.position.z = -3
+            cubeMesh.position.z = 5
             cubeMesh.castShadow = true
             scene.add(cubeMesh)
-            const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
+            const cubeShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))//must be the double from gemoetry
             const cubeBody = new CANNON.Body({
                 mass: 0, // mass = 0 makes the body static
                 material: groundMaterial,
