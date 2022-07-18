@@ -167,14 +167,31 @@ class Car {
             world.addBody(planeBody)
             
             // import models from blender
-            const loader = new GLTFLoader();
-            loader.load('../models/tree-poly.glb', 
+            const loaderTree1 = new GLTFLoader();
+            loaderTree1.load('../models/tree-poly.glb', 
             (gltf) => {
                 const treePolyMesh = gltf.scene;
                 treePolyMesh.scale.set(treePolyMesh.scale.x * 0.4, treePolyMesh.scale.y * 0.4, treePolyMesh.scale.z * 0.4);
                 treePolyMesh.position.set(5, 0.1, -7);
                 scene.add(treePolyMesh);
-                // addCheckers(treePolyMesh);
+            });
+            const loaderTree2 = new GLTFLoader();
+            loaderTree2.load('../models/tree-poly.glb', 
+            (gltf) => {
+                const treePolyMesh = gltf.scene;
+                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.2, treePolyMesh.scale.y * 0.2, treePolyMesh.scale.z * 0.2);
+                treePolyMesh.position.set(6, 0.1, 4);
+                treePolyMesh.rotateY(Math.PI/2);
+                scene.add(treePolyMesh);
+            });
+            const loaderTree3 = new GLTFLoader();
+            loaderTree2.load('../models/tree-poly.glb', 
+            (gltf) => {
+                const treePolyMesh = gltf.scene;
+                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.3, treePolyMesh.scale.y * 0.3, treePolyMesh.scale.z * 0.3);
+                treePolyMesh.position.set(-6, 0.1, 4);
+                treePolyMesh.rotateY(Math.PI/8);
+                scene.add(treePolyMesh);
             });
 
             //light or sun
