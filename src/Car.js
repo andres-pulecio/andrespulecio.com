@@ -71,7 +71,7 @@ class Car {
             
             // car visual body
             var geometry = new THREE.BoxGeometry(2, 0.6, 4); // double chasis shape
-            var material = new THREE.MeshBasicMaterial({color: 0x5DADE2, side: THREE.DoubleSide});
+            var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
             var box = new THREE.Mesh(geometry, material);
             scene.add(box);
 
@@ -198,7 +198,7 @@ class Car {
 
             //box
             const normalMaterial = new THREE.MeshNormalMaterial()
-            const cubeGeometry = new THREE.BoxGeometry(3, 3, 3)
+            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
             const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
             cubeMesh.position.x = -5
             cubeMesh.position.y = 1
