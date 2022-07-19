@@ -188,6 +188,22 @@ class Car {
             var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
             scene.add(sphereMesh)
 
+            //icosahedron physics body
+            var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+            var icosahedronBody = new CANNON.Body({mass: 1});
+            icosahedronBody.addShape(icosahedronShape);
+            icosahedronBody.position.set(-5, 10, -2.5);
+            icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
+            world.addBody(icosahedronBody)
+            
+            //icosahedron visual body
+            var icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
+            var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
+            icosahedronMesh.castShadow = true
+            scene.add(icosahedronMesh)
+
+
+
 
             // import models from blender
             const loaderTree1 = new GLTFLoader();
@@ -251,9 +267,12 @@ class Car {
                 // update the sphare position
                 sphereMesh.position.copy(sphereBody.position);
                 sphereMesh.quaternion.copy(sphereBody.quaternion);
-                // update the sphare position
+                // update the box position
                 boxMesh.position.copy(boxBody.position);
                 boxMesh.quaternion.copy(boxBody.quaternion);
+                // update the icosahedron position
+                icosahedronMesh.position.copy(icosahedronBody.position);
+                icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
 
                 camera.position.copy(objectPosition).add(cameraOffset);
             }
