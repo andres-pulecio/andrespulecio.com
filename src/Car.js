@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-
-// let World, SAPBroadphase, vehicle;
 let vehicle, objectPosition,cameraOffset,vehicle1;
 
 class Car {
@@ -164,6 +162,18 @@ class Car {
                 quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
             });
             world.addBody(planeBody)
+            //box physics body
+            var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
+            var boxBody = new CANNON.Body({mass: 1});
+            boxBody.addShape(boxShape);
+            boxBody.position.set(-5, 5, -5);
+            boxBody.angularVelocity.set(0, 0, 0); // initial velocity
+            world.addBody(boxBody)
+
+            // box visual body
+            var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
+            var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
+            scene.add(boxMesh)
             
             //sphere physics body
             var sphereShape = new CANNON.Sphere(1);
@@ -177,6 +187,7 @@ class Car {
             var sphereGeometry = new THREE.SphereGeometry()
             var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
             scene.add(sphereMesh)
+
 
             // import models from blender
             const loaderTree1 = new GLTFLoader();
@@ -208,41 +219,24 @@ class Car {
             light.position.set(4.5,10,4.5);
             scene.add(light);
 
-            //box
-            const cubeGeometry = new THREE.BoxGeometry(2, 2, 2)
-            const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
-            cubeMesh.position.x = 0
-            cubeMesh.position.y = 1
-            cubeMesh.position.z = 5
-            cubeMesh.castShadow = true
-            scene.add(cubeMesh)
-            const cubeShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))//must be the double from gemoetry
-            const cubeBody = new CANNON.Body({
-                mass: 0, // mass = 0 makes the body static
-                material: groundMaterial,
-                shape: new CANNON.Plane(),
-                quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-            })
-            cubeBody.addShape(cubeShape)
-            cubeBody.position = cubeMesh.position
-            world.addBody(cubeBody)
-
-            // //sphere
-            // const sphereGeometry = new THREE.SphereGeometry()
-            // const sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
-            // sphereMesh.position.x = -5
-            // sphereMesh.position.y = 3
-            // sphereMesh.castShadow = true
-            // scene.add(sphereMesh)
-            // const sphereShape = new CANNON.Sphere(1)
-            // const sphereBody = new CANNON.Body({ 
-            //     mass: 1, 
+            // //box
+            // const cubeGeometry = new THREE.BoxGeometry(2, 2, 2)
+            // const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
+            // cubeMesh.position.x = 0
+            // cubeMesh.position.y = 1
+            // cubeMesh.position.z = 5
+            // cubeMesh.castShadow = true
+            // scene.add(cubeMesh)
+            // const cubeShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))//must be the double from gemoetry
+            // const cubeBody = new CANNON.Body({
+            //     mass: 0, // mass = 0 makes the body static
+            //     material: groundMaterial,
+            //     shape: new CANNON.Plane(),
+            //     quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
             // })
-            // sphereBody.addShape(sphereShape)
-            // sphereBody.position.x = sphereMesh.position.x
-            // sphereBody.position.y = sphereMesh.position.y
-            // sphereBody.position.z = sphereMesh.position.z
-            // world.addBody(sphereBody)
+            // cubeBody.addShape(cubeShape)
+            // cubeBody.position = cubeMesh.position
+            // world.addBody(cubeBody)
 
             /**
              * Main
@@ -257,12 +251,14 @@ class Car {
                 // update the sphare position
                 sphereMesh.position.copy(sphereBody.position);
                 sphereMesh.quaternion.copy(sphereBody.quaternion);
-                // sphereMesh.getWorldPosition(objectPosition);
-                // console.log(objectPosition);
+                // update the sphare position
+                boxMesh.position.copy(boxBody.position);
+                boxMesh.quaternion.copy(boxBody.quaternion);
+
                 camera.position.copy(objectPosition).add(cameraOffset);
             }
             
-            function render() {
+        function render() {
         requestAnimationFrame(render);
         renderer.render(scene, camera);
         updatePhysics();
