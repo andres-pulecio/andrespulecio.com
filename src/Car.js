@@ -6,10 +6,14 @@ let vehicle, objectPosition,cameraOffset,vehicle1;
 
 class Car {
 	init() {
+        var CarMesh;
         objectPosition = new THREE.Vector3();
-        cameraOffset = new THREE.Vector3(5, 10, 10);
-        const normalMaterial = new THREE.MeshNormalMaterial()
-
+        cameraOffset = new THREE.Vector3(8, 9, 16);
+        // cameraOffset = new THREE.Vector3(0, 5, 0);
+        
+        var normalMaterial = new THREE.MeshNormalMaterial()
+        normalMaterial.friction = 0.25;
+        normalMaterial.restitution = 0.25;
 
         var container = document.querySelector('body'),
             w = container.clientWidth,
@@ -19,7 +23,8 @@ class Car {
             renderConfig = {antialias: true, alpha: true},
             renderer = new THREE.WebGLRenderer(renderConfig);
             
-            camera.position.set(5, 10, 10);            
+            camera.position.set(8, 9, 16);
+            // camera.position.set(0, 5, 0);
             camera.lookAt(0,0,0);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(w, h);
@@ -39,27 +44,35 @@ class Car {
             plane.rotation.x = Math.PI/2;
             scene.add(plane);
             
-            var sunlight = new THREE.DirectionalLight(0xffffff, 1.0);
-            sunlight.position.set(-10, 10, 0);
+            var sunlight = new THREE.DirectionalLight(0xF9E79F, 1.0);
+            sunlight.position.set(-100, 10, 0);
             scene.add(sunlight)
             
             /**
              * Physics
              **/
-            var world = new CANNON.World();
-            world.broadphase = new CANNON.SAPBroadphase(world);
-            world.gravity.set(0, -10, 0);
-            world.defaultContactMaterial.friction = 0;
+            const world = new CANNON.World();
+            // world.broadphase = new CANNON.SAPBroadphase(world);
+            world.gravity.set(0, -9.82, 0);
+            // world.defaultContactMaterial.friction = 0.01;
             
             var groundMaterial = new CANNON.Material('groundMaterial');
-            var wheelMaterial = new CANNON.Material('wheelMaterial');
-            var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
-                friction: 0.3,
-                restitution: 0,
-                contactEquationStiffness: 1000,
-            });
+            groundMaterial.friction = 0.25;
+            groundMaterial.restitution = 0.25;
             
-            world.addContactMaterial(wheelGroundContactMaterial);
+            var wheelMaterial = new CANNON.Material('wheelMaterial');
+            wheelMaterial.friction = 0.25;
+            wheelMaterial.restitution = 0.25;
+
+            
+            
+            // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
+            //     friction: 0.25,
+            //     restitution: 0.25,
+            //     contactEquationStiffness: 1000,
+            // });
+            
+            // world.addContactMaterial(wheelGroundContactMaterial);
             
             // car physics body
             var chassisShape = new CANNON.Box(new CANNON.Vec3(1, 0.3, 2));
@@ -162,11 +175,13 @@ class Car {
                 quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
             });
             world.addBody(planeBody)
+
+
             //box physics body
             var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
             var boxBody = new CANNON.Body({mass: 1});
             boxBody.addShape(boxShape);
-            boxBody.position.set(-5, 5, -5);
+            boxBody.position.set(5, 1, 3);
             boxBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(boxBody)
 
@@ -177,7 +192,7 @@ class Car {
             
             //sphere physics body
             var sphereShape = new CANNON.Sphere(1);
-            var sphereBody = new CANNON.Body({mass: 1});
+            var sphereBody = new CANNON.Body({mass: 100});
             sphereBody.addShape(sphereShape);
             sphereBody.position.set(5, 5, 5);
             sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
@@ -192,7 +207,7 @@ class Car {
             var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
             var icosahedronBody = new CANNON.Body({mass: 1});
             icosahedronBody.addShape(icosahedronShape);
-            icosahedronBody.position.set(-5, 10, -2.5);
+            icosahedronBody.position.set(-5, 1, -2.5);
             icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(icosahedronBody)
             
@@ -229,30 +244,32 @@ class Car {
                 world.addBody(cubeBodyTree)
             });
 
+            // var loaderCar = new GLTFLoader();
+            // loaderCar.load('../models/poly-car.glb', 
+            // function(gltf){
+            //     var CarMesh = gltf.scene;
+            //     CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1, CarMesh.scale.z * 1);
+            //     // CarMesh.position.set(5, 0, 7);
+            //     // CarMesh.rotateY(Math.PI/2);
+            //     scene.add(CarMesh);
+            // });
+            
+            
+            var loaderCar = new GLTFLoader();
+            loaderCar.load('../models/poly-car.glb', 
+            (gltf) => {
+                CarMesh = gltf.scene;
+                CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1 ,CarMesh.scale.z * 1);
+                CarMesh.position.set(0, 0, 0);
+                scene.add(CarMesh);
+            }
+            );       
 
             //light or sun
             const light= new THREE.PointLight(0xffffff,2,200);
             light.position.set(4.5,10,4.5);
             scene.add(light);
 
-            // //box
-            // const cubeGeometry = new THREE.BoxGeometry(2, 2, 2)
-            // const cubeMesh = new THREE.Mesh(cubeGeometry, normalMaterial)
-            // cubeMesh.position.x = 0
-            // cubeMesh.position.y = 1
-            // cubeMesh.position.z = 5
-            // cubeMesh.castShadow = true
-            // scene.add(cubeMesh)
-            // const cubeShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))//must be the double from gemoetry
-            // const cubeBody = new CANNON.Body({
-            //     mass: 0, // mass = 0 makes the body static
-            //     material: groundMaterial,
-            //     shape: new CANNON.Plane(),
-            //     quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-            // })
-            // cubeBody.addShape(cubeShape)
-            // cubeBody.position = cubeMesh.position
-            // world.addBody(cubeBody)
 
             /**
              * Main
@@ -260,7 +277,7 @@ class Car {
             
             function updatePhysics() {
                 world.step(1/60);
-                // update the chassis position
+                // update the chassis position    
                 box.position.copy(chassisBody.position);
                 box.quaternion.copy(chassisBody.quaternion);
                 box.getWorldPosition(objectPosition);
@@ -281,6 +298,8 @@ class Car {
         requestAnimationFrame(render);
         renderer.render(scene, camera);
         updatePhysics();
+        CarMesh.position.copy(chassisBody.position);
+        CarMesh.quaternion.copy(chassisBody.quaternion);
         }
 
         function navigate(e) {
