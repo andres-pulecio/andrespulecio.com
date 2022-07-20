@@ -9,7 +9,7 @@ class Car {
         var CarMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(8, 9, 16);
-        // cameraOffset = new THREE.Vector3(0, 5, 0);
+        // cameraOffset = new THREE.Vector3(5, 0, 0);
         
         var normalMaterial = new THREE.MeshNormalMaterial()
         normalMaterial.friction = 0.25;
@@ -24,7 +24,7 @@ class Car {
             renderer = new THREE.WebGLRenderer(renderConfig);
             
             camera.position.set(8, 9, 16);
-            // camera.position.set(0, 5, 0);
+            // camera.position.set(5, 0, 0);
             camera.lookAt(0,0,0);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(w, h);
@@ -75,7 +75,7 @@ class Car {
             // world.addContactMaterial(wheelGroundContactMaterial);
             
             // car physics body
-            var chassisShape = new CANNON.Box(new CANNON.Vec3(1, 0.3, 2));
+            var chassisShape = new CANNON.Box(new CANNON.Vec3(0.7, 0.3, 1.7));
             var chassisBody = new CANNON.Body({mass: 150});
             chassisBody.addShape(chassisShape);
             chassisBody.position.set(0, 1, 0);
@@ -83,10 +83,10 @@ class Car {
             world.addBody(chassisBody)
             
             // car visual body
-            var geometry = new THREE.BoxGeometry(2, 0.6, 4); // double chasis shape
-            var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
-            var box = new THREE.Mesh(geometry, material);
-            scene.add(box);
+            // var geometry = new THREE.BoxGeometry(1.4, 0.6, 3.4); // double chasis shape
+            // var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
+            // var box = new THREE.Mesh(geometry, material);
+            // scene.add(box);
 
             // parent vehicle object
             vehicle = new CANNON.RaycastVehicle({
@@ -181,7 +181,7 @@ class Car {
             var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
             var boxBody = new CANNON.Body({mass: 1});
             boxBody.addShape(boxShape);
-            boxBody.position.set(5, 1, 3);
+            boxBody.position.set(5, 1, 10);
             boxBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(boxBody)
 
@@ -259,7 +259,8 @@ class Car {
             loaderCar.load('../models/poly-car.glb', 
             (gltf) => {
                 CarMesh = gltf.scene;
-                CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1 ,CarMesh.scale.z * 1);
+                var scale = 1.09; 
+                CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale ,CarMesh.scale.z * scale);
                 CarMesh.position.set(0, 0, 0);
                 scene.add(CarMesh);
             }
@@ -278,9 +279,9 @@ class Car {
             function updatePhysics() {
                 world.step(1/60);
                 // update the chassis position    
-                box.position.copy(chassisBody.position);
-                box.quaternion.copy(chassisBody.quaternion);
-                box.getWorldPosition(objectPosition);
+                // box.position.copy(chassisBody.position);
+                // box.quaternion.copy(chassisBody.quaternion);
+                // box.getWorldPosition(objectPosition);
                 // update the sphare position
                 sphereMesh.position.copy(sphereBody.position);
                 sphereMesh.quaternion.copy(sphereBody.quaternion);
