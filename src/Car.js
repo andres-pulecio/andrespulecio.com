@@ -8,7 +8,7 @@ class Car {
 	init() {
         var CarMesh;
         objectPosition = new THREE.Vector3();
-        cameraOffset = new THREE.Vector3(8, 9, 16);
+        cameraOffset = new THREE.Vector3(8, 7, 12);
         // cameraOffset = new THREE.Vector3(5, 0, 0);
         
         var normalMaterial = new THREE.MeshNormalMaterial()
@@ -23,7 +23,7 @@ class Car {
             renderConfig = {antialias: true, alpha: true},
             renderer = new THREE.WebGLRenderer(renderConfig);
             
-            camera.position.set(8, 9, 16);
+            camera.position.set(8, 7, 12);
             // camera.position.set(5, 0, 0);
             camera.lookAt(0,0,0);
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -181,7 +181,7 @@ class Car {
             var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
             var boxBody = new CANNON.Body({mass: 1});
             boxBody.addShape(boxShape);
-            boxBody.position.set(5, 1, 10);
+            boxBody.position.set(5, 1, -10);
             boxBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(boxBody)
 
