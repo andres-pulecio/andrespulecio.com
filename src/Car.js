@@ -2,14 +2,15 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
 
 class Car {
 	init() {
         var CarMesh;
         objectPosition = new THREE.Vector3();
-        cameraOffset = new THREE.Vector3(8, 9, 12);
+        cameraOffset = new THREE.Vector3(6, 7, 10);
         lightOffset = new THREE.Vector3(8, 15, 12);
+        planeOffset = new THREE.Vector3(0, -1, 0);
         // cameraOffset = new THREE.Vector3(5, 0, 0);
         
         var normalMaterial = new THREE.MeshNormalMaterial()
@@ -24,9 +25,9 @@ class Car {
             renderConfig = {antialias: true, alpha: true},
             renderer = new THREE.WebGLRenderer(renderConfig);
             
-            camera.position.set(8, 9, 12);
+            camera.position.set(6, 7, 10);
             // camera.position.set(5, 0, 0);
-            camera.lookAt(0,0,0);
+            camera.lookAt(0,-4,0);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(w, h);
             container.appendChild(renderer.domElement);
@@ -39,29 +40,34 @@ class Car {
                 renderer.setSize(w, h);
             })
                                     
-            var geometry = new THREE.PlaneGeometry(1000, 1000, 1000);
-            var material = new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide});
-            // var material = new THREE.MeshStandardMaterial({color: 0xfe9143, side: THREE.DoubleSide});
-            // var material = new THREE.MeshBasicMaterial({color: 0xfc8d41, side: THREE.DoubleSide});
-            // var material = new THREE.MeshToonMaterial({color: 0x3f7b9d});
+            var geometry = new THREE.PlaneGeometry(240, 240, 200);
+            // var material = new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide});
+            var material = new THREE.MeshStandardMaterial({color: 0xfc8e42, side: THREE.DoubleSide});
             var plane = new THREE.Mesh(geometry, material);
             plane.rotation.x = Math.PI/2;
             scene.add(plane);
             
             //light or sun
-            const sunlight = new THREE.PointLight(0xfcece0, 0.5, 50);
-            // const sunlight = new THREE.PointLight(0xffffff, 1.5, 100);
-            sunlight.position.set( 8, 15, 12 );
+            // const sunlight = new THREE.PointLight(0xfcece0, 0.5, 45);
+            const sunlight = new THREE.PointLight(0xffffff, 0.5, 70);
+            sunlight.position.set( 13, 15, 12 );
             scene.add( sunlight );
+            
+            // const lightCar = new THREE.PointLight(0xffffff, 1, 30);
+            // const lightCar = new THREE.SpotLight(0xffffff, 1, 20);
+            // lightCar.position.set( 0, 10, 0 );
+            // scene.add( lightCar );
 
-            const directionalLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
-            scene.add( directionalLight );
+            const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
+            DirectionalLight.position.set(5, 5, 5)
+            DirectionalLight.target.position.set(0,0,0);
+            scene.add( DirectionalLight );
+            scene.add( DirectionalLight.target );
 
-            // const sunlight = new THREE.AmbientLight( 0x404040, 0); // soft white light
-            // scene.add( sunlight );
-
-            // const sunlight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-            // scene.add( sunlight );
+            // const AmbientLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
+            const AmbientLight = new THREE.AmbientLight( 0xffffff,0.7);
+            scene.add( AmbientLight );
             
             /**
              * Physics
@@ -77,9 +83,7 @@ class Car {
             
             var wheelMaterial = new CANNON.Material('wheelMaterial');
             wheelMaterial.friction = 0.25;
-            wheelMaterial.restitution = 0.25;
-
-            
+            wheelMaterial.restitution = 0.25;  
             
             // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
             //     friction: 0.25,
@@ -158,8 +162,8 @@ class Car {
                 // wheel visual body
                 var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.3, 12 );
                 var material = new THREE.MeshPhongMaterial({
-                    color: 0x6FE25D,
-                    emissive: 0xaa0000,
+                    color: 0x283747,
+                    // emissive: 0xaa0000,
                     side: THREE.DoubleSide,
                     flatShading: true,
                 });
@@ -303,6 +307,7 @@ class Car {
             icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
             camera.position.copy(chassisBody.position).add(cameraOffset);
             sunlight.position.copy(chassisBody.position).add(lightOffset);
+            plane.position.copy(chassisBody.position).add(planeOffset);
         }
             
         function render() {
