@@ -86,6 +86,7 @@ class Car {
             // var geometry = new THREE.BoxGeometry(1.4, 0.6, 3.4); // double chasis shape
             // var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
             // var box = new THREE.Mesh(geometry, material);
+            // var box = new THREE.Mesh(geometry, material);
             // scene.add(box);
 
             // parent vehicle object
@@ -109,7 +110,7 @@ class Car {
                 rollInfluence:  0.01,
                 axleLocal: new CANNON.Vec3(-1, 0, 0),
                 chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
-                maxSuspensionTravel: 0.25,
+                maxSuspensionTravel: 1,
                 customSlidingRotationalSpeed: -30,
                 useCustomSlidingRotationalSpeed: true,
             };
@@ -140,7 +141,7 @@ class Car {
                 body.addShape(shape, new CANNON.Vec3(), q);
                 wheelBodies.push(body);
                 // wheel visual body
-                var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.4, 32 );
+                var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.3, 12 );
                 var material = new THREE.MeshPhongMaterial({
                     color: 0x6FE25D,
                     emissive: 0xaa0000,
@@ -276,24 +277,23 @@ class Car {
              * Main
              **/
             
-            function updatePhysics() {
-                world.step(1/60);
-                // update the chassis position    
-                // box.position.copy(chassisBody.position);
-                // box.quaternion.copy(chassisBody.quaternion);
-                // box.getWorldPosition(objectPosition);
-                // update the sphare position
-                sphereMesh.position.copy(sphereBody.position);
-                sphereMesh.quaternion.copy(sphereBody.quaternion);
-                // update the box position
-                boxMesh.position.copy(boxBody.position);
-                boxMesh.quaternion.copy(boxBody.quaternion);
-                // update the icosahedron position
-                icosahedronMesh.position.copy(icosahedronBody.position);
-                icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
-
-                camera.position.copy(objectPosition).add(cameraOffset);
-            }
+        function updatePhysics() {
+            world.step(1/60);
+            // update the chassis position    
+            // box.position.copy(chassisBody.position);
+            // box.quaternion.copy(chassisBody.quaternion);
+            // box.getWorldPosition(objectPosition);
+            // update the sphare position
+            sphereMesh.position.copy(sphereBody.position);
+            sphereMesh.quaternion.copy(sphereBody.quaternion);
+            // update the box position
+            boxMesh.position.copy(boxBody.position);
+            boxMesh.quaternion.copy(boxBody.quaternion);
+            // update the icosahedron position
+            icosahedronMesh.position.copy(icosahedronBody.position);
+            icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
+            camera.position.copy(chassisBody.position).add(cameraOffset);
+        }
             
         function render() {
         requestAnimationFrame(render);
@@ -312,7 +312,7 @@ class Car {
         vehicle.setBrake(0, 3);
 
         var engineForce = 800,
-            maxSteerVal = 0.3;
+            maxSteerVal = 0.5;
         switch(e.keyCode) {
 
             case 38: // forward
