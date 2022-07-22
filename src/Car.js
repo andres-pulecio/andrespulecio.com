@@ -9,11 +9,11 @@ class Car {
         var CarMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(6, 7, 10);
+        // cameraOffset = new THREE.Vector3(5, 2, 0);
         lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
-        // cameraOffset = new THREE.Vector3(5, 0, 0);
         
-        var normalMaterial = new THREE.MeshNormalMaterial()
+        var normalMaterial = new THREE.MeshToonMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
 
@@ -26,7 +26,7 @@ class Car {
             renderer = new THREE.WebGLRenderer(renderConfig);
             
             camera.position.set(6, 7, 10);
-            // camera.position.set(5, 0, 0);
+            // camera.position.set(5, 2, 0);
             camera.lookAt(0,-4,0);
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(w, h);
@@ -94,7 +94,7 @@ class Car {
             // world.addContactMaterial(wheelGroundContactMaterial);
             
             // car physics body
-            var chassisShape = new CANNON.Box(new CANNON.Vec3(0.7, 0.3, 1.7));
+            var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 1.7));
             var chassisBody = new CANNON.Body({mass: 150});
             chassisBody.addShape(chassisShape);
             chassisBody.position.set(0, 1, 0);
@@ -102,7 +102,7 @@ class Car {
             world.addBody(chassisBody)
             
             // car visual body
-            // var geometry = new THREE.BoxGeometry(1.4, 0.6, 3.4); // double chasis shape
+            // var geometry = new THREE.BoxGeometry(1.6, 0.6, 3.4); // double chasis shape
             // var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
             // var box = new THREE.Mesh(geometry, material);
             // var box = new THREE.Mesh(geometry, material);
@@ -118,7 +118,8 @@ class Car {
 
             // wheel options
             var options = {
-                radius: 0.3,
+                // radius: 0.3,
+                radius: 0.4,
                 directionLocal: new CANNON.Vec3(0, -1, 0),
                 suspensionStiffness: 45,
                 suspensionRestLength: 0.4,
@@ -134,7 +135,7 @@ class Car {
                 useCustomSlidingRotationalSpeed: true,
             };
             
-            var axlewidth = 0.7;
+            var axlewidth = 0.9;
             options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
             vehicle.addWheel(options);
             
