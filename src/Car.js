@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight,DirectionalLightOffset;
 
 class Car {
 	init() {
@@ -12,8 +12,10 @@ class Car {
         // cameraOffset = new THREE.Vector3(5, 2, 0);
         lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
+        DirectionalLightOffset = new THREE.Vector3(-15, 5, 5);
         
-        var normalMaterial = new THREE.MeshToonMaterial({color: 0xCB4335, side: THREE.DoubleSide})
+        // var normalMaterial = new THREE.MeshToonMaterial({color: 0xCB4335, side: THREE.DoubleSide})
+        var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
 
@@ -45,29 +47,40 @@ class Car {
             // var material = new THREE.MeshStandardMaterial({color: 0xfc8e42, side: THREE.DoubleSide});
             var material = new THREE.MeshStandardMaterial({color: 0x1D8348, side: THREE.DoubleSide});
             var plane = new THREE.Mesh(geometry, material);
+            plane.receiveShadow = true;
             plane.rotation.x = Math.PI/2;
             scene.add(plane);
             
             //light or sun
             // const sunlight = new THREE.PointLight(0xfcece0, 0.5, 45);
-            const sunlight = new THREE.PointLight(0xffffff, 1.2, 40);
+            const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
             sunlight.position.set( 13, 15, 12 );
+            sunlight.shadow.mapSize.width = 512; // default
+            sunlight.shadow.mapSize.height = 512; // default
+            sunlight.shadow.camera.near = 0.5; // default
+            sunlight.shadow.camera.far = 500; // default
             scene.add( sunlight );
+
             
             // const lightCar = new THREE.PointLight(0xffffff, 1, 30);
             // const lightCar = new THREE.SpotLight(0xffffff, 1, 20);
             // lightCar.position.set( 0, 10, 0 );
             // scene.add( lightCar );
 
-            const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
             // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
-            DirectionalLight.position.set(5, 5, 5)
+            DirectionalLight.position.set(-15, 5, 5)
             DirectionalLight.target.position.set(0,0,0);
             scene.add( DirectionalLight );
             scene.add( DirectionalLight.target );
 
+            DirectionalLight.shadow.mapSize.width = 512; // default
+            DirectionalLight.shadow.mapSize.height = 512; // default
+            DirectionalLight.shadow.camera.near = 0.5; // default
+            DirectionalLight.shadow.camera.far = 500; // default
+
             // const AmbientLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
-            const AmbientLight = new THREE.AmbientLight( 0xffffff,0.7);
+            const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
             scene.add( AmbientLight );
             
             /**
@@ -98,7 +111,7 @@ class Car {
             var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 1.7));
             var chassisBody = new CANNON.Body({mass: 150});
             chassisBody.addShape(chassisShape);
-            chassisBody.position.set(0, 1, 0);
+            chassisBody.position.set(0, 2, 0);
             chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(chassisBody)
             
@@ -203,7 +216,7 @@ class Car {
             var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
             var boxBody = new CANNON.Body({mass: 1});
             boxBody.addShape(boxShape);
-            boxBody.position.set(5, 1, -10);
+            boxBody.position.set(7, 3, -10);
             boxBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(boxBody)
 
@@ -219,10 +232,12 @@ class Car {
             sphereBody.position.set(5, 5, 5);
             sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(sphereBody)
-
+            
             // sphere visual body
             var sphereGeometry = new THREE.SphereGeometry()
             var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
+            sphereMesh.castShadow = true; //default is false
+            sphereMesh.receiveShadow = false; //default
             scene.add(sphereMesh)
 
             //icosahedron physics body
@@ -310,6 +325,8 @@ class Car {
             camera.position.copy(chassisBody.position).add(cameraOffset);
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
+            plane.position.copy(chassisBody.position).add(planeOffset);
+            DirectionalLight.position.copy(chassisBody.position).add(DirectionalLightOffset);
         }
             
         function render() {
