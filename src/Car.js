@@ -8,7 +8,7 @@ class Car {
 	init() {
         var CarMesh;
         objectPosition = new THREE.Vector3();
-        cameraOffset = new THREE.Vector3(6, 7, 10);
+        cameraOffset = new THREE.Vector3(10, 11, 9);
         // cameraOffset = new THREE.Vector3(5, 2, 0);
         lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
@@ -25,7 +25,7 @@ class Car {
             renderConfig = {antialias: true, alpha: true},
             renderer = new THREE.WebGLRenderer(renderConfig);
             
-            camera.position.set(6, 7, 10);
+            camera.position.set(10, 11, 9);
             // camera.position.set(5, 2, 0);
             camera.lookAt(0,-4,0);
             renderer.setPixelRatio(window.devicePixelRatio);
@@ -42,14 +42,15 @@ class Car {
                                     
             var geometry = new THREE.PlaneGeometry(240, 240, 200);
             // var material = new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide});
-            var material = new THREE.MeshStandardMaterial({color: 0xfc8e42, side: THREE.DoubleSide});
+            // var material = new THREE.MeshStandardMaterial({color: 0xfc8e42, side: THREE.DoubleSide});
+            var material = new THREE.MeshStandardMaterial({color: 0x1D8348, side: THREE.DoubleSide});
             var plane = new THREE.Mesh(geometry, material);
             plane.rotation.x = Math.PI/2;
             scene.add(plane);
             
             //light or sun
             // const sunlight = new THREE.PointLight(0xfcece0, 0.5, 45);
-            const sunlight = new THREE.PointLight(0xffffff, 0.5, 70);
+            const sunlight = new THREE.PointLight(0xffffff, 1.2, 40);
             sunlight.position.set( 13, 15, 12 );
             scene.add( sunlight );
             
@@ -247,7 +248,7 @@ class Car {
             (gltf) => {
                 const treePolyMesh = gltf.scene;
                 treePolyMesh.scale.set(treePolyMesh.scale.x * 0.4, treePolyMesh.scale.y * 0.4, treePolyMesh.scale.z * 0.4);
-                treePolyMesh.position.set(5, 0, -7);
+                treePolyMesh.position.set(-5, 0, -7);
                 treePolyMesh.rotateY(Math.PI/2);
                 scene.add(treePolyMesh);
                 //hit box trees
