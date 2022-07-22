@@ -251,11 +251,21 @@ class Car {
         
         // import models from blender
         const stone1 = new importModels();
-        stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 0, 0, 7, 1, 1, 0.1);
+        stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, 7, 1, 1, 0.1);
         const loaderTree2 = new importModels();
         loaderTree2.init('../models/tree-poly.glb', scene, world, groundMaterial, q, 0.4, 0, 0, -7, 0.5, 1.5, 0.5);
         
-
+        //Path Information
+        const pathToInfo1 = new importModels();
+        for (var i = 0; i < 40; i=i+3) {
+            var n = 14 + i;
+            pathToInfo1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 0, 0, n , 1, 1, 0.1);
+        }
+        const pathToInfo2 = new importModels();
+        for (var i = 0; i < 40; i=i+3) {
+            var n = 12 + i;
+            pathToInfo2.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, n , 1, 1, 0.1);
+        }
         
         // import car from blender
         var loaderCar = new GLTFLoader();
