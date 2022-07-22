@@ -1,14 +1,19 @@
 import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import importModels from './importModels.js';
+
+
+
 
 let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight,DirectionalLightOffset;
 
 class Car {
-	init() {
+    init() {
+        
         var CarMesh;
         objectPosition = new THREE.Vector3();
-        cameraOffset = new THREE.Vector3(10, 11, 9);
+        cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0);
         lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
@@ -18,88 +23,81 @@ class Car {
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
-
+        
         var container = document.querySelector('body'),
-            w = container.clientWidth,
-            h = container.clientHeight,
-            scene = new THREE.Scene(),
-            camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
-            renderConfig = {antialias: true, alpha: true},
-            renderer = new THREE.WebGLRenderer(renderConfig);
-            
-            camera.position.set(10, 11, 9);
-            // camera.position.set(5, 2, 0);
-            camera.lookAt(0,-4,0);
-            renderer.setPixelRatio(window.devicePixelRatio);
+        w = container.clientWidth,
+        h = container.clientHeight,
+        scene = new THREE.Scene(),
+        camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
+        renderConfig = {antialias: true, alpha: true},
+        renderer = new THREE.WebGLRenderer(renderConfig);
+        
+        camera.position.set(10, 11, 11);
+        // camera.position.set(5, 2, 0);
+        camera.lookAt(0,-4,0);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(w, h);
+        container.appendChild(renderer.domElement);
+        
+        window.addEventListener('resize', function() {
+            w = container.clientWidth;
+            h = container.clientHeight;
+            camera.aspect = w/h;
+            camera.updateProjectionMatrix();
             renderer.setSize(w, h);
-            container.appendChild(renderer.domElement);
-            
-            window.addEventListener('resize', function() {
-                w = container.clientWidth;
-                h = container.clientHeight;
-                camera.aspect = w/h;
-                camera.updateProjectionMatrix();
-                renderer.setSize(w, h);
-            })
-                                    
-            var geometry = new THREE.PlaneGeometry(240, 240, 200);
-            // var material = new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide});
-            // var material = new THREE.MeshStandardMaterial({color: 0xfc8e42, side: THREE.DoubleSide});
-            var material = new THREE.MeshStandardMaterial({color: 0x1D8348, side: THREE.DoubleSide});
-            var plane = new THREE.Mesh(geometry, material);
-            plane.receiveShadow = true;
-            plane.rotation.x = Math.PI/2;
-            scene.add(plane);
-            
-            //light or sun
-            // const sunlight = new THREE.PointLight(0xfcece0, 0.5, 45);
-            const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
-            sunlight.position.set( 13, 15, 12 );
-            sunlight.shadow.mapSize.width = 512; // default
-            sunlight.shadow.mapSize.height = 512; // default
-            sunlight.shadow.camera.near = 0.5; // default
-            sunlight.shadow.camera.far = 500; // default
-            scene.add( sunlight );
-
-            
-            // const lightCar = new THREE.PointLight(0xffffff, 1, 30);
-            // const lightCar = new THREE.SpotLight(0xffffff, 1, 20);
-            // lightCar.position.set( 0, 10, 0 );
-            // scene.add( lightCar );
-
-            const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
-            // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
-            DirectionalLight.position.set(-15, 5, 5)
-            DirectionalLight.target.position.set(0,0,0);
-            scene.add( DirectionalLight );
-            scene.add( DirectionalLight.target );
-
-            DirectionalLight.shadow.mapSize.width = 512; // default
-            DirectionalLight.shadow.mapSize.height = 512; // default
-            DirectionalLight.shadow.camera.near = 0.5; // default
-            DirectionalLight.shadow.camera.far = 500; // default
-
-            // const AmbientLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
-            const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
-            scene.add( AmbientLight );
-            
-            /**
-             * Physics
-             **/
-            const world = new CANNON.World();
-            // world.broadphase = new CANNON.SAPBroadphase(world);
-            world.gravity.set(0, -9.82, 0);
-            // world.defaultContactMaterial.friction = 0.01;
-            
-            var groundMaterial = new CANNON.Material('groundMaterial');
-            groundMaterial.friction = 0.25;
-            groundMaterial.restitution = 0.25;
-            
-            var wheelMaterial = new CANNON.Material('wheelMaterial');
-            wheelMaterial.friction = 0.25;
-            wheelMaterial.restitution = 0.25;  
-            
-            // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
+        })
+        
+        var geometry = new THREE.PlaneGeometry(270, 270, 1);
+        // var material = new THREE.MeshStandardMaterial({color: 0x1D8348, side: THREE.DoubleSide});
+        var material = new THREE.MeshStandardMaterial({color: 0x2874A6, side: THREE.DoubleSide});
+        var plane = new THREE.Mesh(geometry, material);
+        plane.receiveShadow = true;
+        plane.rotation.x = Math.PI/2;
+        scene.add(plane);
+        
+        //light or sun
+        const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
+        sunlight.position.set( 13, 15, 12 );
+        sunlight.shadow.mapSize.width = 512; // default
+        sunlight.shadow.mapSize.height = 512; // default
+        sunlight.shadow.camera.near = 0.5; // default
+        sunlight.shadow.camera.far = 500; // default
+        scene.add( sunlight );
+        
+        
+        const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
+        // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
+        DirectionalLight.position.set(-10, 5, 5)
+        DirectionalLight.target.position.set(0,0,0);
+        scene.add( DirectionalLight );
+        scene.add( DirectionalLight.target );
+        
+        DirectionalLight.shadow.mapSize.width = 512; // default
+        DirectionalLight.shadow.mapSize.height = 512; // default
+        DirectionalLight.shadow.camera.near = 0.5; // default
+        DirectionalLight.shadow.camera.far = 500; // default
+        
+        // const AmbientLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
+        const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
+        scene.add( AmbientLight );
+        
+        /**
+         * Physics
+         **/
+        const world = new CANNON.World();
+        // world.broadphase = new CANNON.SAPBroadphase(world);
+        world.gravity.set(0, -9.82, 0);
+        // world.defaultContactMaterial.friction = 0.01;
+        
+        var groundMaterial = new CANNON.Material('groundMaterial');
+        groundMaterial.friction = 0.25;
+        groundMaterial.restitution = 0.25;
+        
+        var wheelMaterial = new CANNON.Material('wheelMaterial');
+        wheelMaterial.friction = 0.25;
+        wheelMaterial.restitution = 0.25;  
+        
+        // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
             //     friction: 0.25,
             //     restitution: 0.25,
             //     contactEquationStiffness: 1000,
@@ -121,7 +119,7 @@ class Car {
             // var box = new THREE.Mesh(geometry, material);
             // var box = new THREE.Mesh(geometry, material);
             // scene.add(box);
-
+            
             // parent vehicle object
             vehicle = new CANNON.RaycastVehicle({
                 chassisBody: chassisBody,
@@ -129,7 +127,7 @@ class Car {
                 indexUpAxis: 1, // y
                 indexForwardAxis: 2, // z
             });
-
+            
             // wheel options
             var options = {
                 // radius: 0.3,
@@ -201,7 +199,7 @@ class Car {
                     wheelVisuals[i].quaternion.copy(t.quaternion);
                 }
             });
-
+            
             var q = plane.quaternion;
             var planeBody = new CANNON.Body({
                 mass: 0, // mass = 0 makes the body static
@@ -210,8 +208,8 @@ class Car {
                 quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
             });
             world.addBody(planeBody)
-
-
+            
+            
             //box physics body
             var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
             var boxBody = new CANNON.Body({mass: 1});
@@ -219,7 +217,7 @@ class Car {
             boxBody.position.set(7, 3, -10);
             boxBody.angularVelocity.set(0, 0, 0); // initial velocity
             world.addBody(boxBody)
-
+            
             // box visual body
             var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
             var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
@@ -239,7 +237,7 @@ class Car {
             sphereMesh.castShadow = true; //default is false
             sphereMesh.receiveShadow = false; //default
             scene.add(sphereMesh)
-
+            
             //icosahedron physics body
             var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
             var icosahedronBody = new CANNON.Body({mass: 1});
@@ -253,10 +251,10 @@ class Car {
             var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
             icosahedronMesh.castShadow = true
             scene.add(icosahedronMesh)
-
-
-
-
+            
+            
+            
+            
             // import models from blender
             const loaderTree1 = new GLTFLoader();
             loaderTree1.load('../models/tree-poly.glb', 
@@ -280,17 +278,29 @@ class Car {
                 cubeBodyTree.position.z = treePolyMesh.position.z
                 world.addBody(cubeBodyTree)
             });
-
+            
+            const loaderStone = new GLTFLoader();
+            loaderStone.load('../models/stone.glb', 
+            (gltf) => {
+                const stoneMesh = gltf.scene;
+                stoneMesh.scale.set(stoneMesh.scale.x * 0.4, stoneMesh.scale.y * 0.4, stoneMesh.scale.z * 0.4);
+                stoneMesh.position.set(7, 0, 7);
+                stoneMesh.rotateY(Math.PI/2);
+                scene.add(stoneMesh);
+            });
+            
+            const ImportModels = new importModels();
+            ImportModels.init(scene);
             // var loaderCar = new GLTFLoader();
             // loaderCar.load('../models/poly-car.glb', 
             // function(gltf){
-            //     var CarMesh = gltf.scene;
-            //     CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1, CarMesh.scale.z * 1);
-            //     // CarMesh.position.set(5, 0, 7);
-            //     // CarMesh.rotateY(Math.PI/2);
-            //     scene.add(CarMesh);
-            // });
-            
+                //     var CarMesh = gltf.scene;
+                //     CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1, CarMesh.scale.z * 1);
+                //     // CarMesh.position.set(5, 0, 7);
+                //     // CarMesh.rotateY(Math.PI/2);
+                //     scene.add(CarMesh);
+                // });
+                
             
             var loaderCar = new GLTFLoader();
             loaderCar.load('../models/poly-car.glb', 
@@ -326,7 +336,7 @@ class Car {
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
-            DirectionalLight.position.copy(chassisBody.position).add(DirectionalLightOffset);
+            // DirectionalLight.position.copy(chassisBody.position).add(DirectionalLightOffset);
         }
             
         function render() {
