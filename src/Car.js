@@ -3,9 +3,6 @@ import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 
-
-
-
 let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight,DirectionalLightOffset;
 
 class Car {
@@ -122,188 +119,147 @@ class Car {
             
             // parent vehicle object
             vehicle = new CANNON.RaycastVehicle({
-                chassisBody: chassisBody,
-                indexRightAxis: 0, // x
-                indexUpAxis: 1, // y
-                indexForwardAxis: 2, // z
+            chassisBody: chassisBody,
+            indexRightAxis: 0, // x
+            indexUpAxis: 1, // y
+            indexForwardAxis: 2, // z
+        });
+        
+        // wheel options
+        var options = {
+            // radius: 0.3,
+            radius: 0.4,
+            directionLocal: new CANNON.Vec3(0, -1, 0),
+            suspensionStiffness: 45,
+            suspensionRestLength: 0.4,
+            frictionSlip: 5,
+            dampingRelaxation: 2.3,
+            dampingCompression: 4.5,
+            maxSuspensionForce: 200000,
+            rollInfluence:  0.01,
+            axleLocal: new CANNON.Vec3(-1, 0, 0),
+            chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
+            maxSuspensionTravel: 1,
+            customSlidingRotationalSpeed: -30,
+            useCustomSlidingRotationalSpeed: true,
+        };
+        
+        var axlewidth = 0.9;
+        options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
+        vehicle.addWheel(options);
+        
+        options.chassisConnectionPointLocal.set(-axlewidth, 0, -1);
+        vehicle.addWheel(options);
+        
+        options.chassisConnectionPointLocal.set(axlewidth, 0, 1);
+        vehicle.addWheel(options);
+        
+        options.chassisConnectionPointLocal.set(-axlewidth, 0, 1);
+        vehicle.addWheel(options);
+        
+        vehicle.addToWorld(world);
+        
+        // car wheels
+        var wheelBodies = [],
+        wheelVisuals = [];
+        vehicle.wheelInfos.forEach(function(wheel) {
+            var shape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20);
+            var body = new CANNON.Body({mass: 1, material: wheelMaterial});
+            var q = new CANNON.Quaternion();
+            q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
+            body.addShape(shape, new CANNON.Vec3(), q);
+            wheelBodies.push(body);
+            // wheel visual body
+            var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.3, 12 );
+            var material = new THREE.MeshPhongMaterial({
+                color: 0x283747,
+                // emissive: 0xaa0000,
+                side: THREE.DoubleSide,
+                flatShading: true,
             });
-            
-            // wheel options
-            var options = {
-                // radius: 0.3,
-                radius: 0.4,
-                directionLocal: new CANNON.Vec3(0, -1, 0),
-                suspensionStiffness: 45,
-                suspensionRestLength: 0.4,
-                frictionSlip: 5,
-                dampingRelaxation: 2.3,
-                dampingCompression: 4.5,
-                maxSuspensionForce: 200000,
-                rollInfluence:  0.01,
-                axleLocal: new CANNON.Vec3(-1, 0, 0),
-                chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
-                maxSuspensionTravel: 1,
-                customSlidingRotationalSpeed: -30,
-                useCustomSlidingRotationalSpeed: true,
-            };
-            
-            var axlewidth = 0.9;
-            options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
-            vehicle.addWheel(options);
-            
-            options.chassisConnectionPointLocal.set(-axlewidth, 0, -1);
-            vehicle.addWheel(options);
-            
-            options.chassisConnectionPointLocal.set(axlewidth, 0, 1);
-            vehicle.addWheel(options);
-            
-            options.chassisConnectionPointLocal.set(-axlewidth, 0, 1);
-            vehicle.addWheel(options);
-            
-            vehicle.addToWorld(world);
-            
-            // car wheels
-            var wheelBodies = [],
-            wheelVisuals = [];
-            vehicle.wheelInfos.forEach(function(wheel) {
-                var shape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20);
-                var body = new CANNON.Body({mass: 1, material: wheelMaterial});
-                var q = new CANNON.Quaternion();
-                q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
-                body.addShape(shape, new CANNON.Vec3(), q);
-                wheelBodies.push(body);
-                // wheel visual body
-                var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.3, 12 );
-                var material = new THREE.MeshPhongMaterial({
-                    color: 0x283747,
-                    // emissive: 0xaa0000,
-                    side: THREE.DoubleSide,
-                    flatShading: true,
-                });
-                var cylinder = new THREE.Mesh(geometry, material);
-                cylinder.geometry.rotateZ(Math.PI/2);
-                wheelVisuals.push(cylinder);
-                scene.add(cylinder);
-            });
-            
-            // update the wheels to match the physics
-            world.addEventListener('postStep', function() {
-                for (var i=0; i<vehicle.wheelInfos.length; i++) {
-                    vehicle.updateWheelTransform(i);
-                    var t = vehicle.wheelInfos[i].worldTransform;
-                    // update wheel physics
-                    wheelBodies[i].position.copy(t.position);
-                    wheelBodies[i].quaternion.copy(t.quaternion);
-                    // update wheel visuals
-                    wheelVisuals[i].position.copy(t.position);
-                    wheelVisuals[i].quaternion.copy(t.quaternion);
-                }
-            });
-            
-            var q = plane.quaternion;
-            var planeBody = new CANNON.Body({
-                mass: 0, // mass = 0 makes the body static
-                material: groundMaterial,
-                shape: new CANNON.Plane(),
-                quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-            });
-            world.addBody(planeBody)
-            
-            
-            //box physics body
-            var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
-            var boxBody = new CANNON.Body({mass: 1});
-            boxBody.addShape(boxShape);
-            boxBody.position.set(7, 3, -10);
-            boxBody.angularVelocity.set(0, 0, 0); // initial velocity
-            world.addBody(boxBody)
-            
-            // box visual body
-            var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
-            var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
-            scene.add(boxMesh)
-            
-            //sphere physics body
-            var sphereShape = new CANNON.Sphere(1);
-            var sphereBody = new CANNON.Body({mass: 100});
-            sphereBody.addShape(sphereShape);
-            sphereBody.position.set(5, 5, 5);
-            sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
-            world.addBody(sphereBody)
-            
-            // sphere visual body
-            var sphereGeometry = new THREE.SphereGeometry()
-            var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
-            sphereMesh.castShadow = true; //default is false
-            sphereMesh.receiveShadow = false; //default
-            scene.add(sphereMesh)
-            
-            //icosahedron physics body
-            var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-            var icosahedronBody = new CANNON.Body({mass: 1});
-            icosahedronBody.addShape(icosahedronShape);
-            icosahedronBody.position.set(-5, 1, -2.5);
-            icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
-            world.addBody(icosahedronBody)
-            
-            //icosahedron visual body
-            var icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
-            var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
-            icosahedronMesh.castShadow = true
-            scene.add(icosahedronMesh)
-            
-            
-            
-            
-            // import models from blender
-            const loaderTree1 = new GLTFLoader();
-            loaderTree1.load('../models/tree-poly.glb', 
-            (gltf) => {
-                const treePolyMesh = gltf.scene;
-                treePolyMesh.scale.set(treePolyMesh.scale.x * 0.4, treePolyMesh.scale.y * 0.4, treePolyMesh.scale.z * 0.4);
-                treePolyMesh.position.set(-5, 0, -7);
-                treePolyMesh.rotateY(Math.PI/2);
-                scene.add(treePolyMesh);
-                //hit box trees
-                const cubeShapeTree = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))//must be the double from gemoetry
-                const cubeBodyTree = new CANNON.Body({
-                    mass: 0, // mass = 0 makes the body static
-                    material: groundMaterial,
-                    shape: new CANNON.Plane(),
-                    quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-                })
-                cubeBodyTree.addShape(cubeShapeTree)
-                cubeBodyTree.position.x = treePolyMesh.position.x 
-                cubeBodyTree.position.y = treePolyMesh.position.y
-                cubeBodyTree.position.z = treePolyMesh.position.z
-                world.addBody(cubeBodyTree)
-            });
-            
-            const loaderStone = new GLTFLoader();
-            loaderStone.load('../models/stone.glb', 
-            (gltf) => {
-                const stoneMesh = gltf.scene;
-                stoneMesh.scale.set(stoneMesh.scale.x * 0.4, stoneMesh.scale.y * 0.4, stoneMesh.scale.z * 0.4);
-                stoneMesh.position.set(7, 0, 7);
-                stoneMesh.rotateY(Math.PI/2);
-                scene.add(stoneMesh);
-            });
-            
-            const ImportModels = new importModels();
-            ImportModels.init(scene);
-            // var loaderCar = new GLTFLoader();
-            // loaderCar.load('../models/poly-car.glb', 
-            // function(gltf){
-                //     var CarMesh = gltf.scene;
-                //     CarMesh.scale.set(CarMesh.scale.x * 1, CarMesh.scale.y * 1, CarMesh.scale.z * 1);
-                //     // CarMesh.position.set(5, 0, 7);
-                //     // CarMesh.rotateY(Math.PI/2);
-                //     scene.add(CarMesh);
-                // });
-                
-            
-            var loaderCar = new GLTFLoader();
-            loaderCar.load('../models/poly-car.glb', 
+            var cylinder = new THREE.Mesh(geometry, material);
+            cylinder.geometry.rotateZ(Math.PI/2);
+            wheelVisuals.push(cylinder);
+            scene.add(cylinder);
+        });
+        
+        // update the wheels to match the physics
+        world.addEventListener('postStep', function() {
+            for (var i=0; i<vehicle.wheelInfos.length; i++) {
+                vehicle.updateWheelTransform(i);
+                var t = vehicle.wheelInfos[i].worldTransform;
+                // update wheel physics
+                wheelBodies[i].position.copy(t.position);
+                wheelBodies[i].quaternion.copy(t.quaternion);
+                // update wheel visuals
+                wheelVisuals[i].position.copy(t.position);
+                wheelVisuals[i].quaternion.copy(t.quaternion);
+            }
+        });
+        
+        var q = plane.quaternion;
+        var planeBody = new CANNON.Body({
+            mass: 0, // mass = 0 makes the body static
+            material: groundMaterial,
+            shape: new CANNON.Plane(),
+            quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
+        });
+        world.addBody(planeBody)
+        
+        
+        //box physics body
+        var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
+        var boxBody = new CANNON.Body({mass: 1});
+        boxBody.addShape(boxShape);
+        boxBody.position.set(7, 3, -10);
+        boxBody.angularVelocity.set(0, 0, 0); // initial velocity
+        world.addBody(boxBody)
+        
+        // box visual body
+        var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
+        var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
+        scene.add(boxMesh)
+        
+        //sphere physics body
+        var sphereShape = new CANNON.Sphere(1);
+        var sphereBody = new CANNON.Body({mass: 100});
+        sphereBody.addShape(sphereShape);
+        sphereBody.position.set(5, 5, 5);
+        sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
+        world.addBody(sphereBody)
+        
+        // sphere visual body
+        var sphereGeometry = new THREE.SphereGeometry()
+        var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
+        sphereMesh.castShadow = true; //default is false
+        sphereMesh.receiveShadow = false; //default
+        scene.add(sphereMesh)
+        
+        //icosahedron physics body
+        var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
+        var icosahedronBody = new CANNON.Body({mass: 1});
+        icosahedronBody.addShape(icosahedronShape);
+        icosahedronBody.position.set(-5, 1, -2.5);
+        icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
+        world.addBody(icosahedronBody)
+        
+        //icosahedron visual body
+        var icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
+        var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
+        icosahedronMesh.castShadow = true
+        scene.add(icosahedronMesh)
+        
+        // import models from blender
+        const stone1 = new importModels();
+        stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 0, 0, 7, 1, 1, 0.1);
+        const loaderTree2 = new importModels();
+        loaderTree2.init('../models/tree-poly.glb', scene, world, groundMaterial, q, 0.4, 0, 0, -7, 0.5, 1.5, 0.5);
+        
+
+        
+        // import car from blender
+        var loaderCar = new GLTFLoader();
+        loaderCar.load('../models/poly-car.glb', 
             (gltf) => {
                 CarMesh = gltf.scene;
                 var scale = 1.09; 
@@ -311,11 +267,11 @@ class Car {
                 CarMesh.position.set(0, 0, 0);
                 scene.add(CarMesh);
             }
-            );       
+        );       
 
-            /**
-             * Main
-             **/
+        /**
+         * Main
+         **/
             
         function updatePhysics() {
             world.step(1/60);
