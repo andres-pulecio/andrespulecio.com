@@ -10,14 +10,14 @@ class importModels {
         this.boxMesh_param 
         this.body_param
     }
-	init(modelPath, scene, world, modelMaterial, q, modelscale,xPosition,yPosition,zPosition,xScale,yScale,zScale, modelMass) {
+	init(modelPath, scene, world, modelMaterial, q, modelscale,xPosition,yPosition,zPosition,xScale,yScale,zScale, modelMass, rotation) {
         const loaderStone = new GLTFLoader();
         loaderStone.load(modelPath, 
         (gltf) => {
             const Mesh = gltf.scene;
             Mesh.scale.set(Mesh.scale.x * modelscale, Mesh.scale.y * modelscale, Mesh.scale.z * modelscale);
             Mesh.position.set(xPosition, yPosition,zPosition);
-            Mesh.rotateY(Math.PI/2);
+            Mesh.rotateY(Math.PI/rotation);
             scene.add(Mesh);
             //hit box 
             const cubeShapeTree = new CANNON.Box(new CANNON.Vec3(xScale,yScale,zScale))//must be the double from gemoetry

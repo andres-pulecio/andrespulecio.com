@@ -222,17 +222,26 @@ class world {
         scene.add(icosahedronMesh)
         
         // import models from blender
+        // var xPosition = ;
+        // var yPosition = ;
+        var zPosition = 7;
+        var modelscale = 0.6;
+        var xScale = 1.08;
+        var yScale = 0.42;
+        var zScale = 0.6;
+        var modelMass = 0.5;
+        var rotation = 2;
         const bricks1 = new importModels();
-        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 0, 1, 7, 1.08, 0.42, 0.6, 1);
+        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks2 = new importModels();
-        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 2, 1, 7, 1.08, 0.42, 0.6, 1);
+        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks3 = new importModels();
-        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 4, 1, 7, 1.08, 0.42, 0.6, 1);
+        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
        
         const bricks4 = new importModels();
-        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 3, 1.42 * 2, 7, 1.08, 0.42, 0.6, 1);
+        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks5 = new importModels();
-        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 , 1.42 * 2, 7, 1.08, 0.42, 0.6, 1);
+        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         
         
         // import car from blender
