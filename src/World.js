@@ -222,25 +222,18 @@ class world {
         scene.add(icosahedronMesh)
         
         // import models from blender
-        const cubeImported = new importModels();
-        cubeImported.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 0, 1, 7, 1.08, 0.42, 0.6, 1);
-
-        // const stone1 = new importModels();
-        // stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, 7, 1, 1, 0.1);
-        // const cubeImported = new importModels();
-        // cubeImported.init('../models/tree-poly.glb', scene, world, groundMaterial, q, 0.4, 0, 0, -7, 0.5, 1.5, 0.5);
+        const bricks1 = new importModels();
+        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 0, 1, 7, 1.08, 0.42, 0.6, 1);
+        const bricks2 = new importModels();
+        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 2, 1, 7, 1.08, 0.42, 0.6, 1);
+        const bricks3 = new importModels();
+        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 4, 1, 7, 1.08, 0.42, 0.6, 1);
+       
+        const bricks4 = new importModels();
+        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 * 3, 1.42 * 2, 7, 1.08, 0.42, 0.6, 1);
+        const bricks5 = new importModels();
+        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 1.08 , 1.42 * 2, 7, 1.08, 0.42, 0.6, 1);
         
-        //Path Information
-        // const pathToInfo1 = new importModels();
-        // for (var i = 0; i < 40; i=i+3) {
-        //     var n = 14 + i;
-        //     pathToInfo1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 0, 0, n , 1, 1, 0.1);
-        // }
-        // const pathToInfo2 = new importModels();
-        // for (var i = 0; i < 40; i=i+3) {
-        //     var n = 12 + i;
-        //     pathToInfo2.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, n , 1, 1, 0.1);
-        // }
         
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -285,12 +278,21 @@ class world {
             updatePhysics();
             CarMesh.position.copy(chassisBody.position);
             CarMesh.quaternion.copy(chassisBody.quaternion);
-            cubeImported.mesh_param.position.copy(cubeImported.body_param.position);
-            cubeImported.mesh_param.quaternion.copy(cubeImported.body_param.quaternion);
+            
+            bricks1.mesh_param.position.copy(bricks1.body_param.position);
+            bricks1.mesh_param.quaternion.copy(bricks1.body_param.quaternion);
+            bricks2.mesh_param.position.copy(bricks2.body_param.position);
+            bricks2.mesh_param.quaternion.copy(bricks2.body_param.quaternion);
+            bricks3.mesh_param.position.copy(bricks3.body_param.position);
+            bricks3.mesh_param.quaternion.copy(bricks3.body_param.quaternion);
+            bricks4.mesh_param.position.copy(bricks4.body_param.position);
+            bricks4.mesh_param.quaternion.copy(bricks4.body_param.quaternion);
+            bricks5.mesh_param.position.copy(bricks5.body_param.position);
+            bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
             
             //Test hitbox
-            // cubeImported.boxMesh_param.position.copy(cubeImported.body_param.position);
-            // cubeImported.boxMesh_param.quaternion.copy(cubeImported.body_param.quaternion);
+            // bricks1.boxMesh_param.position.copy(bricks1.body_param.position);
+            // bricks1.boxMesh_param.quaternion.copy(bricks1.body_param.quaternion);
         }
 
         function navigate(e) {
