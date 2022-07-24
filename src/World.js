@@ -242,12 +242,25 @@ class world {
         stoneSmall2.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -7, 0, -3, 0.1, 0.1, 0.1, 0, 1);
         const stoneSmall3 = new importModels();
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, 11, 0, 5.5, 0.1, 0.1, 0.1, 0, 1);
+        
+        //mushrooms
+        const mushroom1 = new importModels();
+        mushroom1.init('../models/mushroom.glb', scene, world, normalMaterial, q, 2, -12, 0, 3, 1, 1, 1, 0, 1);
+        const mushroom2 = new importModels();
+        mushroom2.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.8, -14, 0, -7, 0.8, 1, 0.8, 0, 1);
+        const mushroom3 = new importModels();
+        mushroom3.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 4, 0, -12, 0.6, 1, 0.6, 0, 1);
+        const mushroom4 = new importModels();
+        mushroom4.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 10, 0, -16, 0.6, 1, 0.6, 0, 1);
+        
+        const groupMushrooms = new importModels();
+        groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
 
         
         // Wall start left
-        var xPosition = -24;
+        var xPosition = -4;
         // var yPosition = ;
-        var zPosition = -7;
+        var zPosition = -6;
         var modelscale = 0.6;
         var xScale = 1.08;
         var yScale = 0.42;
@@ -265,7 +278,6 @@ class world {
         bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks5 = new importModels();
         bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        
         
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -322,12 +334,9 @@ class world {
             bricks5.mesh_param.position.copy(bricks5.body_param.position);
             bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
             
-            // stoneBig1.mesh_param.position.copy(stoneBig1.body_param.position);
-            // stoneBig1.mesh_param.quaternion.copy(stoneBig1.body_param.quaternion);
-            
             //Test hitbox
-            // stoneBig1.boxMesh_param.position.copy(stoneBig1.body_param.position);
-            // stoneBig1.boxMesh_param.quaternion.copy(stoneBig1.body_param.quaternion);
+            // groupMushrooms.boxMesh_param.position.copy(groupMushrooms.body_param.position);
+            // groupMushrooms.boxMesh_param.quaternion.copy(groupMushrooms.body_param.quaternion);
         }
 
         function navigate(e) {

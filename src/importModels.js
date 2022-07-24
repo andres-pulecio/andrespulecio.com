@@ -31,6 +31,7 @@ class importModels {
             
             //Test hitbox
             // box visual body
+            
             // const cubeGeometry = new THREE.BoxGeometry(xScale * 2,yScale * 2,zScale * 2)
             // const cubeMesh = new THREE.Mesh(cubeGeometry, modelMaterial)
             // scene.add(cubeMesh)
