@@ -183,7 +183,7 @@ class world {
         var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
         var boxBody = new CANNON.Body({mass: 1});
         boxBody.addShape(boxShape);
-        boxBody.position.set(7, 3, -10);
+        boxBody.position.set(25, 3, -10);
         boxBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(boxBody)
         
@@ -196,7 +196,7 @@ class world {
         var sphereShape = new CANNON.Sphere(1);
         var sphereBody = new CANNON.Body({mass: 100});
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(5, 5, 5);
+        sphereBody.position.set(25, 5, 5);
         sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(sphereBody)
         
@@ -211,7 +211,7 @@ class world {
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-5, 1, -2.5);
+        icosahedronBody.position.set(-25, 1, 12);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
         
@@ -221,10 +221,33 @@ class world {
         icosahedronMesh.castShadow = true
         scene.add(icosahedronMesh)
         
-        // import models from blender
-        // var xPosition = ;
+        //stones
+        const stoneBig1 = new importModels();
+        stoneBig1.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -8, 0, 0, 0.8, 0.8, 0.8, 0, 1);
+        const stoneBig2 = new importModels();
+        stoneBig2.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -12, 0, -4, 0.8, 0.8, 0.8, 0, 1);
+        const stoneBig3 = new importModels();
+        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
+        
+        const stoneMedium1 = new importModels();
+        stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
+        const stoneMedium2 = new importModels();
+        stoneMedium2.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, 5.8, 0, -5.8, 0.1, 0.1, 0.1, 0, 1);
+        const stoneMedium3 = new importModels();
+        stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, 5, 0.1, 0.1, 0.1, 0, 1);
+        
+        const stoneSmall1 = new importModels();
+        stoneSmall1.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -6, 0, 3, 0.1, 0.1, 0.1, 0, 1);
+        const stoneSmall2 = new importModels();
+        stoneSmall2.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -7, 0, -3, 0.1, 0.1, 0.1, 0, 1);
+        const stoneSmall3 = new importModels();
+        stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, 11, 0, 5.5, 0.1, 0.1, 0.1, 0, 1);
+
+        
+        // Wall start left
+        var xPosition = -24;
         // var yPosition = ;
-        var zPosition = 7;
+        var zPosition = -7;
         var modelscale = 0.6;
         var xScale = 1.08;
         var yScale = 0.42;
@@ -232,16 +255,16 @@ class world {
         var modelMass = 0.5;
         var rotation = 2;
         const bricks1 = new importModels();
-        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks2 = new importModels();
-        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks3 = new importModels();
-        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
        
         const bricks4 = new importModels();
-        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks5 = new importModels();
-        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         
         
         // import car from blender
@@ -299,9 +322,12 @@ class world {
             bricks5.mesh_param.position.copy(bricks5.body_param.position);
             bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
             
+            // stoneBig1.mesh_param.position.copy(stoneBig1.body_param.position);
+            // stoneBig1.mesh_param.quaternion.copy(stoneBig1.body_param.quaternion);
+            
             //Test hitbox
-            // bricks1.boxMesh_param.position.copy(bricks1.body_param.position);
-            // bricks1.boxMesh_param.quaternion.copy(bricks1.body_param.quaternion);
+            // stoneBig1.boxMesh_param.position.copy(stoneBig1.body_param.position);
+            // stoneBig1.boxMesh_param.quaternion.copy(stoneBig1.body_param.quaternion);
         }
 
         function navigate(e) {
