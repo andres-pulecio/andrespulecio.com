@@ -279,6 +279,28 @@ class world {
         const bricks5 = new importModels();
         bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         
+        // Wall start left
+        var xPosition = 14;
+        // var yPosition = ;
+        var zPosition = -12;
+        var modelscale = 0.6;
+        var xScale = 1.08;
+        var yScale = 0.42;
+        var zScale = 0.6;
+        var modelMass = 0.5;
+        var rotation = 2;
+        const bricks6 = new importModels();
+        bricks6.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const bricks7 = new importModels();
+        bricks7.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const bricks8 = new importModels();
+        bricks8.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+       
+        const bricks9 = new importModels();
+        bricks9.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const bricks10 = new importModels();
+        bricks10.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        
         // import car from blender
         var loaderCar = new GLTFLoader();
         loaderCar.load('../models/poly-car.glb', 
@@ -333,6 +355,17 @@ class world {
             bricks4.mesh_param.quaternion.copy(bricks4.body_param.quaternion);
             bricks5.mesh_param.position.copy(bricks5.body_param.position);
             bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
+            
+            bricks6.mesh_param.position.copy(bricks6.body_param.position);
+            bricks6.mesh_param.quaternion.copy(bricks6.body_param.quaternion);
+            bricks7.mesh_param.position.copy(bricks7.body_param.position);
+            bricks7.mesh_param.quaternion.copy(bricks7.body_param.quaternion);
+            bricks8.mesh_param.position.copy(bricks8.body_param.position);
+            bricks8.mesh_param.quaternion.copy(bricks8.body_param.quaternion);
+            bricks9.mesh_param.position.copy(bricks9.body_param.position);
+            bricks9.mesh_param.quaternion.copy(bricks9.body_param.quaternion);
+            bricks10.mesh_param.position.copy(bricks10.body_param.position);
+            bricks10.mesh_param.quaternion.copy(bricks10.body_param.quaternion);
             
             //Test hitbox
             // groupMushrooms.boxMesh_param.position.copy(groupMushrooms.body_param.position);
