@@ -36,12 +36,8 @@ class importModels {
             var cubeMesh = new THREE.Mesh(cubeGeometry, modelMaterial)
             scene.add(cubeMesh)
 
-            //update position
             this.mesh_param = cubeMesh
             this.body_param = cubeBody
-            // cubeMesh.position.copy(cubeBody.position);
-            // cubeMesh.quaternion.copy(cubeBody.quaternion);
-            
         });
     }
 }

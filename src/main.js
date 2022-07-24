@@ -1,4 +1,4 @@
-import Car from './Car.js';
+import World from './World.js';
 
-const car = new Car();
-car.init();
+const world = new World();
+world.init();

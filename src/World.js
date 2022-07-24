@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
+import directionalLight from './directionalLight.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
 
 class Car {
     init() {
@@ -52,28 +53,20 @@ class Car {
         //light or sun
         const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
         sunlight.position.set( 13, 15, 12 );
-        sunlight.shadow.mapSize.width = 512; // default
-        sunlight.shadow.mapSize.height = 512; // default
-        sunlight.shadow.camera.near = 0.5; // default
-        sunlight.shadow.camera.far = 500; // default
         scene.add( sunlight );
         
         
-        const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
-        // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
-        DirectionalLight.position.set(-10, 5, 5)
-        DirectionalLight.target.position.set(0,0,0);
-        scene.add( DirectionalLight );
-        scene.add( DirectionalLight.target );
+        // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
+        // DirectionalLight.position.set(-10, 5, 5)
+        // DirectionalLight.target.position.set(0,0,0);
+        // scene.add( DirectionalLight );
+        // scene.add( DirectionalLight.target );
         
-        DirectionalLight.shadow.mapSize.width = 512; // default
-        DirectionalLight.shadow.mapSize.height = 512; // default
-        DirectionalLight.shadow.camera.near = 0.5; // default
-        DirectionalLight.shadow.camera.far = 500; // default
-        
-        // const AmbientLight = new THREE.DirectionalLight( 0xfe9143, 0.9 );
-        const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
-        scene.add( AmbientLight );
+        // const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
+        // scene.add( AmbientLight );
+
+        const light = new directionalLight();
+        light.init(scene);
         
         /**
          * Physics
