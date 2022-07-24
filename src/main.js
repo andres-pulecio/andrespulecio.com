@@ -1,4 +1,4 @@
-import World from './World.js';
+import world from './world.js';
 
-const world = new World();
-world.init();
+const World = new world();
+World.init();

@@ -6,7 +6,7 @@ import directionalLight from './directionalLight.js';
 
 let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
 
-class Car {
+class world {
     init() {
         
         var CarMesh;
@@ -54,16 +54,6 @@ class Car {
         const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
         sunlight.position.set( 13, 15, 12 );
         scene.add( sunlight );
-        
-        
-        // const DirectionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
-        // DirectionalLight.position.set(-10, 5, 5)
-        // DirectionalLight.target.position.set(0,0,0);
-        // scene.add( DirectionalLight );
-        // scene.add( DirectionalLight.target );
-        
-        // const AmbientLight = new THREE.AmbientLight( 0xffffff,0.5);
-        // scene.add( AmbientLight );
 
         const light = new directionalLight();
         light.init(scene);
@@ -85,34 +75,26 @@ class Car {
         wheelMaterial.restitution = 0.25;  
         
         // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
-            //     friction: 0.25,
-            //     restitution: 0.25,
-            //     contactEquationStiffness: 1000,
-            // });
-            
-            // world.addContactMaterial(wheelGroundContactMaterial);
-            
-            // car physics body
-            var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
-            var chassisBody = new CANNON.Body({mass: 150});
-            chassisBody.addShape(chassisShape);
-            chassisBody.position.set(0, 2, 0);
-            chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
-            world.addBody(chassisBody)
-            
-            // car visual body
-            // var geometry = new THREE.BoxGeometry(1.6, 0.6, 3.4); // double chasis shape
-            // var material = new THREE.MeshBasicMaterial({color: 0xC39BD3, side: THREE.DoubleSide});
-            // var box = new THREE.Mesh(geometry, material);
-            // var box = new THREE.Mesh(geometry, material);
-            // scene.add(box);
-            
-            // parent vehicle object
-            vehicle = new CANNON.RaycastVehicle({
-            chassisBody: chassisBody,
-            indexRightAxis: 0, // x
-            indexUpAxis: 1, // y
-            indexForwardAxis: 2, // z
+        //     friction: 0.25,
+        //     restitution: 0.25,
+        //     contactEquationStiffness: 1000,
+        // });
+        // world.addContactMaterial(wheelGroundContactMaterial);
+        
+        // car physics body
+        var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
+        var chassisBody = new CANNON.Body({mass: 150});
+        chassisBody.addShape(chassisShape);
+        chassisBody.position.set(0, 2, 0);
+        chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
+        world.addBody(chassisBody)
+        
+        // parent vehicle object
+        vehicle = new CANNON.RaycastVehicle({
+        chassisBody: chassisBody,
+        indexRightAxis: 0, // x
+        indexUpAxis: 1, // y
+        indexForwardAxis: 2, // z
         });
         
         // wheel options
@@ -241,7 +223,7 @@ class Car {
         
         // import models from blender
         const cubeImported = new importModels();
-        cubeImported.init('../models/stone.glb', scene, world, normalMaterial, q, 0.4, 0, 1, 7, 1, 1, 1, 100);
+        cubeImported.init('../models/brick.glb', scene, world, normalMaterial, q, 0.6, 0, 1, 7, 1.08, 0.42, 0.6, 1);
 
         // const stone1 = new importModels();
         // stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, 7, 1, 1, 0.1);
@@ -303,16 +285,12 @@ class Car {
             updatePhysics();
             CarMesh.position.copy(chassisBody.position);
             CarMesh.quaternion.copy(chassisBody.quaternion);
-            
-            // cube_mesh = cubeImported.mesh_param;
-            // cube_body = cubeImported.body_param;
-            
             cubeImported.mesh_param.position.copy(cubeImported.body_param.position);
             cubeImported.mesh_param.quaternion.copy(cubeImported.body_param.quaternion);
-
-            // console.log(cube_mesh);
-            //cubeMesh.position.copy(cubeBody.position);
-            //cubeMesh.quaternion.copy(cubeBody.quaternion);
+            
+            //Test hitbox
+            // cubeImported.boxMesh_param.position.copy(cubeImported.body_param.position);
+            // cubeImported.boxMesh_param.quaternion.copy(cubeImported.body_param.quaternion);
         }
 
         function navigate(e) {
@@ -355,4 +333,4 @@ class Car {
         render();
     }
 }
-export default Car;
+export default world;
