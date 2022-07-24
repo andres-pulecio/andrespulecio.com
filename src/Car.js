@@ -3,7 +3,7 @@ import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight,DirectionalLightOffset;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,DirectionalLight;
 
 class Car {
     init() {
@@ -11,12 +11,10 @@ class Car {
         var CarMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
-        // cameraOffset = new THREE.Vector3(5, 2, 0);
+        // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
         lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
-        DirectionalLightOffset = new THREE.Vector3(-15, 5, 5);
         
-        // var normalMaterial = new THREE.MeshToonMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
@@ -30,7 +28,7 @@ class Car {
         renderer = new THREE.WebGLRenderer(renderConfig);
         
         camera.position.set(10, 11, 11);
-        // camera.position.set(5, 2, 0);
+        // camera.position.set(5, 2, 0); //calibration
         camera.lookAt(0,-4,0);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
@@ -45,7 +43,6 @@ class Car {
         })
         
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
-        // var material = new THREE.MeshStandardMaterial({color: 0x1D8348, side: THREE.DoubleSide});
         var material = new THREE.MeshStandardMaterial({color: 0x2874A6, side: THREE.DoubleSide});
         var plane = new THREE.Mesh(geometry, material);
         plane.receiveShadow = true;
@@ -250,13 +247,13 @@ class Car {
         scene.add(icosahedronMesh)
         
         // import models from blender
-        const loaderTree2 = new importModels();
-        loaderTree2.init('../models/stone.glb', scene, world, normalMaterial, q, 0.4, 0, 0, 7, 0.5, 1.5, 0.5);
+        const cubeImported = new importModels();
+        cubeImported.init('../models/stone.glb', scene, world, normalMaterial, q, 0.4, 0, 1, 7, 1, 1, 1, 100);
 
         // const stone1 = new importModels();
         // stone1.init('../models/tile1.glb', scene, world, groundMaterial, q, 0.5, 2, 0, 7, 1, 1, 0.1);
-        // const loaderTree2 = new importModels();
-        // loaderTree2.init('../models/tree-poly.glb', scene, world, groundMaterial, q, 0.4, 0, 0, -7, 0.5, 1.5, 0.5);
+        // const cubeImported = new importModels();
+        // cubeImported.init('../models/tree-poly.glb', scene, world, groundMaterial, q, 0.4, 0, 0, -7, 0.5, 1.5, 0.5);
         
         //Path Information
         // const pathToInfo1 = new importModels();
@@ -305,49 +302,58 @@ class Car {
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
-            // DirectionalLight.position.copy(chassisBody.position).add(DirectionalLightOffset);
         }
             
         function render() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-        updatePhysics();
-        CarMesh.position.copy(chassisBody.position);
-        CarMesh.quaternion.copy(chassisBody.quaternion);
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+            updatePhysics();
+            CarMesh.position.copy(chassisBody.position);
+            CarMesh.quaternion.copy(chassisBody.quaternion);
+            
+            // cube_mesh = cubeImported.mesh_param;
+            // cube_body = cubeImported.body_param;
+            
+            cubeImported.mesh_param.position.copy(cubeImported.body_param.position);
+            cubeImported.mesh_param.quaternion.copy(cubeImported.body_param.quaternion);
+
+            // console.log(cube_mesh);
+            //cubeMesh.position.copy(cubeBody.position);
+            //cubeMesh.quaternion.copy(cubeBody.quaternion);
         }
 
         function navigate(e) {
-        if (e.type != 'keydown' && e.type != 'keyup') return;
-        var keyup = e.type == 'keyup';
-        vehicle.setBrake(0, 0);
-        vehicle.setBrake(0, 1);
-        vehicle.setBrake(0, 2);
-        vehicle.setBrake(0, 3);
+            if (e.type != 'keydown' && e.type != 'keyup') return;
+            var keyup = e.type == 'keyup';
+            vehicle.setBrake(0, 0);
+            vehicle.setBrake(0, 1);
+            vehicle.setBrake(0, 2);
+            vehicle.setBrake(0, 3);
 
-        var engineForce = 800,
-            maxSteerVal = 0.5;
-        switch(e.keyCode) {
+            var engineForce = 800,
+                maxSteerVal = 0.5;
+            switch(e.keyCode) {
 
-            case 38: // forward
-            vehicle.applyEngineForce(keyup ? 0 : -engineForce, 2);
-            vehicle.applyEngineForce(keyup ? 0 : -engineForce, 3);
-            break;
+                case 38: // forward
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 2);
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 3);
+                break;
 
-            case 40: // backward
-            vehicle.applyEngineForce(keyup ? 0 : engineForce, 2);
-            vehicle.applyEngineForce(keyup ? 0 : engineForce, 3);
-            break;
+                case 40: // backward
+                vehicle.applyEngineForce(keyup ? 0 : engineForce, 2);
+                vehicle.applyEngineForce(keyup ? 0 : engineForce, 3);
+                break;
 
-            case 39: // right
-            vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 2);
-            vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 3);
-            break;
+                case 39: // right
+                vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 2);
+                vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 3);
+                break;
 
-            case 37: // left
-            vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 2);
-            vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 3);
-            break;
-        }
+                case 37: // left
+                vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 2);
+                vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 3);
+                break;
+            }
         }
 
         window.addEventListener('keydown', navigate)

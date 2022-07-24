@@ -5,7 +5,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 //This class imports blender models in GLTF format and assigns them a hitbox
 
 class importModels {
-	init(modelPath, scene, world, modelMaterial, q, modelscale,xPosition,yPosition,zPosition,xScale,yScale,zScale) {
+    constructor() {
+        this.mesh_param 
+        this.body_param
+    }
+	init(modelPath, scene, world, modelMaterial, q, modelscale,xPosition,yPosition,zPosition,xScale,yScale,zScale, modelMass) {
         const loaderStone = new GLTFLoader();
         loaderStone.load(modelPath, 
         (gltf) => {
@@ -17,13 +21,14 @@ class importModels {
             //hit box 
             const cubeShapeTree = new CANNON.Box(new CANNON.Vec3(xScale,yScale,zScale))//must be the double from gemoetry
             const cubeBody = new CANNON.Body({
-                mass: 0, // mass = 0 makes the body static
+                mass: modelMass, // mass = 0 makes the body static
                 // material: modelMaterial,
                 // shape: new CANNON.Plane(),
                 // quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
             })
             cubeBody.addShape(cubeShapeTree)
-            cubeBody.position.copy(Mesh.position);
+            // cubeBody.position.copy(Mesh.position);
+            cubeBody.position.set(xPosition, yPosition,zPosition);
             world.addBody(cubeBody);
             
             // box visual body
@@ -32,8 +37,10 @@ class importModels {
             scene.add(cubeMesh)
 
             //update position
-            cubeMesh.position.copy(cubeBody.position);
-            cubeMesh.quaternion.copy(cubeBody.quaternion);
+            this.mesh_param = cubeMesh
+            this.body_param = cubeBody
+            // cubeMesh.position.copy(cubeBody.position);
+            // cubeMesh.quaternion.copy(cubeBody.quaternion);
             
         });
     }
