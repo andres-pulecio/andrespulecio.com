@@ -261,8 +261,19 @@ class world {
         tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0, 11.3, 1, 0.1, 1, 0, 1);
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
         
+        //name
+        var xPosition = 0;
+        // var yPosition = ;
+        var zPosition = 18;
+        var modelscale = 1;
+        var xScale = 1.5;
+        var yScale = 1.5;
+        var zScale = 0.5;
+        var modelMass = 1;
+        var rotation = 1;
+        const A_Word = new importModels();
+        A_Word.init('../models/A.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1.1, zPosition, xScale, yScale, zScale, modelMass, rotation);
 
-        
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -395,10 +406,12 @@ class world {
             keysRight.mesh_param.quaternion.copy(keysRight.body_param.quaternion);
             keysDown.mesh_param.position.copy(keysDown.body_param.position);
             keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
+            A_Word.mesh_param.position.copy(A_Word.body_param.position);
+            A_Word.mesh_param.quaternion.copy(A_Word.body_param.quaternion);
             
             //Test hitbox
-            // tile1.boxMesh_param.position.copy(tile1.body_param.position);
-            // tile1.boxMesh_param.quaternion.copy(tile1.body_param.quaternion);
+            // A_Word.boxMesh_param.position.copy(A_Word.body_param.position);
+            // A_Word.boxMesh_param.quaternion.copy(A_Word.body_param.quaternion);
         }
 
         function navigate(e) {
