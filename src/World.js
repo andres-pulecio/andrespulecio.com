@@ -253,6 +253,14 @@ class world {
         
         const groupMushrooms = new importModels();
         groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
+        
+        //Path start
+        const tile1 = new importModels();
+        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1, 0, 9, 1, 0.1, 1, 0, 1);
+        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1.2, 0, 15.2, 1, 0.1, 1, 0, 1);
+        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0, 11.3, 1, 0.1, 1, 0, 1);
+        stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
+        
 
         
         // Wall start left
@@ -312,11 +320,6 @@ class world {
         keysRight.init('../models/keysRight.glb', scene, world, normalMaterial, q, 5, 7.6, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
         const keysDown = new importModels();
         keysDown.init('../models/keysDown.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
-
-        
-        
-        keysDown
-
 
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -394,8 +397,8 @@ class world {
             keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
             
             //Test hitbox
-            // keys.boxMesh_param.position.copy(keys.body_param.position);
-            // keys.boxMesh_param.quaternion.copy(keys.body_param.quaternion);
+            // tile1.boxMesh_param.position.copy(tile1.body_param.position);
+            // tile1.boxMesh_param.quaternion.copy(tile1.body_param.quaternion);
         }
 
         function navigate(e) {
