@@ -26,11 +26,10 @@ class importModels {
             })
             cubeBody.addShape(cubeShapeTree)
             cubeBody.position.set(xPosition, yPosition,zPosition);
-            // cubeBody.rotateX(Math.PI/rotation);
+            // cubeBody.rotatkeX(Math.PI/rotation);
             world.addBody(cubeBody);
             
             //Test hitbox
-            // box visual body
             
             // const cubeGeometry = new THREE.BoxGeometry(xScale * 2,yScale * 2,zScale * 2)
             // const cubeMesh = new THREE.Mesh(cubeGeometry, modelMaterial)

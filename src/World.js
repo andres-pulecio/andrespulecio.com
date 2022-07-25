@@ -13,7 +13,6 @@ class world {
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
-        lightOffset = new THREE.Vector3(8, 15, 12);
         planeOffset = new THREE.Vector3(0, -1, 0);
         
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
@@ -29,7 +28,6 @@ class world {
         renderer = new THREE.WebGLRenderer(renderConfig);
         
         camera.position.set(10, 11, 11);
-        // camera.position.set(5, 2, 0); //calibration
         camera.lookAt(0,-4,0);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
@@ -51,8 +49,8 @@ class world {
         scene.add(plane);
         
         //light or sun
-        const sunlight = new THREE.PointLight(0xffffff, 1.2, 60);
-        sunlight.position.set( 13, 15, 12 );
+        lightOffset = new THREE.Vector3(7, 60, 30);
+        const sunlight = new THREE.PointLight(0xffffff, 1.5, 120);
         scene.add( sunlight );
 
         const light = new directionalLight();
@@ -258,9 +256,9 @@ class world {
 
         
         // Wall start left
-        var xPosition = -4;
+        var xPosition = -16;
         // var yPosition = ;
-        var zPosition = -6;
+        var zPosition = 6;
         var modelscale = 0.6;
         var xScale = 1.08;
         var yScale = 0.42;
@@ -301,6 +299,25 @@ class world {
         const bricks10 = new importModels();
         bricks10.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         
+        //Messages
+        const keysMessage = new importModels();
+        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0, 3, 0.1, 0.1, 0.1, 0, 1);
+        
+        //Keys
+        const keysLeft = new importModels();
+        keysLeft.init('../models/keysLeft.glb', scene, world, normalMaterial, q, 5, 5.2, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
+        const keysUp = new importModels();
+        keysUp.init('../models/keysUp.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 1.2, 0.55, 0.5, 0.55, 1, 2);
+        const keysRight = new importModels();
+        keysRight.init('../models/keysRight.glb', scene, world, normalMaterial, q, 5, 7.6, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
+        const keysDown = new importModels();
+        keysDown.init('../models/keysDown.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
+
+        
+        
+        keysDown
+
+
         // import car from blender
         var loaderCar = new GLTFLoader();
         loaderCar.load('../models/poly-car.glb', 
@@ -367,9 +384,18 @@ class world {
             bricks10.mesh_param.position.copy(bricks10.body_param.position);
             bricks10.mesh_param.quaternion.copy(bricks10.body_param.quaternion);
             
+            keysLeft.mesh_param.position.copy(keysLeft.body_param.position);
+            keysLeft.mesh_param.quaternion.copy(keysLeft.body_param.quaternion);
+            keysUp.mesh_param.position.copy(keysUp.body_param.position);
+            keysUp.mesh_param.quaternion.copy(keysUp.body_param.quaternion);
+            keysRight.mesh_param.position.copy(keysRight.body_param.position);
+            keysRight.mesh_param.quaternion.copy(keysRight.body_param.quaternion);
+            keysDown.mesh_param.position.copy(keysDown.body_param.position);
+            keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
+            
             //Test hitbox
-            // groupMushrooms.boxMesh_param.position.copy(groupMushrooms.body_param.position);
-            // groupMushrooms.boxMesh_param.quaternion.copy(groupMushrooms.body_param.quaternion);
+            // keys.boxMesh_param.position.copy(keys.body_param.position);
+            // keys.boxMesh_param.quaternion.copy(keys.body_param.quaternion);
         }
 
         function navigate(e) {
