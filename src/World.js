@@ -181,7 +181,7 @@ class world {
         var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
         var boxBody = new CANNON.Body({mass: 1});
         boxBody.addShape(boxShape);
-        boxBody.position.set(25, 3, -10);
+        boxBody.position.set(-45, 3, 20);
         boxBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(boxBody)
         
@@ -194,7 +194,7 @@ class world {
         var sphereShape = new CANNON.Sphere(1);
         var sphereBody = new CANNON.Body({mass: 100});
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(25, 5, 5);
+        sphereBody.position.set(-35, 5, 20);
         sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(sphereBody)
         
@@ -209,7 +209,7 @@ class world {
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-25, 1, 12);
+        icosahedronBody.position.set(-20, 1, 25);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
         
@@ -262,7 +262,7 @@ class world {
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
         
         //name
-        var xPosition = 0;
+        var xPosition = -16;
         // var yPosition = ;
         var zPosition = 18;
         var modelscale = 1;
@@ -272,7 +272,17 @@ class world {
         var modelMass = 1;
         var rotation = 1;
         const A_Word = new importModels();
-        A_Word.init('../models/A.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1.1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        A_Word.init('../models/A.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const N_Word = new importModels();
+        N_Word.init('../models/N.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const D_Word = new importModels();
+        D_Word.init('../models/D.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const R_Word = new importModels();
+        R_Word.init('../models/R.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 6, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const E_Word = new importModels();
+        E_Word.init('../models/E.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 8, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const S_Word = new importModels();
+        S_Word.init('../models/S.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 10, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
 
         // Wall start left
         var xPosition = -16;
@@ -408,6 +418,16 @@ class world {
             keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
             A_Word.mesh_param.position.copy(A_Word.body_param.position);
             A_Word.mesh_param.quaternion.copy(A_Word.body_param.quaternion);
+            N_Word.mesh_param.position.copy(N_Word.body_param.position);
+            N_Word.mesh_param.quaternion.copy(N_Word.body_param.quaternion);
+            D_Word.mesh_param.position.copy(D_Word.body_param.position);
+            D_Word.mesh_param.quaternion.copy(D_Word.body_param.quaternion);
+            R_Word.mesh_param.position.copy(R_Word.body_param.position);
+            R_Word.mesh_param.quaternion.copy(R_Word.body_param.quaternion);
+            E_Word.mesh_param.position.copy(E_Word.body_param.position);
+            E_Word.mesh_param.quaternion.copy(E_Word.body_param.quaternion);
+            S_Word.mesh_param.position.copy(S_Word.body_param.position);
+            S_Word.mesh_param.quaternion.copy(S_Word.body_param.quaternion);
             
             //Test hitbox
             // A_Word.boxMesh_param.position.copy(A_Word.body_param.position);
