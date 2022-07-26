@@ -181,7 +181,7 @@ class world {
         var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
         var boxBody = new CANNON.Body({mass: 1});
         boxBody.addShape(boxShape);
-        boxBody.position.set(-45, 3, 20);
+        boxBody.position.set(-55, 3, 20);
         boxBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(boxBody)
         
@@ -209,7 +209,7 @@ class world {
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-20, 1, 25);
+        icosahedronBody.position.set(-40, 1, 30);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
         
@@ -262,7 +262,7 @@ class world {
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
         
         //name
-        var xPosition = -16;
+        var xPosition = -17;
         // var yPosition = ;
         var zPosition = 18;
         var modelscale = 1;
@@ -283,7 +283,21 @@ class world {
         E_Word.init('../models/E.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 8, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const S_Word = new importModels();
         S_Word.init('../models/S.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 10, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
+        const P_Word = new importModels();
+        
+        P_Word.init('../models/P.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 13, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const U_Word = new importModels();
+        U_Word.init('../models/U.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 15, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const L_Word = new importModels();
+        L_Word.init('../models/L.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 17, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const E2_Word = new importModels();
+        E2_Word.init('../models/E.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 19, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const C_Word = new importModels();
+        C_Word.init('../models/C.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 21, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        const I_Word = new importModels();
+        I_Word.init('../models/I.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 23.3 , 1, zPosition, 0.6, yScale, zScale, modelMass, rotation);
+        const O_Word = new importModels();
+        O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -428,10 +442,24 @@ class world {
             E_Word.mesh_param.quaternion.copy(E_Word.body_param.quaternion);
             S_Word.mesh_param.position.copy(S_Word.body_param.position);
             S_Word.mesh_param.quaternion.copy(S_Word.body_param.quaternion);
+            P_Word.mesh_param.position.copy(P_Word.body_param.position);
+            P_Word.mesh_param.quaternion.copy(P_Word.body_param.quaternion);
+            U_Word.mesh_param.position.copy(U_Word.body_param.position);
+            U_Word.mesh_param.quaternion.copy(U_Word.body_param.quaternion);
+            L_Word.mesh_param.position.copy(L_Word.body_param.position);
+            L_Word.mesh_param.quaternion.copy(L_Word.body_param.quaternion);
+            E2_Word.mesh_param.position.copy(E2_Word.body_param.position);
+            E2_Word.mesh_param.quaternion.copy(E2_Word.body_param.quaternion);
+            C_Word.mesh_param.position.copy(C_Word.body_param.position);
+            C_Word.mesh_param.quaternion.copy(C_Word.body_param.quaternion);
+            I_Word.mesh_param.position.copy(I_Word.body_param.position);
+            I_Word.mesh_param.quaternion.copy(I_Word.body_param.quaternion);
+            O_Word.mesh_param.position.copy(O_Word.body_param.position);
+            O_Word.mesh_param.quaternion.copy(O_Word.body_param.quaternion);
             
             //Test hitbox
-            // A_Word.boxMesh_param.position.copy(A_Word.body_param.position);
-            // A_Word.boxMesh_param.quaternion.copy(A_Word.body_param.quaternion);
+            // I_Word.boxMesh_param.position.copy(I_Word.body_param.position);
+            // I_Word.boxMesh_param.quaternion.copy(I_Word.body_param.quaternion);
         }
 
         function navigate(e) {
