@@ -226,6 +226,7 @@ class world {
         stoneBig2.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -12, 0, -4, 0.8, 0.8, 0.8, 0, 1);
         const stoneBig3 = new importModels();
         stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
+        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 5, 0, 21, 0.8, 0.8, 0.8, 0, 1);
         
         const stoneMedium1 = new importModels();
         stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
@@ -233,6 +234,7 @@ class world {
         stoneMedium2.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, 5.8, 0, -5.8, 0.1, 0.1, 0.1, 0, 1);
         const stoneMedium3 = new importModels();
         stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, 5, 0.1, 0.1, 0.1, 0, 1);
+        stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 8, 0, 21.3, 0.1, 0.1, 0.1, 0, 1);
         
         const stoneSmall1 = new importModels();
         stoneSmall1.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -6, 0, 3, 0.1, 0.1, 0.1, 0, 1);
@@ -298,6 +300,9 @@ class world {
         I_Word.init('../models/I.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 23.3 , 1, zPosition, 0.6, yScale, zScale, modelMass, rotation);
         const O_Word = new importModels();
         O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
+        
+        const DEVOPS_Word = new importModels();
+        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 22 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -456,10 +461,12 @@ class world {
             I_Word.mesh_param.quaternion.copy(I_Word.body_param.quaternion);
             O_Word.mesh_param.position.copy(O_Word.body_param.position);
             O_Word.mesh_param.quaternion.copy(O_Word.body_param.quaternion);
+            DEVOPS_Word.mesh_param.position.copy(DEVOPS_Word.body_param.position);
+            DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
             
             //Test hitbox
-            // I_Word.boxMesh_param.position.copy(I_Word.body_param.position);
-            // I_Word.boxMesh_param.quaternion.copy(I_Word.body_param.quaternion);
+            // DEVOPS_Word.boxMesh_param.position.copy(DEVOPS_Word.body_param.position);
+            // DEVOPS_Word.boxMesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
         }
 
         function navigate(e) {
