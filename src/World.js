@@ -327,6 +327,16 @@ class world {
         
         const DEVOPS_Word = new importModels();
         DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 25 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
+        
+        //Signs
+        const signInformation = new importModels();
+        signInformation.init('../models/signInformation.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, 80, 0.2, 2, 0.2, 0, 1);
+        const signPlayzone = new importModels();
+        signPlayzone.init('../models/signPlayzone.glb', scene, world, normalMaterial, q, 0.4, -8 , 0, 65, 0.2, 2, 0.2, 0, 1);
+        const signProjects = new importModels();
+        signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
+        
+        
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -492,8 +502,8 @@ class world {
             DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
             
             //Test hitbox
-            // DEVOPS_Word.boxMesh_param.position.copy(DEVOPS_Word.body_param.position);
-            // DEVOPS_Word.boxMesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
+            // signInformation.boxMesh_param.position.copy(signInformation.body_param.position);
+            // signInformation.boxMesh_param.quaternion.copy(signInformation.body_param.quaternion);
         }
 
         function navigate(e) {
