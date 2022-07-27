@@ -8,17 +8,17 @@ let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
 
 class world {
     init() {
-        
+
         var CarMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
         planeOffset = new THREE.Vector3(0, -1, 0);
-        
+
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
-        
+
         var container = document.querySelector('body'),
         w = container.clientWidth,
         h = container.clientHeight,
@@ -26,13 +26,13 @@ class world {
         camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
         renderConfig = {antialias: true, alpha: true},
         renderer = new THREE.WebGLRenderer(renderConfig);
-        
+
         camera.position.set(10, 11, 11);
         camera.lookAt(0,-4,0);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
         container.appendChild(renderer.domElement);
-        
+
         window.addEventListener('resize', function() {
             w = container.clientWidth;
             h = container.clientHeight;
@@ -40,14 +40,14 @@ class world {
             camera.updateProjectionMatrix();
             renderer.setSize(w, h);
         })
-        
+
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
         var material = new THREE.MeshStandardMaterial({color: 0x2874A6, side: THREE.DoubleSide});
         var plane = new THREE.Mesh(geometry, material);
         plane.receiveShadow = true;
         plane.rotation.x = Math.PI/2;
         scene.add(plane);
-        
+
         //light or sun
         lightOffset = new THREE.Vector3(7, 60, 30);
         const sunlight = new THREE.PointLight(0xffffff, 1.5, 120);
@@ -55,7 +55,7 @@ class world {
 
         const light = new directionalLight();
         light.init(scene);
-        
+
         /**
          * Physics
          **/
@@ -63,30 +63,30 @@ class world {
         // world.broadphase = new CANNON.SAPBroadphase(world);
         world.gravity.set(0, -9.82, 0);
         // world.defaultContactMaterial.friction = 0.01;
-        
+
         var groundMaterial = new CANNON.Material('groundMaterial');
         groundMaterial.friction = 0.25;
         groundMaterial.restitution = 0.25;
-        
+
         var wheelMaterial = new CANNON.Material('wheelMaterial');
         wheelMaterial.friction = 0.25;
-        wheelMaterial.restitution = 0.25;  
-        
+        wheelMaterial.restitution = 0.25;
+
         // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
         //     friction: 0.25,
         //     restitution: 0.25,
         //     contactEquationStiffness: 1000,
         // });
         // world.addContactMaterial(wheelGroundContactMaterial);
-        
+
         // car physics body
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
         chassisBody.addShape(chassisShape);
-        chassisBody.position.set(0, 2, 0);
+        chassisBody.position.set(0, 10, 0);
         chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(chassisBody)
-        
+
         // parent vehicle object
         vehicle = new CANNON.RaycastVehicle({
         chassisBody: chassisBody,
@@ -94,7 +94,7 @@ class world {
         indexUpAxis: 1, // y
         indexForwardAxis: 2, // z
         });
-        
+
         // wheel options
         var options = {
             // radius: 0.3,
@@ -113,22 +113,22 @@ class world {
             customSlidingRotationalSpeed: -30,
             useCustomSlidingRotationalSpeed: true,
         };
-        
+
         var axlewidth = 0.9;
         options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
         vehicle.addWheel(options);
-        
+
         options.chassisConnectionPointLocal.set(-axlewidth, 0, -1);
         vehicle.addWheel(options);
-        
+
         options.chassisConnectionPointLocal.set(axlewidth, 0, 1);
         vehicle.addWheel(options);
-        
+
         options.chassisConnectionPointLocal.set(-axlewidth, 0, 1);
         vehicle.addWheel(options);
-        
+
         vehicle.addToWorld(world);
-        
+
         // car wheels
         var wheelBodies = [],
         wheelVisuals = [];
@@ -152,7 +152,7 @@ class world {
             wheelVisuals.push(cylinder);
             scene.add(cylinder);
         });
-        
+
         // update the wheels to match the physics
         world.addEventListener('postStep', function() {
             for (var i=0; i<vehicle.wheelInfos.length; i++) {
@@ -166,7 +166,7 @@ class world {
                 wheelVisuals[i].quaternion.copy(t.quaternion);
             }
         });
-        
+
         var q = plane.quaternion;
         var planeBody = new CANNON.Body({
             mass: 0, // mass = 0 makes the body static
@@ -175,8 +175,8 @@ class world {
             quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
         });
         world.addBody(planeBody)
-        
-        
+
+
         //box physics body
         var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
         var boxBody = new CANNON.Body({mass: 1});
@@ -184,12 +184,12 @@ class world {
         boxBody.position.set(-55, 3, 20);
         boxBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(boxBody)
-        
+
         // box visual body
         var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
         var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
         scene.add(boxMesh)
-        
+
         //sphere physics body
         var sphereShape = new CANNON.Sphere(1);
         var sphereBody = new CANNON.Body({mass: 100});
@@ -197,14 +197,14 @@ class world {
         sphereBody.position.set(-35, 5, 20);
         sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(sphereBody)
-        
+
         // sphere visual body
         var sphereGeometry = new THREE.SphereGeometry()
         var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
         sphereMesh.castShadow = true; //default is false
         sphereMesh.receiveShadow = false; //default
         scene.add(sphereMesh)
-        
+
         //icosahedron physics body
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
@@ -212,13 +212,13 @@ class world {
         icosahedronBody.position.set(-40, 1, 30);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
-        
+
         //icosahedron visual body
         var icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
         var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
         icosahedronMesh.castShadow = true
         scene.add(icosahedronMesh)
-        
+
         //stones
         const stoneBig1 = new importModels();
         stoneBig1.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -8, 0, 0, 0.8, 0.8, 0.8, 0, 1);
@@ -227,7 +227,7 @@ class world {
         const stoneBig3 = new importModels();
         stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
         stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 5, 0, 23, 0.8, 0.8, 0.8, 0, 1);
-        
+
         const stoneMedium1 = new importModels();
         stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
         const stoneMedium2 = new importModels();
@@ -235,14 +235,14 @@ class world {
         const stoneMedium3 = new importModels();
         stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, 5, 0.1, 0.1, 0.1, 0, 1);
         stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 8, 0, 21.3, 0.1, 0.1, 0.1, 0, 1);
-        
+
         const stoneSmall1 = new importModels();
         stoneSmall1.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -6, 0, 3, 0.1, 0.1, 0.1, 0, 1);
         const stoneSmall2 = new importModels();
         stoneSmall2.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -7, 0, -3, 0.1, 0.1, 0.1, 0, 1);
         const stoneSmall3 = new importModels();
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, 11, 0, 5.5, 0.1, 0.1, 0.1, 0, 1);
-        
+
         //mushrooms
         const mushroom1 = new importModels();
         mushroom1.init('../models/mushroom.glb', scene, world, normalMaterial, q, 2, -12, 0, 3, 1, 1, 1, 0, 1);
@@ -252,17 +252,17 @@ class world {
         mushroom3.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 4, 0, -12, 0.6, 1, 0.6, 0, 1);
         const mushroom4 = new importModels();
         mushroom4.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 10, 0, -16, 0.6, 1, 0.6, 0, 1);
-        
+
         const groupMushrooms = new importModels();
         groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
-        
+
         //Path start to center
         const tile = new importModels();
         tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1, 0, 9, 1, 0.1, 1, 0, 1);
         tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1.2, 0, 15.2, 1, 0.1, 1, 0, 1);
         tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0, 11.3, 1, 0.1, 1, 0, 1);
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
-        
+
         for (var i=0; i<15; i=i+1.2) {
             zPosition = 27;
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
@@ -286,7 +286,7 @@ class world {
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
             //Path center to proyects
         }
-        
+
         //Name
         var xPosition = -18;
         // var yPosition = ;
@@ -310,7 +310,7 @@ class world {
         const S_Word = new importModels();
         S_Word.init('../models/S.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 10, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const P_Word = new importModels();
-        
+
         P_Word.init('../models/P.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 13, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const U_Word = new importModels();
         U_Word.init('../models/U.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 15, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
@@ -324,10 +324,10 @@ class world {
         I_Word.init('../models/I.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 23.3 , 1, zPosition, 0.6, yScale, zScale, modelMass, rotation);
         const O_Word = new importModels();
         O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        
+
         const DEVOPS_Word = new importModels();
         DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 25 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
-        
+
         //Signs
         const signInformation = new importModels();
         signInformation.init('../models/signInformation.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, 80, 0.2, 2, 0.2, 0, 1);
@@ -335,8 +335,8 @@ class world {
         signPlayzone.init('../models/signPlayzone.glb', scene, world, normalMaterial, q, 0.4, -8 , 0, 65, 0.2, 2, 0.2, 0, 1);
         const signProjects = new importModels();
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
-        
-        
+
+
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -353,12 +353,12 @@ class world {
         bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks3 = new importModels();
         bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-       
+
         const bricks4 = new importModels();
         bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks5 = new importModels();
         bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        
+
         // Wall start left
         var xPosition = 14;
         // var yPosition = ;
@@ -375,16 +375,16 @@ class world {
         bricks7.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks8 = new importModels();
         bricks8.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-       
+
         const bricks9 = new importModels();
         bricks9.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
         const bricks10 = new importModels();
         bricks10.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        
+
         //Messages
         const keysMessage = new importModels();
         keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0, 3, 0.1, 0.1, 0.1, 0, 1);
-        
+
         //Keys
         const keysLeft = new importModels();
         keysLeft.init('../models/keysLeft.glb', scene, world, normalMaterial, q, 5, 5.2, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
@@ -397,23 +397,23 @@ class world {
 
         // import car from blender
         var loaderCar = new GLTFLoader();
-        loaderCar.load('../models/poly-car.glb', 
+        loaderCar.load('../models/poly-car.glb',
             (gltf) => {
                 CarMesh = gltf.scene;
-                var scale = 1.09; 
+                var scale = 1.09;
                 CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale ,CarMesh.scale.z * scale);
                 CarMesh.position.set(0, 0, 0);
                 scene.add(CarMesh);
             }
-        );       
+        );
 
         /**
          * Main
          **/
-            
+
         function updatePhysics() {
             world.step(1/60);
-            // update the chassis position    
+            // update the chassis position
             // box.position.copy(chassisBody.position);
             // box.quaternion.copy(chassisBody.quaternion);
             // box.getWorldPosition(objectPosition);
@@ -426,22 +426,23 @@ class world {
             // update the icosahedron position
             icosahedronMesh.position.copy(icosahedronBody.position);
             icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
-            camera.position.copy(chassisBody.position).add(cameraOffset);
+
+            camera.position.x = chassisBody.position.x + cameraOffset.x;
+            camera.position.z = chassisBody.position.z + cameraOffset.z;
+
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
-
+            
         }
         
         function render() {
-            console.log(chassisBody.position);
-
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             updatePhysics();
             CarMesh.position.copy(chassisBody.position);
             CarMesh.quaternion.copy(chassisBody.quaternion);
-            
+
             bricks1.mesh_param.position.copy(bricks1.body_param.position);
             bricks1.mesh_param.quaternion.copy(bricks1.body_param.quaternion);
             bricks2.mesh_param.position.copy(bricks2.body_param.position);
@@ -452,7 +453,7 @@ class world {
             bricks4.mesh_param.quaternion.copy(bricks4.body_param.quaternion);
             bricks5.mesh_param.position.copy(bricks5.body_param.position);
             bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
-            
+
             bricks6.mesh_param.position.copy(bricks6.body_param.position);
             bricks6.mesh_param.quaternion.copy(bricks6.body_param.quaternion);
             bricks7.mesh_param.position.copy(bricks7.body_param.position);
@@ -463,7 +464,7 @@ class world {
             bricks9.mesh_param.quaternion.copy(bricks9.body_param.quaternion);
             bricks10.mesh_param.position.copy(bricks10.body_param.position);
             bricks10.mesh_param.quaternion.copy(bricks10.body_param.quaternion);
-            
+
             keysLeft.mesh_param.position.copy(keysLeft.body_param.position);
             keysLeft.mesh_param.quaternion.copy(keysLeft.body_param.quaternion);
             keysUp.mesh_param.position.copy(keysUp.body_param.position);
@@ -500,7 +501,7 @@ class world {
             O_Word.mesh_param.quaternion.copy(O_Word.body_param.quaternion);
             DEVOPS_Word.mesh_param.position.copy(DEVOPS_Word.body_param.position);
             DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
-            
+
             //Test hitbox
             // signInformation.boxMesh_param.position.copy(signInformation.body_param.position);
             // signInformation.boxMesh_param.quaternion.copy(signInformation.body_param.quaternion);
@@ -542,7 +543,7 @@ class world {
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min) ) + min;
         }
-        
+
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
 
