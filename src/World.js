@@ -338,6 +338,9 @@ class world {
         //location
         const location = new importModels();
         location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -5 , 0, 100, 1, 2, 0.3, 0, 1);
+        //flag
+        const flag = new importModels();
+        flag.init('../models/flag.glb', scene, world, normalMaterial, q, 2.5, -4.6 , 0, 99, 0.2, 1.2, 0.2, 0, 1);
 
 
         // Wall start left
@@ -512,8 +515,8 @@ class world {
             DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
 
             //Test hitbox
-            // location.boxMesh_param.position.copy(location.body_param.position);
-            // location.boxMesh_param.quaternion.copy(location.body_param.quaternion);
+            // flag.boxMesh_param.position.copy(flag.body_param.position);
+            // flag.boxMesh_param.quaternion.copy(flag.body_param.quaternion);
         }
 
         function navigate(e) {
