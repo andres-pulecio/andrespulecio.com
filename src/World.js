@@ -335,6 +335,9 @@ class world {
         signPlayzone.init('../models/signPlayzone.glb', scene, world, normalMaterial, q, 0.4, -8 , 0, 65, 0.2, 2, 0.2, 0, 1);
         const signProjects = new importModels();
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
+        //location
+        const location = new importModels();
+        location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -5 , 0, 100, 1, 2, 0.3, 0, 1);
 
 
         // Wall start left
@@ -509,8 +512,8 @@ class world {
             DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
 
             //Test hitbox
-            // signInformation.boxMesh_param.position.copy(signInformation.body_param.position);
-            // signInformation.boxMesh_param.quaternion.copy(signInformation.body_param.quaternion);
+            // location.boxMesh_param.position.copy(location.body_param.position);
+            // location.boxMesh_param.quaternion.copy(location.body_param.quaternion);
         }
 
         function navigate(e) {
