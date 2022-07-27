@@ -226,7 +226,7 @@ class world {
         stoneBig2.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -12, 0, -4, 0.8, 0.8, 0.8, 0, 1);
         const stoneBig3 = new importModels();
         stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
-        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 5, 0, 22, 0.8, 0.8, 0.8, 0, 1);
+        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 5, 0, 23, 0.8, 0.8, 0.8, 0, 1);
         
         const stoneMedium1 = new importModels();
         stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
@@ -257,15 +257,34 @@ class world {
         groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
         
         //Path start to center
-        const tile1 = new importModels();
-        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1, 0, 9, 1, 0.1, 1, 0, 1);
-        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1.2, 0, 15.2, 1, 0.1, 1, 0, 1);
-        tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0, 11.3, 1, 0.1, 1, 0, 1);
+        const tile = new importModels();
+        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1, 0, 9, 1, 0.1, 1, 0, 1);
+        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1.2, 0, 15.2, 1, 0.1, 1, 0, 1);
+        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0, 11.3, 1, 0.1, 1, 0, 1);
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
         
-        for (var i=0; i<10; i=i+1.2) {
+        for (var i=0; i<15; i=i+1.2) {
             zPosition = 27;
-            tile1.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
+            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
+        }
+        //Path center to proyects
+        for (var i=0; i<15; i=i+1.2) {
+            zPosition = 72;
+            xPosition = 2;
+            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
+            //Path center to proyects
+        }
+        //Path center to information
+        for (var i=0; i<15; i=i+1.2) {
+            zPosition = 74;
+            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
+        }
+        //Path center to playzone
+        for (var i=0; i>-15; i=i-1.2) {
+            zPosition = 72;
+            xPosition = -2;
+            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
+            //Path center to proyects
         }
         
         //Name
@@ -307,7 +326,7 @@ class world {
         O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
         
         const DEVOPS_Word = new importModels();
-        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 24 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
+        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 25 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -406,7 +425,7 @@ class world {
         
         function render() {
             console.log(chassisBody.position);
-            
+
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             updatePhysics();
