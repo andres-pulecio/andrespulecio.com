@@ -384,6 +384,8 @@ class world {
         //Messages
         const keysMessage = new importModels();
         keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0, 3, 0.1, 0.1, 0.1, 0, 1);
+        const restartMessage = new importModels();
+        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0, 8, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
@@ -394,6 +396,8 @@ class world {
         keysRight.init('../models/keysRight.glb', scene, world, normalMaterial, q, 5, 7.6, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
         const keysDown = new importModels();
         keysDown.init('../models/keysDown.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
+        const keysR = new importModels();
+        keysR.init('../models/keysR.glb', scene, world, normalMaterial, q, 5, 5.6, 1, 7.5, 0.55, 0.5, 0.55, 1, 2);
 
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -473,6 +477,8 @@ class world {
             keysRight.mesh_param.quaternion.copy(keysRight.body_param.quaternion);
             keysDown.mesh_param.position.copy(keysDown.body_param.position);
             keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
+            keysR.mesh_param.position.copy(keysR.body_param.position);
+            keysR.mesh_param.quaternion.copy(keysR.body_param.quaternion);
             A_Word.mesh_param.position.copy(A_Word.body_param.position);
             A_Word.mesh_param.quaternion.copy(A_Word.body_param.quaternion);
             N_Word.mesh_param.position.copy(N_Word.body_param.position);
