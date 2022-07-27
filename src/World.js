@@ -226,7 +226,7 @@ class world {
         stoneBig2.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -12, 0, -4, 0.8, 0.8, 0.8, 0, 1);
         const stoneBig3 = new importModels();
         stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
-        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 5, 0, 23, 0.8, 0.8, 0.8, 0, 1);
+        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 7, 0, 23, 0.8, 0.8, 0.8, 0, 1);
 
         const stoneMedium1 = new importModels();
         stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
@@ -326,7 +326,7 @@ class world {
         O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
 
         const DEVOPS_Word = new importModels();
-        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 25 , 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
+        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 27, 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
 
         //Signs
         const signInformation = new importModels();
@@ -337,10 +337,16 @@ class world {
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
         //location
         const location = new importModels();
-        location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -5 , 0, 100, 1, 2, 0.3, 0, 1);
+        location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -8 , 0, 100, 1, 2, 0.3, 0, 1);
         //flag
         const flag = new importModels();
-        flag.init('../models/flag.glb', scene, world, normalMaterial, q, 2.5, -4.6 , 0, 99, 0.2, 1.2, 0.2, 0, 1);
+        flag.init('../models/flag.glb', scene, world, normalMaterial, q, 2.5, -7.6 , 0, 99, 0.2, 1.2, 0.2, 0, 1);
+        //cup
+        const cup = new importModels();
+        cup.init('../models/cup.glb', scene, world, normalMaterial, q, 1, -4.2 , 0.5, 103.7, 0.7, 0.5, 0.7, 1, 1);
+        //plate
+        const plate = new importModels();
+        plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
 
 
         // Wall start left
@@ -513,10 +519,14 @@ class world {
             O_Word.mesh_param.quaternion.copy(O_Word.body_param.quaternion);
             DEVOPS_Word.mesh_param.position.copy(DEVOPS_Word.body_param.position);
             DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
+            cup.mesh_param.position.copy(cup.body_param.position);
+            cup.mesh_param.quaternion.copy(cup.body_param.quaternion);
+            plate.mesh_param.position.copy(plate.body_param.position);
+            plate.mesh_param.quaternion.copy(plate.body_param.quaternion);
 
             //Test hitbox
-            // flag.boxMesh_param.position.copy(flag.body_param.position);
-            // flag.boxMesh_param.quaternion.copy(flag.body_param.quaternion);
+            // plate.boxMesh_param.position.copy(plate.body_param.position);
+            // plate.boxMesh_param.quaternion.copy(plate.body_param.quaternion);
         }
 
         function navigate(e) {
