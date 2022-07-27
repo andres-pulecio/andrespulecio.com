@@ -508,7 +508,7 @@ class world {
         }
 
         function navigate(e) {
-            if (e.type != 'keydown' && e.type != 'keyup') return;
+            if (e.type != 'keydown' && e.type != 'keyup' && e.type != 'restart') return;
             var keyup = e.type == 'keyup';
             vehicle.setBrake(0, 0);
             vehicle.setBrake(0, 1);
@@ -537,6 +537,12 @@ class world {
                 case 37: // left
                 vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 2);
                 vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 3);
+                break;
+              
+                case 82: // restart
+                chassisBody.position.x = 0;
+                chassisBody.position.y = 2;
+                chassisBody.position.z = 0;
                 break;
             }
         }
