@@ -546,12 +546,12 @@ class world {
         function navigate(e) {
             if (e.type != 'keydown' && e.type != 'keyup' && e.type != 'restart') return;
             var keyup = e.type == 'keyup';
-            vehicle.setBrake(0, 0);
-            vehicle.setBrake(0, 1);
-            vehicle.setBrake(0, 2);
-            vehicle.setBrake(0, 3);
+            vehicle.setBrake(4, 0);
+            vehicle.setBrake(4, 1);
+            vehicle.setBrake(4, 2);
+            vehicle.setBrake(4, 3);
 
-            var engineForce = 1600,
+            var engineForce = 1000,
                 maxSteerVal = 0.5;
             switch(e.keyCode) {
 
