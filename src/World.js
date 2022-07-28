@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import directionalLight from './directionalLight.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,clock;
 
 class world {
     init() {
@@ -357,8 +357,24 @@ class world {
         //Banana
         const banana = new importModels();
         banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -12 , 1, 102, 1, 0.5, 0.5, 1, 1);
-
-
+        //Butterfly
+        var animation = new GLTFLoader();
+        animation.load('../models/butterfly.glb',
+            (gltf) => {
+                butterflyMesh = gltf.scene;
+                var scale = 0.4;
+                butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
+                butterflyMesh.position.set(-8 , 1, 97);
+                scene.add(butterflyMesh);
+                
+                mixer = new THREE.AnimationMixer(butterflyMesh)
+                const clips = gltf.animations;
+                clips.forEach(function(clip) {
+                    const action = mixer.clipAction(clip);
+                    action.play();
+                });
+            }
+        );
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -433,6 +449,8 @@ class world {
             }
         );
 
+
+
         /**
          * Main
          **/
@@ -462,7 +480,13 @@ class world {
             
         }
         
+        clock = new THREE.Clock();
+        
         function render() {
+            if(mixer){
+                mixer.update(clock.getDelta());
+            }
+
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             updatePhysics();
