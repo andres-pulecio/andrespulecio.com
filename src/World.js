@@ -350,7 +350,7 @@ class world {
         plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
         //Palm
         const palm = new importModels();
-        palm.init('../models/palm.glb', scene, world, normalMaterial, q, 2, -11 , 0, 98, 0.3, 1.5, 0.3, 0, 1);
+        palm.init('../models/palm.glb', scene, world, normalMaterial, q, 2, -11 , 0, 96, 0.3, 1.5, 0.3, 0, 1);
         //Watermelon
         const watermelon = new importModels();
         watermelon.init('../models/watermelon.glb', scene, world, normalMaterial, q, 12, -11 , 0, 103.5, 1.1, 1.1, 0.5, 1, 1);
@@ -364,7 +364,7 @@ class world {
                 butterflyMesh = gltf.scene;
                 var scale = 0.4;
                 butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
-                butterflyMesh.position.set(-8 , 1, 97);
+                butterflyMesh.position.set(-13 , 1, 98);
                 scene.add(butterflyMesh);
                 
                 mixer = new THREE.AnimationMixer(butterflyMesh)
