@@ -141,7 +141,7 @@ class world {
             body.addShape(shape, new CANNON.Vec3(), q);
             wheelBodies.push(body);
             // wheel visual body
-            var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.3, 12 );
+            var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.5, 12 );
             var material = new THREE.MeshPhongMaterial({
                 color: 0x283747,
                 // emissive: 0xaa0000,
@@ -551,7 +551,7 @@ class world {
             vehicle.setBrake(0, 2);
             vehicle.setBrake(0, 3);
 
-            var engineForce = 800,
+            var engineForce = 1600,
                 maxSteerVal = 0.5;
             switch(e.keyCode) {
 
