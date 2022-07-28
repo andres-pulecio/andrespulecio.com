@@ -83,7 +83,8 @@ class world {
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
         chassisBody.addShape(chassisShape);
-        chassisBody.position.set(0, 10, 0);
+        // chassisBody.position.set(0, 10, 0);
+        chassisBody.position.set(0, 0, 0);
         chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(chassisBody)
 
@@ -347,6 +348,15 @@ class world {
         //plate
         const plate = new importModels();
         plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
+        //Palm
+        const palm = new importModels();
+        palm.init('../models/palm.glb', scene, world, normalMaterial, q, 2, -11 , 0, 98, 0.3, 1.5, 0.3, 0, 1);
+        //Watermelon
+        const watermelon = new importModels();
+        watermelon.init('../models/watermelon.glb', scene, world, normalMaterial, q, 12, -11 , 0, 103.5, 1.1, 1.1, 0.5, 1, 1);
+        //Banana
+        const banana = new importModels();
+        banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -12 , 1, 102, 1, 0.5, 0.5, 1, 1);
 
 
         // Wall start left
@@ -523,10 +533,14 @@ class world {
             cup.mesh_param.quaternion.copy(cup.body_param.quaternion);
             plate.mesh_param.position.copy(plate.body_param.position);
             plate.mesh_param.quaternion.copy(plate.body_param.quaternion);
+            watermelon.mesh_param.position.copy(watermelon.body_param.position);
+            watermelon.mesh_param.quaternion.copy(watermelon.body_param.quaternion);
+            banana.mesh_param.position.copy(banana.body_param.position);
+            banana.mesh_param.quaternion.copy(banana.body_param.quaternion);
 
             //Test hitbox
-            // plate.boxMesh_param.position.copy(plate.body_param.position);
-            // plate.boxMesh_param.quaternion.copy(plate.body_param.quaternion);
+            // banana.boxMesh_param.position.copy(banana.body_param.position);
+            // banana.boxMesh_param.quaternion.copy(banana.body_param.quaternion);
         }
 
         function navigate(e) {
