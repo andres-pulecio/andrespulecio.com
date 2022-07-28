@@ -182,7 +182,7 @@ class world {
         var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
         var boxBody = new CANNON.Body({mass: 1});
         boxBody.addShape(boxShape);
-        boxBody.position.set(-55, 3, 20);
+        boxBody.position.set(-55, 3, 68);
         boxBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(boxBody)
 
@@ -195,7 +195,7 @@ class world {
         var sphereShape = new CANNON.Sphere(1);
         var sphereBody = new CANNON.Body({mass: 100});
         sphereBody.addShape(sphereShape);
-        sphereBody.position.set(-35, 5, 20);
+        sphereBody.position.set(-40, 5, 74);
         sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(sphereBody)
 
@@ -210,7 +210,7 @@ class world {
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-40, 1, 30);
+        icosahedronBody.position.set(-45, 1, 73);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
 
