@@ -276,7 +276,7 @@ class world {
             //Path center to proyects
         }
         //Path center to information
-        for (var i=0; i<15; i=i+1.2) {
+        for (var i=0; i<25; i=i+1.2) {
             zPosition = 74;
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
         }
@@ -287,7 +287,13 @@ class world {
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
             //Path center to proyects
         }
-
+        //Path to studies
+        for (var i=0; i<15; i=i+1.2) {
+            zPosition = 125;
+            xPosition = 2;
+            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
+            //Path center to proyects
+        }
         //Name
         var xPosition = -18;
         // var yPosition = ;
@@ -336,6 +342,8 @@ class world {
         signPlayzone.init('../models/signPlayzone.glb', scene, world, normalMaterial, q, 0.4, -8 , 0, 65, 0.2, 2, 0.2, 0, 1);
         const signProjects = new importModels();
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
+        const signStudies = new importModels();
+        signStudies.init('../models/signStudies.glb', scene, world, normalMaterial, q, 0.4, 6 , 0, 120, 0.2, 2, 0.2, 0, 1);
         //location
         const location = new importModels();
         location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -8 , 0, 100, 1, 2, 0.3, 0, 1);
@@ -353,28 +361,31 @@ class world {
         palm.init('../models/palm.glb', scene, world, normalMaterial, q, 2, -11 , 0, 96, 0.3, 1.5, 0.3, 0, 1);
         //Watermelon
         const watermelon = new importModels();
-        watermelon.init('../models/watermelon.glb', scene, world, normalMaterial, q, 12, -11 , 0, 103.5, 1.1, 1.1, 0.5, 1, 1);
+        watermelon.init('../models/watermelon.glb', scene, world, normalMaterial, q, 12, -5 , 0.5, 99, 1.1, 1.1, 0.5, 1, 1);
         //Banana
         const banana = new importModels();
-        banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -12 , 1, 102, 1, 0.5, 0.5, 1, 1);
+        banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -5 , 0.5, 97.7, 1, 0.5, 0.5, 1, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
-            (gltf) => {
-                butterflyMesh = gltf.scene;
-                var scale = 0.4;
-                butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
-                butterflyMesh.position.set(-13 , 1, 98);
-                scene.add(butterflyMesh);
-                
-                mixer = new THREE.AnimationMixer(butterflyMesh)
-                const clips = gltf.animations;
-                clips.forEach(function(clip) {
-                    const action = mixer.clipAction(clip);
-                    action.play();
-                });
-            }
+        (gltf) => {
+            butterflyMesh = gltf.scene;
+            var scale = 0.4;
+            butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
+            butterflyMesh.position.set(-13 , 1, 98);
+            scene.add(butterflyMesh);
+            
+            mixer = new THREE.AnimationMixer(butterflyMesh)
+            const clips = gltf.animations;
+            clips.forEach(function(clip) {
+                const action = mixer.clipAction(clip);
+                action.play();
+            });
+        }
         );
+        //wall-e
+        const wall_e = new importModels();
+        wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0, 135, 2.3, 1.2, 2, 0, 1);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -457,6 +468,7 @@ class world {
 
         function updatePhysics() {
             world.step(1/60);
+            console.log(chassisBody.position);
             // update the chassis position
             // box.position.copy(chassisBody.position);
             // box.quaternion.copy(chassisBody.quaternion);
@@ -563,8 +575,8 @@ class world {
             banana.mesh_param.quaternion.copy(banana.body_param.quaternion);
 
             //Test hitbox
-            // banana.boxMesh_param.position.copy(banana.body_param.position);
-            // banana.boxMesh_param.quaternion.copy(banana.body_param.quaternion);
+            // wall_e.boxMesh_param.position.copy(wall_e.body_param.position);
+            // wall_e.boxMesh_param.quaternion.copy(wall_e.body_param.quaternion);
         }
 
         function navigate(e) {
