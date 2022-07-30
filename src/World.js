@@ -451,6 +451,8 @@ class world {
         restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0, 8, 0.1, 0.1, 0.1, 0, 1);
         const certificationsMessage = new importModels();
         certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0, 113, 0.1, 0.1, 0.1, 0, 1);
+        const activitiesMessage = new importModels();
+        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0, 183, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
