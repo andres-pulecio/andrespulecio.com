@@ -276,7 +276,7 @@ class world {
             //Path center to proyects
         }
         //Path center to information
-        for (var i=0; i<25; i=i+1.2) {
+        for (var i=0; i<35; i=i+1.2) {
             zPosition = 74;
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
         }
@@ -288,7 +288,7 @@ class world {
             //Path center to proyects
         }
         //Path to studies
-        for (var i=0; i<15; i=i+1.2) {
+        for (var i=0; i<30; i=i+1.2) {
             zPosition = 125;
             xPosition = 2;
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
@@ -365,6 +365,12 @@ class world {
         //Banana
         const banana = new importModels();
         banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -5 , 0.5, 97.7, 1, 0.5, 0.5, 1, 1);
+        //Python
+        const python = new importModels();
+        python.init('../models/python.glb', scene, world, normalMaterial, q, 0.08, 59 , 2.5, 113, 2.6, 2.6, 0.5, 1, 1);
+        //linuxPenguin
+        const linuxPenguin = new importModels();
+        linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -435,6 +441,8 @@ class world {
         keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0, 3, 0.1, 0.1, 0.1, 0, 1);
         const restartMessage = new importModels();
         restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0, 8, 0.1, 0.1, 0.1, 0, 1);
+        const certificationsMessage = new importModels();
+        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0, 113, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
@@ -468,7 +476,7 @@ class world {
 
         function updatePhysics() {
             world.step(1/60);
-            console.log(chassisBody.position);
+            // console.log(chassisBody.position);
             // update the chassis position
             // box.position.copy(chassisBody.position);
             // box.quaternion.copy(chassisBody.quaternion);
@@ -573,10 +581,14 @@ class world {
             watermelon.mesh_param.quaternion.copy(watermelon.body_param.quaternion);
             banana.mesh_param.position.copy(banana.body_param.position);
             banana.mesh_param.quaternion.copy(banana.body_param.quaternion);
+            python.mesh_param.position.copy(python.body_param.position);
+            python.mesh_param.quaternion.copy(python.body_param.quaternion);
+            linuxPenguin.mesh_param.position.copy(linuxPenguin.body_param.position);
+            linuxPenguin.mesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
 
             //Test hitbox
-            // wall_e.boxMesh_param.position.copy(wall_e.body_param.position);
-            // wall_e.boxMesh_param.quaternion.copy(wall_e.body_param.quaternion);
+            // linuxPenguin.boxMesh_param.position.copy(linuxPenguin.body_param.position);
+            // linuxPenguin.boxMesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
         }
 
         function navigate(e) {
