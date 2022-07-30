@@ -344,6 +344,8 @@ class world {
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
         const signStudies = new importModels();
         signStudies.init('../models/signStudies.glb', scene, world, normalMaterial, q, 0.4, 6 , 0, 120, 0.2, 2, 0.2, 0, 1);
+        const signContact = new importModels();
+        signContact.init('../models/signContact.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 155, 0.2, 2, 0.2, 0, 1);
         //location
         const location = new importModels();
         location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -8 , 0, 100, 1, 2, 0.3, 0, 1);
@@ -371,6 +373,12 @@ class world {
         //linuxPenguin
         const linuxPenguin = new importModels();
         linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
+        //linkedin
+        const linkedin = new importModels();
+        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -20 , 1, 153, 1.3, 1.3, 0.5, 1, 1);
+        //mailbox
+        const mailbox = new importModels();
+        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -26 , 1, 154, 0.3, 2, 0.3, 0, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -585,10 +593,12 @@ class world {
             python.mesh_param.quaternion.copy(python.body_param.quaternion);
             linuxPenguin.mesh_param.position.copy(linuxPenguin.body_param.position);
             linuxPenguin.mesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
+            linkedin.mesh_param.position.copy(linkedin.body_param.position);
+            linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
 
             //Test hitbox
-            // linuxPenguin.boxMesh_param.position.copy(linuxPenguin.body_param.position);
-            // linuxPenguin.boxMesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
+            // mailbox.boxMesh_param.position.copy(mailbox.body_param.position);
+            // mailbox.boxMesh_param.quaternion.copy(mailbox.body_param.quaternion);
         }
 
         function navigate(e) {
