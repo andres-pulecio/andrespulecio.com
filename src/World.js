@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import directionalLight from './directionalLight.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,clock;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,clock,trigger;
 
 class world {
     init() {
@@ -375,10 +375,10 @@ class world {
         linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
         //linkedin
         const linkedin = new importModels();
-        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -20 , 1, 153, 1.3, 1.3, 0.5, 1, 1);
+        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -25 , 1, 156, 1.3, 1.3, 0.5, 1, 1);
         //mailbox
         const mailbox = new importModels();
-        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -26 , 1, 154, 0.3, 2, 0.3, 0, 1);
+        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -397,6 +397,10 @@ class world {
             });
         }
         );
+        //mailAnimation
+           
+        // mailAnimation();
+
         //wall-e
         const wall_e = new importModels();
         wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0, 135, 2.3, 1.2, 2, 0, 1);
@@ -453,6 +457,8 @@ class world {
         certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0, 113, 0.1, 0.1, 0.1, 0, 1);
         const activitiesMessage = new importModels();
         activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0, 183, 0.1, 0.1, 0.1, 0, 1);
+        const mailMessage = new importModels();
+        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0, 162, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
@@ -507,7 +513,7 @@ class world {
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
             plane.position.copy(chassisBody.position).add(planeOffset);
-            
+
         }
         
         clock = new THREE.Clock();
@@ -519,9 +525,9 @@ class world {
 
             requestAnimationFrame(render);
             renderer.render(scene, camera);
-            updatePhysics();
             CarMesh.position.copy(chassisBody.position);
             CarMesh.quaternion.copy(chassisBody.quaternion);
+            updatePhysics();
 
             bricks1.mesh_param.position.copy(bricks1.body_param.position);
             bricks1.mesh_param.quaternion.copy(bricks1.body_param.quaternion);
@@ -644,6 +650,26 @@ class world {
         }
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min) ) + min;
+        }
+        
+        function mailAnimation(){
+            var mailAnimation = new GLTFLoader();
+            mailAnimation.load('../models/mailAnimation.glb',
+            (gltf) => {
+                butterflyMesh = gltf.scene;
+                var scale = 3;
+                butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
+                butterflyMesh.position.set(-4 , 0, 4);
+                scene.add(butterflyMesh);
+                
+                mixer = new THREE.AnimationMixer(butterflyMesh)
+                const clips = gltf.animations;
+                clips.forEach(function(clip) {
+                    const action = mixer.clipAction(clip);
+                    action.play();
+                });
+            }
+            );
         }
 
         window.addEventListener('keydown', navigate)
