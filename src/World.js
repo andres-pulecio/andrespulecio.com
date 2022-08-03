@@ -4,12 +4,13 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import directionalLight from './directionalLight.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,clock,trigger;
+let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,mixerAnimation,clock,clockAnimation;
 
 class world {
     init() {
 
         var CarMesh;
+        var mailAnimationMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
@@ -375,7 +376,8 @@ class world {
         linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
         //linkedin
         const linkedin = new importModels();
-        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -25 , 1, 156, 1.3, 1.3, 0.5, 1, 1);
+        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -25
+         , 1, 156, 1.3, 1.3, 0.5, 1, 1);
         //mailbox
         const mailbox = new importModels();
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
@@ -400,7 +402,23 @@ class world {
         //mailAnimation
            
         // mailAnimation();
-
+        var mailAnimation = new GLTFLoader();
+        mailAnimation.load('../models/mailAnimation.glb',
+        (gltf) => {
+            mailAnimationMesh = gltf.scene;
+            var scale = 3;
+            mailAnimationMesh.scale.set(mailAnimationMesh.scale.x * scale, mailAnimationMesh.scale.y * scale ,mailAnimationMesh.scale.z * scale);
+            mailAnimationMesh.position.set(-4 , 1, 4);
+            scene.add(mailAnimationMesh);
+            
+            mixerAnimation = new THREE.AnimationMixer(mailAnimationMesh)
+            const clips = gltf.animations;
+            clips.forEach(function(clip) {
+                const action = mixerAnimation.clipAction(clip);
+                action.play();
+            });
+        }
+        );
         //wall-e
         const wall_e = new importModels();
         wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0, 135, 2.3, 1.2, 2, 0, 1);
@@ -517,12 +535,11 @@ class world {
         }
         
         clock = new THREE.Clock();
+        clockAnimation = new THREE.Clock();
         
         function render() {
-            if(mixer){
-                mixer.update(clock.getDelta());
-            }
 
+            
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             CarMesh.position.copy(chassisBody.position);
@@ -604,6 +621,16 @@ class world {
             linkedin.mesh_param.position.copy(linkedin.body_param.position);
             linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
 
+            if(mixer){
+                mixer.update(clock.getDelta());
+            }
+            if(mixerAnimation && chassisBody.position.x < 0){
+                mixerAnimation.update(clockAnimation.getDelta());
+                mailAnimationMesh.position.set(-4 , 1, 4);
+            }else{
+                mailAnimationMesh.position.set(-4 , -10, 4);
+            }
+
             //Test hitbox
             // mailbox.boxMesh_param.position.copy(mailbox.body_param.position);
             // mailbox.boxMesh_param.quaternion.copy(mailbox.body_param.quaternion);
@@ -652,25 +679,25 @@ class world {
             return Math.floor(Math.random() * (max - min) ) + min;
         }
         
-        function mailAnimation(){
-            var mailAnimation = new GLTFLoader();
-            mailAnimation.load('../models/mailAnimation.glb',
-            (gltf) => {
-                butterflyMesh = gltf.scene;
-                var scale = 3;
-                butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
-                butterflyMesh.position.set(-4 , 0, 4);
-                scene.add(butterflyMesh);
+        // function mailAnimation(){
+        //     var mailAnimation = new GLTFLoader();
+        //     mailAnimation.load('../models/mailAnimation.glb',
+        //     (gltf) => {
+        //         mailAnimationMesh = gltf.scene;
+        //         var scale = 3;
+        //         mailAnimationMesh.scale.set(mailAnimationMesh.scale.x * scale, mailAnimationMesh.scale.y * scale ,mailAnimationMesh.scale.z * scale);
+        //         mailAnimationMesh.position.set(-4 , 1, 4);
+        //         scene.add(mailAnimationMesh);
                 
-                mixer = new THREE.AnimationMixer(butterflyMesh)
-                const clips = gltf.animations;
-                clips.forEach(function(clip) {
-                    const action = mixer.clipAction(clip);
-                    action.play();
-                });
-            }
-            );
-        }
+        //         mixerAnimation = new THREE.AnimationMixer(mailAnimationMesh)
+        //         const clips = gltf.animations;
+        //         clips.forEach(function(clip) {
+        //             const action = mixerAnimation.clipAction(clip);
+        //             action.play();
+        //         });
+        //     }
+        //     );
+        // }
 
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
