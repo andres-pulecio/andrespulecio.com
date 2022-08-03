@@ -396,6 +396,9 @@ class world {
         //mailbox
         const mailbox = new importModels();
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
+        //big Tree
+        const treeMedium = new importModels();
+        mailbox.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -4 , 0, 4, 0.3, 2, 0.3, 0, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -531,8 +534,9 @@ class world {
             camera.position.z = chassisBody.position.z + cameraOffset.z;
 
             sunlight.position.copy(chassisBody.position).add(lightOffset);
-            plane.position.copy(chassisBody.position).add(planeOffset);
-            plane.position.copy(chassisBody.position).add(planeOffset);
+            plane.position.x = chassisBody.position.x + planeOffset.x;
+            plane.position.z = chassisBody.position.z + planeOffset.z;
+
 
         }
         
@@ -626,14 +630,14 @@ class world {
             linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
             
             mixers();
-
+            contactLinks();
             //Test hitbox
             // mailbox.boxMesh_param.position.copy(mailbox.body_param.position);
             // mailbox.boxMesh_param.quaternion.copy(mailbox.body_param.quaternion);
         }
 
         function navigate(e) {
-            if (e.type != 'keydown' && e.type != 'keyup' && e.type != 'restart') return;
+            if (e.type != 'keydown' && e.type != 'keyup') return;
             var keyup = e.type == 'keyup';
             vehicle.setBrake(4, 0);
             vehicle.setBrake(4, 1);
@@ -669,6 +673,10 @@ class world {
                 chassisBody.position.y = 2;
                 chassisBody.position.z = 0;
                 break;
+
+                // case 13: // enter
+                // window.open('https://www.google.com/', '_blank').focus();
+                // break;
             }
         }
         function getRndInteger(min, max) {
@@ -771,6 +779,34 @@ class world {
             );
         }
 
+        function contactLinks(e) {
+            if (e.type != 'keydown' && e.type != 'keyup') return;
+            var keyup = e.type == 'keyup';
+            
+            var mixMailPositionX = -15;
+            var mixMailPositionZ = 162;
+            var squMailTrig = 3;
+            if(e.keyCode == 13 && chassisBody.position.x < (mixMailPositionX + squMailTrig) && chassisBody.position.x > (mixMailPositionX - squMailTrig) && chassisBody.position.z < (mixMailPositionZ + squMailTrig) && chassisBody.position.z > (mixMailPositionZ - squMailTrig)){
+                window.open('mailto:andresfelipepulecio@gmail.com', '_blank').focus();
+            }
+            
+            var mixLinkPositionX = -24;
+            var mixLinkPositionZ = 162;
+            var squLinkTrig = 3;
+            if (e.keyCode == 13 && chassisBody.position.x < (mixLinkPositionX + squLinkTrig) && chassisBody.position.x > (mixLinkPositionX - squLinkTrig) && chassisBody.position.z < (mixLinkPositionZ + squLinkTrig) && chassisBody.position.z > (mixLinkPositionZ - squLinkTrig)) {
+                window.open('https://www.linkedin.com/in/andres-pulecio/', '_blank').focus();
+            }
+            
+            var mixGitPositionX = -33;
+            var mixGitPositionZ = 162;
+            var squGitTrig = 3;
+            if (e.keyCode == 13 && chassisBody.position.x < (mixGitPositionX + squGitTrig) && chassisBody.position.x > (mixGitPositionX - squGitTrig) && chassisBody.position.z < (mixGitPositionZ + squGitTrig) && chassisBody.position.z > (mixGitPositionZ - squGitTrig)) {
+                window.open('https://github.com/andres-pulecio', '_blank').focus();
+            }
+        }
+        window.addEventListener('keydown', contactLinks)
+        window.addEventListener('keyup', contactLinks)
+        
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
 
