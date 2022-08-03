@@ -391,8 +391,8 @@ class world {
         linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
         //linkedin
         const linkedin = new importModels();
-        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -25
-         , 1, 156, 1.3, 1.3, 0.5, 1, 1);
+        // linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 0.5, -25 , 1, 156, 1.3, 1.3, 0.5, 1, 1);
+        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 1, -25 , 2.5, 156, 2.6, 2.6, 1, 1, 1);
         //mailbox
         const mailbox = new importModels();
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
