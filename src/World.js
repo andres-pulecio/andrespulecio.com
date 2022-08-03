@@ -4,13 +4,28 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import directionalLight from './directionalLight.js';
 
-let vehicle, objectPosition,cameraOffset,vehicle1,lightOffset,planeOffset,butterflyMesh,mixer,mixerAnimation,clock,clockAnimation;
+let vehicle, 
+    objectPosition,
+    cameraOffset,
+    lightOffset,
+    planeOffset,
+    butterflyMesh,
+    mixerButterfly,
+    mixerMail,
+    mixerLinkedin,
+    mixerGithub,
+    clockButterfly,
+    clockMail,
+    clockLinkedin,
+    clockGithub;
 
 class world {
     init() {
 
         var CarMesh;
         var mailAnimationMesh;
+        var linkedinAnimationMesh;
+        var githubAnimationMesh;
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
@@ -391,17 +406,20 @@ class world {
             butterflyMesh.position.set(-13 , 1, 98);
             scene.add(butterflyMesh);
             
-            mixer = new THREE.AnimationMixer(butterflyMesh)
+            mixerButterfly = new THREE.AnimationMixer(butterflyMesh)
             const clips = gltf.animations;
             clips.forEach(function(clip) {
-                const action = mixer.clipAction(clip);
+                const action = mixerButterfly.clipAction(clip);
                 action.play();
             });
         }
         );
         
-        //mailAnimation
+        //Link Animation
         mailAnimation();
+        linkedinAnimation();
+        githubAnimation();
+
 
         //wall-e
         const wall_e = new importModels();
@@ -518,8 +536,10 @@ class world {
 
         }
         
-        clock = new THREE.Clock();
-        clockAnimation = new THREE.Clock();
+        clockButterfly = new THREE.Clock();
+        clockMail = new THREE.Clock();
+        clockLinkedin = new THREE.Clock();
+        clockGithub= new THREE.Clock();
         
         function render() {
 
@@ -655,18 +675,39 @@ class world {
             return Math.floor(Math.random() * (max - min) ) + min;
         }
         function mixers() {
-            if(mixer){
-                mixer.update(clock.getDelta());
+            if(mixerButterfly){
+                mixerButterfly.update(clockButterfly.getDelta());
             }
-            var mixerPositionX = -15;
-            var mixerPositionZ = 162;
-            var squareTrigger = 3;
-
-            if(mixerAnimation && chassisBody.position.x < (mixerPositionX + squareTrigger) && chassisBody.position.x > (mixerPositionX - squareTrigger) && chassisBody.position.z < (mixerPositionZ + squareTrigger) && chassisBody.position.z > (mixerPositionZ - squareTrigger)){
-                mixerAnimation.update(clockAnimation.getDelta());
-                mailAnimationMesh.position.set(mixerPositionX , 0, mixerPositionZ);
+            var mixMailPositionX = -15;
+            var mixMailPositionZ = 162;
+            var squMailTrig = 3;
+            
+            if(mixerMail && chassisBody.position.x < (mixMailPositionX + squMailTrig) && chassisBody.position.x > (mixMailPositionX - squMailTrig) && chassisBody.position.z < (mixMailPositionZ + squMailTrig) && chassisBody.position.z > (mixMailPositionZ - squMailTrig)){
+                mixerMail.update(clockMail.getDelta());
+                mailAnimationMesh.position.set(mixMailPositionX , 0, mixMailPositionZ);
             }else{
-                mailAnimationMesh.position.set(mixerPositionX , -10, mixerPositionZ);
+                mailAnimationMesh.position.set(mixMailPositionX , -10, mixMailPositionZ);
+            }
+
+            var mixLinkPositionX = -24;
+            var mixLinkPositionZ = 162;
+            var squLinkTrig = 3;
+            
+            if(mixerLinkedin && chassisBody.position.x < (mixLinkPositionX + squLinkTrig) && chassisBody.position.x > (mixLinkPositionX - squLinkTrig) && chassisBody.position.z < (mixLinkPositionZ + squLinkTrig) && chassisBody.position.z > (mixLinkPositionZ - squLinkTrig)){
+                mixerLinkedin.update(clockLinkedin.getDelta());
+                linkedinAnimationMesh.position.set(mixLinkPositionX , 0, mixLinkPositionZ);
+            }else{
+                linkedinAnimationMesh.position.set(mixLinkPositionX  , -10, mixLinkPositionZ);
+            }
+            
+            var mixGitPositionX = -33;
+            var mixGitPositionZ = 162;
+            var squGitTrig = 3;
+            if(mixerGithub && chassisBody.position.x < (mixGitPositionX + squGitTrig) && chassisBody.position.x > (mixGitPositionX - squGitTrig) && chassisBody.position.z < (mixGitPositionZ + squGitTrig) && chassisBody.position.z > (mixGitPositionZ - squGitTrig)){
+                mixerGithub.update(clockLinkedin.getDelta());
+                githubAnimationMesh.position.set(mixGitPositionX , 0, mixGitPositionZ);
+            }else{
+                githubAnimationMesh.position.set(mixGitPositionX  , -10, mixGitPositionZ);
             }
         }
         
@@ -680,10 +721,50 @@ class world {
                 mailAnimationMesh.position.set(-15 , -10, 162);
                 scene.add(mailAnimationMesh);
                 
-                mixerAnimation = new THREE.AnimationMixer(mailAnimationMesh)
+                mixerMail = new THREE.AnimationMixer(mailAnimationMesh)
                 const clips = gltf.animations;
                 clips.forEach(function(clip) {
-                    const action = mixerAnimation.clipAction(clip);
+                    const action = mixerMail.clipAction(clip);
+                    action.play();
+                });
+            }
+            );
+        }
+
+        function linkedinAnimation(){
+            var linkedinAnimation = new GLTFLoader();
+            linkedinAnimation.load('../models/mailAnimation.glb',
+            (gltf) => {
+                linkedinAnimationMesh = gltf.scene;
+                var scale = 3;
+                linkedinAnimationMesh.scale.set(linkedinAnimationMesh.scale.x * scale, linkedinAnimationMesh.scale.y * scale ,linkedinAnimationMesh.scale.z * scale);
+                linkedinAnimationMesh.position.set(-15 , -10, 162);
+                scene.add(linkedinAnimationMesh);
+                
+                mixerLinkedin = new THREE.AnimationMixer(linkedinAnimationMesh)
+                const clips = gltf.animations;
+                clips.forEach(function(clip) {
+                    const action = mixerLinkedin.clipAction(clip);
+                    action.play();
+                });
+            }
+            );
+        }
+
+        function githubAnimation(){
+            var githubAnimation = new GLTFLoader();
+            githubAnimation.load('../models/mailAnimation.glb',
+            (gltf) => {
+                githubAnimationMesh = gltf.scene;
+                var scale = 3;
+                githubAnimationMesh.scale.set(githubAnimationMesh.scale.x * scale, githubAnimationMesh.scale.y * scale ,githubAnimationMesh.scale.z * scale);
+                githubAnimationMesh.position.set(-15 , -10, 162);
+                scene.add(githubAnimationMesh);
+                
+                mixerGithub = new THREE.AnimationMixer(githubAnimationMesh)
+                const clips = gltf.animations;
+                clips.forEach(function(clip) {
+                    const action = mixerGithub.clipAction(clip);
                     action.play();
                 });
             }
