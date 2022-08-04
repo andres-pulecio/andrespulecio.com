@@ -29,7 +29,7 @@ class world {
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
-        planeOffset = new THREE.Vector3(0, -1, 0);
+        planeOffset = new THREE.Vector3(0, -0.1, 0);
 
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
         normalMaterial.friction = 0.25;
@@ -58,7 +58,7 @@ class world {
         })
 
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
-        var material = new THREE.MeshStandardMaterial({color: 0x2874A6, side: THREE.DoubleSide});
+        var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide});
         var plane = new THREE.Mesh(geometry, material);
         plane.receiveShadow = true;
         plane.rotation.x = Math.PI/2;
@@ -76,9 +76,7 @@ class world {
          * Physics
          **/
         const world = new CANNON.World();
-        // world.broadphase = new CANNON.SAPBroadphase(world);
         world.gravity.set(0, -9.82, 0);
-        // world.defaultContactMaterial.friction = 0.01;
 
         var groundMaterial = new CANNON.Material('groundMaterial');
         groundMaterial.friction = 0.25;
@@ -88,19 +86,11 @@ class world {
         wheelMaterial.friction = 0.25;
         wheelMaterial.restitution = 0.25;
 
-        // var wheelGroundContactMaterial = new CANNON.ContactMaterial(wheelMaterial, groundMaterial, {
-        //     friction: 0.25,
-        //     restitution: 0.25,
-        //     contactEquationStiffness: 1000,
-        // });
-        // world.addContactMaterial(wheelGroundContactMaterial);
-
         // car physics body
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
         chassisBody.addShape(chassisShape);
-        // chassisBody.position.set(0, 10, 0);
-        chassisBody.position.set(0, 0, 0);
+        chassisBody.position.set(0, 10, 0);
         chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(chassisBody)
 
@@ -259,16 +249,17 @@ class world {
         stoneSmall2.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -7, 0, -3, 0.1, 0.1, 0.1, 0, 1);
         const stoneSmall3 = new importModels();
         stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, 11, 0, 5.5, 0.1, 0.1, 0.1, 0, 1);
+        
+        const treeMedium = new importModels();
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -12, 0, 3, 0.5, 1, 0.5, 0, 1);
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -14, 0, -7, 0.5, 1, 0.5, 0, 1);
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 4, 0, -12, 0.5, 1, 0.5, 0, 1);
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, -16, 0.5, 1, 0.5, 0, 1);
 
-        //mushrooms
-        const mushroom1 = new importModels();
-        mushroom1.init('../models/mushroom.glb', scene, world, normalMaterial, q, 2, -12, 0, 3, 1, 1, 1, 0, 1);
-        const mushroom2 = new importModels();
-        mushroom2.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.8, -14, 0, -7, 0.8, 1, 0.8, 0, 1);
-        const mushroom3 = new importModels();
-        mushroom3.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 4, 0, -12, 0.6, 1, 0.6, 0, 1);
-        const mushroom4 = new importModels();
-        mushroom4.init('../models/mushroom.glb', scene, world, normalMaterial, q, 1.5, 10, 0, -16, 0.6, 1, 0.6, 0, 1);
+        //big Tree
+        const treeBig = new importModels();
+        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
+        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 20 , 0, 52, 1.2, 3, 1.8, 0, 1);
 
         const groupMushrooms = new importModels();
         groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
@@ -396,9 +387,7 @@ class world {
         //mailbox
         const mailbox = new importModels();
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
-        //big Tree
-        const treeMedium = new importModels();
-        mailbox.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -4 , 0, 4, 0.3, 2, 0.3, 0, 1);
+
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -426,7 +415,7 @@ class world {
 
         //wall-e
         const wall_e = new importModels();
-        wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0, 135, 2.3, 1.2, 2, 0, 1);
+        wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.01, 135, 2.3, 1.2, 2, 0, 1);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -473,15 +462,15 @@ class world {
 
         //Messages
         const keysMessage = new importModels();
-        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0, 3, 0.1, 0.1, 0.1, 0, 1);
+        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0.01, 3, 0.1, 0.1, 0.1, 0, 1);
         const restartMessage = new importModels();
-        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0, 8, 0.1, 0.1, 0.1, 0, 1);
+        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0.01, 8, 0.1, 0.1, 0.1, 0, 1);
         const certificationsMessage = new importModels();
-        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0, 113, 0.1, 0.1, 0.1, 0, 1);
+        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0.01, 113, 0.1, 0.1, 0.1, 0, 1);
         const activitiesMessage = new importModels();
-        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0, 183, 0.1, 0.1, 0.1, 0, 1);
+        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0.01, 183, 0.1, 0.1, 0.1, 0, 1);
         const mailMessage = new importModels();
-        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0, 162, 0.1, 0.1, 0.1, 0, 1);
+        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0.01, 162, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
@@ -632,8 +621,8 @@ class world {
             mixers();
             contactLinks();
             //Test hitbox
-            // mailbox.boxMesh_param.position.copy(mailbox.body_param.position);
-            // mailbox.boxMesh_param.quaternion.copy(mailbox.body_param.quaternion);
+            // treeBig.boxMesh_param.position.copy(treeBig.body_param.position);
+            // treeBig.boxMesh_param.quaternion.copy(treeBig.body_param.quaternion);
         }
 
         function navigate(e) {
@@ -670,13 +659,9 @@ class world {
               
                 case 82: // restart
                 chassisBody.position.x = 0;
-                chassisBody.position.y = 2;
+                chassisBody.position.y = 5;
                 chassisBody.position.z = 0;
                 break;
-
-                // case 13: // enter
-                // window.open('https://www.google.com/', '_blank').focus();
-                // break;
             }
         }
         function getRndInteger(min, max) {
