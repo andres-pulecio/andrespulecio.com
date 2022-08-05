@@ -26,7 +26,6 @@ class importModels {
             })
             cubeBody.addShape(cubeShapeTree)
             cubeBody.position.set(xPosition, yPosition,zPosition);
-            // cubeBody.rotatkeX(Math.PI/rotation);
             world.addBody(cubeBody);
 
             //Test hitbox

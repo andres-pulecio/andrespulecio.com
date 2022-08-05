@@ -262,7 +262,7 @@ class world {
         //big Tree
         const treeBig = new importModels();
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
-        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
+        treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 30, 0, 100, 1.2, 3, 1.8, 0, 1);
 
         const groupMushrooms = new importModels();
@@ -386,7 +386,7 @@ class world {
         linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
         //github
         const github = new importModels();
-        github.init('../models/github.glb', scene, world, normalMaterial, q, 0.6, -33 , 0, 156, 1.5, 2, 1.5, 0, 1);
+        github.init('../models/github.glb', scene, world, normalMaterial, q, 0.6, -33 , 4, 156, 1.5, 3.8, 1.5, 1, 1);
         //linkedin
         const linkedin = new importModels();
         linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 1, -24 , 2.5, 156, 2.6, 2.6, 1, 1, 1);
@@ -623,12 +623,14 @@ class world {
             linuxPenguin.mesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
             linkedin.mesh_param.position.copy(linkedin.body_param.position);
             linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
+            github.mesh_param.position.copy(github.body_param.position);
+            github.mesh_param.quaternion.copy(github.body_param.quaternion);
             
             mixers();
             contactLinks();
             //Test hitbox
-            // treeBig.boxMesh_param.position.copy(treeBig.body_param.position);
-            // treeBig.boxMesh_param.quaternion.copy(treeBig.body_param.quaternion);
+            // github.boxMesh_param.position.copy(github.body_param.position);
+            // github.boxMesh_param.quaternion.copy(github.body_param.quaternion);
         }
 
         function navigate(e) {
