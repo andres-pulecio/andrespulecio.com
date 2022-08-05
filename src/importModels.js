@@ -28,7 +28,7 @@ class importModels {
             cubeBody.position.set(xPosition, yPosition,zPosition);
             // cubeBody.rotatkeX(Math.PI/rotation);
             world.addBody(cubeBody);
-            
+
             //Test hitbox
             
             // const cubeGeometry = new THREE.BoxGeometry(xScale * 2,yScale * 2,zScale * 2)

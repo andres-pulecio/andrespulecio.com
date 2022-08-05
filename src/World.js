@@ -58,7 +58,8 @@ class world {
         })
 
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
-        var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide});
+        // var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide}); //green
+        var material = new THREE.MeshStandardMaterial({color: 0x3498DB , side: THREE.DoubleSide}); //blue
         var plane = new THREE.Mesh(geometry, material);
         plane.receiveShadow = true;
         plane.rotation.x = Math.PI/2;
@@ -255,11 +256,14 @@ class world {
         treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -14, 0, -7, 0.5, 1, 0.5, 0, 1);
         treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 4, 0, -12, 0.5, 1, 0.5, 0, 1);
         treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, -16, 0.5, 1, 0.5, 0, 1);
-
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 18, 0, 150, 0.5, 1, 0.5, 0, 1);
+        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 25, 0, 115, 0.5, 1, 0.5, 0, 1);
+        
         //big Tree
         const treeBig = new importModels();
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
-        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 20 , 0, 52, 1.2, 3, 1.8, 0, 1);
+        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
+        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 30, 0, 100, 1.2, 3, 1.8, 0, 1);
 
         const groupMushrooms = new importModels();
         groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
