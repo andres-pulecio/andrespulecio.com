@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
+import importModelsSphere from './importModelsSphere.js';
 import directionalLight from './directionalLight.js';
 
 let vehicle, 
@@ -184,40 +185,11 @@ class world {
         });
         world.addBody(planeBody)
 
-
-        //box physics body
-        var boxShape = new CANNON.Box(new CANNON.Vec3(2, 2, 2));
-        var boxBody = new CANNON.Body({mass: 1});
-        boxBody.addShape(boxShape);
-        boxBody.position.set(-55, 3, 68);
-        boxBody.angularVelocity.set(0, 0, 0); // initial velocity
-        world.addBody(boxBody)
-
-        // box visual body
-        var boxGeometry = new THREE.BoxGeometry(4, 4, 4)
-        var boxMesh = new THREE.Mesh(boxGeometry, normalMaterial)
-        scene.add(boxMesh)
-
-        //sphere physics body
-        var sphereShape = new CANNON.Sphere(1);
-        var sphereBody = new CANNON.Body({mass: 100});
-        sphereBody.addShape(sphereShape);
-        sphereBody.position.set(-40, 5, 74);
-        sphereBody.angularVelocity.set(0, 0, 0); // initial velocity
-        world.addBody(sphereBody)
-
-        // sphere visual body
-        var sphereGeometry = new THREE.SphereGeometry()
-        var sphereMesh = new THREE.Mesh(sphereGeometry, normalMaterial)
-        sphereMesh.castShadow = true; //default is false
-        sphereMesh.receiveShadow = false; //default
-        scene.add(sphereMesh)
-
         //icosahedron physics body
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-45, 1, 73);
+        icosahedronBody.position.set(-65, 1, 73);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
 
@@ -412,6 +384,9 @@ class world {
         //mailbox
         const mailbox = new importModels();
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
+        //bowlingBall
+        const bowlingBall = new importModelsSphere();
+        bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -60 , 2, 72, 1, 1);
 
         //Butterfly
         var animation = new GLTFLoader();
@@ -534,11 +509,7 @@ class world {
             // box.quaternion.copy(chassisBody.quaternion);
             // box.getWorldPosition(objectPosition);
             // update the sphare position
-            sphereMesh.position.copy(sphereBody.position);
-            sphereMesh.quaternion.copy(sphereBody.quaternion);
-            // update the box position
-            boxMesh.position.copy(boxBody.position);
-            boxMesh.quaternion.copy(boxBody.quaternion);
+
             // update the icosahedron position
             icosahedronMesh.position.copy(icosahedronBody.position);
             icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
@@ -653,6 +624,8 @@ class world {
             cone3.mesh_param.quaternion.copy(cone3.body_param.quaternion);        
             cone4.mesh_param.position.copy(cone4.body_param.position);
             cone4.mesh_param.quaternion.copy(cone4.body_param.quaternion);        
+            bowlingBall.mesh_param.position.copy(bowlingBall.body_param.position);
+            bowlingBall.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
