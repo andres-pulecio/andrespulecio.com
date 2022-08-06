@@ -270,6 +270,7 @@ class world {
         treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 150, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 200, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, 97 , 0, 70, 0.4, 3, 0.4, 0, 1);
 
         //fence    
         const fence = new importModels();
@@ -377,7 +378,13 @@ class world {
         cup.init('../models/cup.glb', scene, world, normalMaterial, q, 1, -4.2 , 0.5, 103.7, 0.7, 0.5, 0.7, 1, 1);
         //cones
         const cone1 = new importModels();
-        cone1.init('../models/cone.glb', scene, world, normalMaterial, q, 1, -4 , 1, 4, 0.7, 1, 0.7, 1, 1);
+        cone1.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 70, 0.4, 0.9, 0.4, 1, 1);
+        const cone2 = new importModels();
+        cone2.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 72, 0.4, 0.9, 0.4, 1, 1);
+        const cone3 = new importModels();
+        cone3.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 74, 0.4, 0.9, 0.4, 1, 1);
+        const cone4 = new importModels();
+        cone4.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 76, 0.4, 0.9, 0.4, 1, 1);
         //plate
         const plate = new importModels();
         plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
@@ -636,7 +643,16 @@ class world {
             linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
             github.mesh_param.position.copy(github.body_param.position);
             github.mesh_param.quaternion.copy(github.body_param.quaternion);
-            
+            cone1.mesh_param.position.copy(cone1.body_param.position);
+            cone1.mesh_param.quaternion.copy(cone1.body_param.quaternion);        
+            cone2.mesh_param.position.copy(cone2.body_param.position);
+            cone2.mesh_param.quaternion.copy(cone2.body_param.quaternion);        
+            cone3.mesh_param.position.copy(cone3.body_param.position);
+            cone3.mesh_param.quaternion.copy(cone3.body_param.quaternion);        
+            cone4.mesh_param.position.copy(cone4.body_param.position);
+            cone3.mesh_param.quaternion.copy(cone3.body_param.quaternion);        
+            cone4.mesh_param.position.copy(cone4.body_param.position);
+            cone4.mesh_param.quaternion.copy(cone4.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
