@@ -264,9 +264,16 @@ class world {
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
         treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 30, 0, 100, 1.2, 3, 1.8, 0, 1);
+        
+        //Dead tree
+        const treeDead = new importModels();
+        treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 150, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 200, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
 
-        const groupMushrooms = new importModels();
-        groupMushrooms.init('../models/groupMushrooms.glb', scene, world, normalMaterial, q, 8, 12, 0, 3, 0.6, 1, 0.6, 0, 1);
+        //fence    
+        const fence = new importModels();
+        fence.init('../models/fence.glb', scene, world, normalMaterial, q, 2, 90, 0, 72, 0.4, 1, 2, 0, 1);
 
         //Path start to center
         const tile = new importModels();
@@ -280,7 +287,7 @@ class world {
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
         }
         //Path center to proyects
-        for (var i=0; i<15; i=i+1.2) {
+        for (var i=0; i<30; i=i+1.2) {
             zPosition = 72;
             xPosition = 2;
             tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
@@ -446,7 +453,6 @@ class world {
 
         // Wall start left
         var xPosition = 14;
-        // var yPosition = ;
         var zPosition = -12;
         var modelscale = 0.6;
         var xScale = 1.08;
@@ -629,8 +635,8 @@ class world {
             mixers();
             contactLinks();
             //Test hitbox
-            // github.boxMesh_param.position.copy(github.body_param.position);
-            // github.boxMesh_param.quaternion.copy(github.body_param.quaternion);
+            // fence.boxMesh_param.position.copy(fence.body_param.position);
+            // fence.boxMesh_param.quaternion.copy(fence.body_param.quaternion);
         }
 
         function navigate(e) {
