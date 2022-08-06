@@ -387,6 +387,9 @@ class world {
         //bowlingBall
         const bowlingBall = new importModelsSphere();
         bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -60 , 2, 72, 1, 1);
+        //pins
+        const pin1 = new importModels();
+        pin1.init('../models/pins.glb', scene, world, normalMaterial, q, 10, -4 , 2, 4, 0.5, 2, 0.5, 1, 1);
 
         //Butterfly
         var animation = new GLTFLoader();
@@ -626,6 +629,8 @@ class world {
             cone4.mesh_param.quaternion.copy(cone4.body_param.quaternion);        
             bowlingBall.mesh_param.position.copy(bowlingBall.body_param.position);
             bowlingBall.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
+            pin1.mesh_param.position.copy(pin1.body_param.position);
+            pin1.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
