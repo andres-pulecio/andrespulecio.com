@@ -18,10 +18,17 @@ let vehicle,
     clockButterfly,
     clockMail,
     clockLinkedin,
-    clockGithub;
+    clockGithub,
+    separation
+  2 ;
 
 class world {
     init() {
+
+        var CarMesh;
+        var mailAnimationMesh;
+        var linkedinAnimationMesh;
+
 
         var CarMesh;
         var mailAnimationMesh;
@@ -189,7 +196,7 @@ class world {
         var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
         var icosahedronBody = new CANNON.Body({mass: 1});
         icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-65, 1, 73);
+        icosahedronBody.position.set(-85, 1, 93);
         icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(icosahedronBody)
 
@@ -386,10 +393,34 @@ class world {
         mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
         //bowlingBall
         const bowlingBall = new importModelsSphere();
-        bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -60 , 2, 72, 1, 1);
+        bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 72, 1, 0.5);
         //pins
+        xPosition = -90;
+        zPosition = 72;
+        separation = 1;
         const pin1 = new importModels();
-        pin1.init('../models/pins.glb', scene, world, normalMaterial, q, 10, -4 , 2, 4, 0.4, 2, 0.4, 1, 1);
+        pin1.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition , 2, zPosition, 0.4, 2, 0.4, 0.1, 1);
+        
+        const pin2 = new importModels();
+        pin2.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 1, 2, zPosition + separation * 1, 0.4, 2, 0.4, 0.1, 1);
+        const pin3 = new importModels();
+        pin3.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 1, 2, zPosition - separation * 1, 0.4, 2, 0.4, 0.1, 1);
+        
+        const pin4 = new importModels();
+        pin4.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition + separation * 2, 0.4, 2, 0.4, 0.1, 1);
+        const pin5 = new importModels();
+        pin5.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition                 , 0.4, 2, 0.4, 0.1, 1);
+        const pin6 = new importModels();
+        pin6.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition - separation * 2, 0.4, 2, 0.4, 0.1, 1);
+        
+        const pin7 = new importModels();
+        pin7.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition + separation * 3, 0.4, 2, 0.4, 0.1, 1);
+        const pin8 = new importModels();
+        pin8.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition + separation * 1, 0.4, 2, 0.4, 0.1, 1);
+        const pin9 = new importModels();
+        pin9.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 1, 0.4, 2, 0.4, 0.1, 1);
+        const pin10 = new importModels();
+        pin10.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 3, 0.4, 2, 0.4, 0.1, 1);
 
         //Butterfly
         var animation = new GLTFLoader();
@@ -631,6 +662,24 @@ class world {
             bowlingBall.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
             pin1.mesh_param.position.copy(pin1.body_param.position);
             pin1.mesh_param.quaternion.copy(pin1.body_param.quaternion);        
+            pin2.mesh_param.position.copy(pin2.body_param.position);
+            pin2.mesh_param.quaternion.copy(pin2.body_param.quaternion);        
+            pin3.mesh_param.position.copy(pin3.body_param.position);
+            pin3.mesh_param.quaternion.copy(pin3.body_param.quaternion);        
+            pin4.mesh_param.position.copy(pin4.body_param.position);
+            pin4.mesh_param.quaternion.copy(pin4.body_param.quaternion);        
+            pin5.mesh_param.position.copy(pin5.body_param.position);
+            pin5.mesh_param.quaternion.copy(pin5.body_param.quaternion);        
+            pin6.mesh_param.position.copy(pin6.body_param.position);
+            pin6.mesh_param.quaternion.copy(pin6.body_param.quaternion);        
+            pin7.mesh_param.position.copy(pin7.body_param.position);
+            pin7.mesh_param.quaternion.copy(pin7.body_param.quaternion);        
+            pin8.mesh_param.position.copy(pin8.body_param.position);
+            pin8.mesh_param.quaternion.copy(pin8.body_param.quaternion);        
+            pin9.mesh_param.position.copy(pin9.body_param.position);
+            pin9.mesh_param.quaternion.copy(pin9.body_param.quaternion);        
+            pin10.mesh_param.position.copy(pin10.body_param.position);
+            pin10.mesh_param.quaternion.copy(pin10.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
