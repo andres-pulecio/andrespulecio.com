@@ -364,6 +364,8 @@ class world {
         signStudies.init('../models/signStudies.glb', scene, world, normalMaterial, q, 0.4, 6 , 0, 120, 0.2, 2, 0.2, 0, 1);
         const signContact = new importModels();
         signContact.init('../models/signContact.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 155, 0.2, 2, 0.2, 0, 1);
+        const signConstruction = new importModels();
+        signConstruction.init('../models/signConstruction.glb', scene, world, normalMaterial, q, 2.6, 91, 0, 68, 0.2, 2, 0.2, 0, 1);
         //location
         const location = new importModels();
         location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -8 , 0, 100, 1, 2, 0.3, 0, 1);
@@ -373,6 +375,9 @@ class world {
         //cup
         const cup = new importModels();
         cup.init('../models/cup.glb', scene, world, normalMaterial, q, 1, -4.2 , 0.5, 103.7, 0.7, 0.5, 0.7, 1, 1);
+        //cones
+        const cone1 = new importModels();
+        cone1.init('../models/cone.glb', scene, world, normalMaterial, q, 1, -4 , 1, 4, 0.7, 1, 0.7, 1, 1);
         //plate
         const plate = new importModels();
         plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
