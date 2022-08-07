@@ -443,7 +443,9 @@ class world {
         dice1.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -75, 2, 90, 2, 2, 2, 1, 1);
         const dice2 = new importModels();
         dice2.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -78, 2, 93, 2, 2, 2, 1, 1);
-
+        //Domino
+        const domino1 = new importModels();
+        domino1.init('../models/domino.glb', scene, world, normalMaterial, q, 40, -4, 2.7, 4, 0.6, 2.7, 1.5, 0.1, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -706,6 +708,8 @@ class world {
             dice1.mesh_param.quaternion.copy(dice1.body_param.quaternion);        
             dice2.mesh_param.position.copy(dice2.body_param.position);
             dice2.mesh_param.quaternion.copy(dice2.body_param.quaternion);        
+            domino1.mesh_param.position.copy(domino1.body_param.position);
+            domino1.mesh_param.quaternion.copy(domino1.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
