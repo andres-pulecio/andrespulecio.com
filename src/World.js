@@ -434,10 +434,15 @@ class world {
         pin9.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 1, 0.4, 2, 0.4, 0.1, 1);
         const pin10 = new importModels();
         pin10.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 3, 0.4, 2, 0.4, 0.1, 1);
-
+        
         const stoneDecoration1 = new importModels();
         stoneDecoration1.init('../models/stoneDecoration.glb', scene, world, normalMaterial, q, 1, -85, 0, 87, 0.8, 0.8, 0.8, 0, 1);
         stoneDecoration1.init('../models/stoneDecoration.glb', scene, world, normalMaterial, q, 1, 25, 0, 155, 0.8, 0.8, 0.8, 0, 1);
+        //Dice
+        const dice1 = new importModels();
+        dice1.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -75, 2, 90, 2, 2, 2, 1, 1);
+        const dice2 = new importModels();
+        dice2.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -78, 2, 93, 2, 2, 2, 1, 1);
 
         //Butterfly
         var animation = new GLTFLoader();
@@ -697,11 +702,15 @@ class world {
             pin9.mesh_param.quaternion.copy(pin9.body_param.quaternion);        
             pin10.mesh_param.position.copy(pin10.body_param.position);
             pin10.mesh_param.quaternion.copy(pin10.body_param.quaternion);        
+            dice1.mesh_param.position.copy(dice1.body_param.position);
+            dice1.mesh_param.quaternion.copy(dice1.body_param.quaternion);        
+            dice2.mesh_param.position.copy(dice2.body_param.position);
+            dice2.mesh_param.quaternion.copy(dice2.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
             // fence.boxMesh_param.position.copy(fence.body_param.position);
-            // fence.boxMesh_param.quaternion.copy(fence.body_param.quaternion);
+            // fence.boxMesh_param.quaternion.co8y(fenc3.body_param.quaternion);
         }
 
         function navigate(e) {
