@@ -245,6 +245,7 @@ class world {
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
         treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
         treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 30, 0, 100, 1.2, 3, 1.8, 0, 1);
+        treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, -60, 0, 45, 1.2, 3, 1.8, 0, 1);
         
         //Dead tree
         const treeDead = new importModels();
@@ -253,6 +254,7 @@ class world {
         treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, 97 , 0, 70, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, -9, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -45 , 0, 110, 0.4, 3, 0.4, 0, 1);
 
         //fence    
         const fence = new importModels();
