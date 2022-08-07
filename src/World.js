@@ -399,6 +399,11 @@ class world {
         //fenceWood    
         const fenceWood = new importModels();
         for (var i=0; i>-5; i=i-1.2) {
+            zPosition = 53;
+            xPosition = -65;
+            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
+        }
+        for (var i=0; i>-5; i=i-1.2) {
             zPosition = 67;
             xPosition = -65;
             fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
@@ -412,7 +417,7 @@ class world {
         const bowlingBall = new importModelsSphere();
         bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 72, 1, 0.5);
         const bowlingBall2 = new importModelsSphere();
-        bowlingBall2.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 55, 1, 0.5);
+        bowlingBall2.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 58, 1, 0.5);
         //pins
         xPosition = -90;
         zPosition = 72;
@@ -452,23 +457,23 @@ class world {
         //Domino
         separation = 4; 
         const domino1 = new importModels();
-        domino1.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino1.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino2 = new importModels();
-        domino2.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 1, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino2.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 1, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino3 = new importModels();
-        domino3.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 2, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino3.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 2, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino4 = new importModels();
-        domino4.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 3, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino4.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 3, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino5 = new importModels();
-        domino5.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 4, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino5.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 4, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino6 = new importModels();
-        domino6.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 5, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino6.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 5, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino7 = new importModels();
-        domino7.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 6, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino7.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 6, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino8 = new importModels();
-        domino8.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 7, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino8.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 7, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         const domino9 = new importModels();
-        domino9.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 8, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        domino9.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 8, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
