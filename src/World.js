@@ -616,7 +616,7 @@ class world {
         clockGithub= new THREE.Clock();
         
         function render() {
-
+            console.log(chassisBody.quaternion);
             
             requestAnimationFrame(render);
             renderer.render(scene, camera);
@@ -772,7 +772,7 @@ class world {
             vehicle.setBrake(4, 2);
             vehicle.setBrake(4, 3);
 
-            var engineForce = 1000,
+            var engineForce = 1500,
                 maxSteerVal = 0.5;
             switch(e.keyCode) {
 
@@ -800,6 +800,7 @@ class world {
                 chassisBody.position.x = 0;
                 chassisBody.position.y = 5;
                 chassisBody.position.z = 0;
+                chassisBody.quaternion.set(0,0,0,1);
                 break;
             }
         }
