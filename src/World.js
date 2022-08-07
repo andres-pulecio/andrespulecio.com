@@ -250,6 +250,7 @@ class world {
         treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 200, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, 97 , 0, 70, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, -9, 0.4, 3, 0.4, 0, 1);
 
         //fence    
         const fence = new importModels();
@@ -390,7 +391,19 @@ class world {
         linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 1, -24 , 2.5, 156, 2.6, 2.6, 1, 1, 1);
         //mailbox
         const mailbox = new importModels();
-        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);
+        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);      
+        //fenceWood    
+        const fenceWood = new importModels();
+        for (var i=0; i>-5; i=i-1.2) {
+            zPosition = 67;
+            xPosition = -65;
+            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
+        }
+        for (var i=0; i>-5; i=i-1.2) {
+            zPosition = 81;
+            xPosition = -65;
+            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
+        }
         //bowlingBall
         const bowlingBall = new importModelsSphere();
         bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 72, 1, 0.5);
