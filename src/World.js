@@ -615,9 +615,7 @@ class world {
         clockLinkedin = new THREE.Clock();
         clockGithub= new THREE.Clock();
         
-        function render() {
-            console.log(chassisBody.quaternion);
-            
+        function render() {            
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             CarMesh.position.copy(chassisBody.position);
