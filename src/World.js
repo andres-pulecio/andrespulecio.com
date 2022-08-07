@@ -43,6 +43,8 @@ class world {
         normalMaterial.friction = 0.25;
         normalMaterial.restitution = 0.25;
 
+        var dominoMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
+
         var container = document.querySelector('body'),
         w = container.clientWidth,
         h = container.clientHeight,
@@ -407,6 +409,8 @@ class world {
         //bowlingBall
         const bowlingBall = new importModelsSphere();
         bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 72, 1, 0.5);
+        const bowlingBall2 = new importModelsSphere();
+        bowlingBall2.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 55, 1, 0.5);
         //pins
         xPosition = -90;
         zPosition = 72;
@@ -444,8 +448,25 @@ class world {
         const dice2 = new importModels();
         dice2.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -78, 2, 93, 2, 2, 2, 1, 1);
         //Domino
+        separation = 4; 
         const domino1 = new importModels();
-        domino1.init('../models/domino.glb', scene, world, normalMaterial, q, 40, -4, 2.7, 4, 0.6, 2.7, 1.5, 0.1, 1);
+        domino1.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino2 = new importModels();
+        domino2.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 1, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino3 = new importModels();
+        domino3.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 2, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino4 = new importModels();
+        domino4.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 3, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino5 = new importModels();
+        domino5.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 4, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino6 = new importModels();
+        domino6.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 5, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino7 = new importModels();
+        domino7.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 6, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino8 = new importModels();
+        domino8.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 7, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
+        const domino9 = new importModels();
+        domino9.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 8, 2.7, 55, 0.1, 2.7, 1.5, 1, 1);
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -684,6 +705,8 @@ class world {
             cone4.mesh_param.quaternion.copy(cone4.body_param.quaternion);        
             bowlingBall.mesh_param.position.copy(bowlingBall.body_param.position);
             bowlingBall.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
+            bowlingBall2.mesh_param.position.copy(bowlingBall2.body_param.position);
+            bowlingBall2.mesh_param.quaternion.copy(bowlingBall2.body_param.quaternion);        
             pin1.mesh_param.position.copy(pin1.body_param.position);
             pin1.mesh_param.quaternion.copy(pin1.body_param.quaternion);        
             pin2.mesh_param.position.copy(pin2.body_param.position);
@@ -708,8 +731,25 @@ class world {
             dice1.mesh_param.quaternion.copy(dice1.body_param.quaternion);        
             dice2.mesh_param.position.copy(dice2.body_param.position);
             dice2.mesh_param.quaternion.copy(dice2.body_param.quaternion);        
+            
             domino1.mesh_param.position.copy(domino1.body_param.position);
             domino1.mesh_param.quaternion.copy(domino1.body_param.quaternion);        
+            domino2.mesh_param.position.copy(domino2.body_param.position);
+            domino2.mesh_param.quaternion.copy(domino2.body_param.quaternion);        
+            domino3.mesh_param.position.copy(domino3.body_param.position);
+            domino3.mesh_param.quaternion.copy(domino3.body_param.quaternion);        
+            domino4.mesh_param.position.copy(domino4.body_param.position);
+            domino4.mesh_param.quaternion.copy(domino4.body_param.quaternion);        
+            domino5.mesh_param.position.copy(domino5.body_param.position);
+            domino5.mesh_param.quaternion.copy(domino5.body_param.quaternion);        
+            domino6.mesh_param.position.copy(domino6.body_param.position);
+            domino6.mesh_param.quaternion.copy(domino6.body_param.quaternion);        
+            domino7.mesh_param.position.copy(domino7.body_param.position);
+            domino7.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
+            domino8.mesh_param.position.copy(domino8.body_param.position);
+            domino8.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
+            domino9.mesh_param.position.copy(domino9.body_param.position);
+            domino9.mesh_param.quaternion.copy(domino9.body_param.quaternion);        
             mixers();
             contactLinks();
             //Test hitbox
