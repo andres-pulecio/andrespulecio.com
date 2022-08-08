@@ -20,7 +20,7 @@ let vehicle,
     clockLinkedin,
     clockGithub,
     separation
-  2 ;
+    ;
 
 class world {
     init() {
@@ -770,7 +770,7 @@ class world {
             vehicle.setBrake(4, 2);
             vehicle.setBrake(4, 3);
 
-            var engineForce = 1500,
+            var engineForce = 1000,
                 maxSteerVal = 0.5;
             switch(e.keyCode) {
 
