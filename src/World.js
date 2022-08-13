@@ -766,8 +766,8 @@ class world {
             domino8.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
             domino9.mesh_param.position.copy(domino9.body_param.position);
             domino9.mesh_param.quaternion.copy(domino9.body_param.quaternion);        
-            // mixers();
-            // contactLinks();
+            mixers();
+            contactLinks();
             //Test hitbox
             // fence.boxMesh_param.position.copy(fence.body_param.position);
             // fence.boxMesh_param.quaternion.co8y(fenc3.body_param.quaternion);
