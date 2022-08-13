@@ -24,7 +24,16 @@ let vehicle,
 
 class world {
     init() {
+        //Load Page
+        // const manager = new THREE.LoadingManager();
+        // manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+        
+        // 	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+        
+        // };
 
+
+        //Car
         var CarMesh;
         var mailAnimationMesh;
         var linkedinAnimationMesh;
@@ -615,7 +624,9 @@ class world {
         clockLinkedin = new THREE.Clock();
         clockGithub= new THREE.Clock();
         
-        function render() {            
+        function render() {           
+
+
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             CarMesh.position.copy(chassisBody.position);
@@ -755,8 +766,8 @@ class world {
             domino8.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
             domino9.mesh_param.position.copy(domino9.body_param.position);
             domino9.mesh_param.quaternion.copy(domino9.body_param.quaternion);        
-            mixers();
-            contactLinks();
+            // mixers();
+            // contactLinks();
             //Test hitbox
             // fence.boxMesh_param.position.copy(fence.body_param.position);
             // fence.boxMesh_param.quaternion.co8y(fenc3.body_param.quaternion);
