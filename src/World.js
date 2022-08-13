@@ -508,9 +508,9 @@ class world {
         githubAnimation();
 
 
-        //wall-e
-        const wall_e = new importModels();
-        wall_e.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.01, 135, 2.3, 1.2, 2, 0, 1);
+        //R2*D2
+        const R2D2 = new importModels();
+        R2D2.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.05, 135, 3, 3.3, 2, 0, 1);
         // Wall start left
         var xPosition = -16;
         // var yPosition = ;
@@ -556,15 +556,15 @@ class world {
 
         //Messages
         const keysMessage = new importModels();
-        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0.01, 3, 0.1, 0.1, 0.1, 0, 1);
+        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0.05, 3, 0.1, 0.1, 0.1, 0, 1);
         const restartMessage = new importModels();
-        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0.01, 8, 0.1, 0.1, 0.1, 0, 1);
+        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0.05, 8, 0.1, 0.1, 0.1, 0, 1);
         const certificationsMessage = new importModels();
-        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0.01, 113, 0.1, 0.1, 0.1, 0, 1);
+        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0.05, 113, 0.1, 0.1, 0.1, 0, 1);
         const activitiesMessage = new importModels();
-        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0.01, 183, 0.1, 0.1, 0.1, 0, 1);
+        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0.05, 183, 0.1, 0.1, 0.1, 0, 1);
         const mailMessage = new importModels();
-        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0.01, 162, 0.1, 0.1, 0.1, 0, 1);
+        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0.05, 162, 0.1, 0.1, 0.1, 0, 1);
 
         //Keys
         const keysLeft = new importModels();
