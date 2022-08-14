@@ -32,12 +32,21 @@
 				font-size: 2rem;
 			}
 		</style>
+
+		<link rel="stylesheet/less" type="text/css" href="joystick.less" />
 	</head>
 	<body>
 		<div class="progress-bar-container">
 			<label for="progress-bar">Loading...</label>
 			<progress id="progress-bar" value="0" max="100"></progress>
 		</div>
+		<div id="mobileInterface" class="noSelect">
+			<div id="joystickWrapper1"></div>
+			<div id="joystickWrapper2">
+			  <div id="jumpButton">
+			  </div>
+			</div>
+		  </div>
 		<script type="module"></script>
 		<script src="../build/bundle.js" defer></script>
 	</body>

@@ -4,7 +4,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import importModelsSphere from './importModelsSphere.js';
 import directionalLight from './directionalLight.js';
-
+import {
+    OrbitControls
+} from "three/examples/jsm/controls/OrbitControls.js"
+import nipplejs from 'nipplejs';
 let vehicle, 
     objectPosition,
     cameraOffset,
@@ -24,15 +27,32 @@ let vehicle,
 
 class world {
     init() {
-        //Load Page
-        // const manager = new THREE.LoadingManager();
-        // manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-        
-        // 	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-        
-        // };
+        let fwdValue = 0;
+        let bkdValue = 0;
+        let rgtValue = 0;
+        let lftValue = 0;
+        let tempVector = new THREE.Vector3();
+        let upVector = new THREE.Vector3(0, 1, 0);
+        let joyManager;
 
-
+        var width = window.innerWidth,
+            height = window.innerHeight;
+        // // Add OrbitControls so that we can pan around with the mouse.
+        // var controls = new OrbitControls(camera, renderer.domElement);
+        // controls.maxDistance = 100;
+        // controls.minDistance = 100;
+            // //controls.maxPolarAngle = (Math.PI / 4) * 3;
+            // controls.maxPolarAngle = Math.PI/2 ;
+            // controls.minPolarAngle = 0;
+            // controls.autoRotate = false;
+            // controls.autoRotateSpeed = 0;
+            // controls.rotateSpeed = 0.4;
+            // controls.enableDamping = false;
+            // controls.dampingFactor = 0.1;
+            // controls.enableZoom = false;
+            // controls.enablePan = false;
+            // controls.minAzimuthAngle = - Math.PI/2; // radians
+            // controls.maxAzimuthAngle = Math.PI/4 // radians
         //Car
         var CarMesh;
         var mailAnimationMesh;
@@ -938,12 +958,59 @@ class world {
                 window.open('https://github.com/andres-pulecio', '_blank').focus();
             }
         }
+        function addJoystick(){
+            const options = {
+                    zone: document.getElementById('joystickWrapper1'),
+                    size: 120,
+                    multitouch: true,
+                    maxNumberOfNipples: 2,
+                    mode: 'static',
+                    restJoystick: true,
+                    shape: 'circle',
+                    // position: { top: 20, left: 20 },
+                    position: { top: '60px', left: '60px' },
+                    dynamicPage: true,
+                }
+            
+            
+            joyManager = nipplejs.create(options);
+            
+            joyManager['0'].on('move', function (evt, data) {
+                    const forward = data.vector.y
+                    const turn = data.vector.x
+    
+                    if (forward > 0) {
+                    fwdValue = Math.abs(forward)
+                    bkdValue = 0
+                    } else if (forward < 0) {
+                    fwdValue = 0
+                    bkdValue = Math.abs(forward)
+                    }
+    
+                    if (turn > 0) {
+                    lftValue = 0
+                    rgtValue = Math.abs(turn)
+                    } else if (turn < 0) {
+                    lftValue = Math.abs(turn)
+                    rgtValue = 0
+                    }
+                })
+    
+                joyManager['0'].on('end', function (evt) {
+                    bkdValue = 0
+                    fwdValue = 0
+                    lftValue = 0
+                    rgtValue = 0
+                })
+            
+            }
         window.addEventListener('keydown', contactLinks)
         window.addEventListener('keyup', contactLinks)
         
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
 
+        addJoystick();
         render();
     }
 }
