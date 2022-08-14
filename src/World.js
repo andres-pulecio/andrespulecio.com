@@ -80,30 +80,22 @@ class world {
             camera.updateProjectionMatrix();
             renderer.setSize(w, h);
         })
-        // -----------------------------------------------------
+        // ------------------------------MOVILE-----------------------
 
         // Add OrbitControls so that we can pan around with the mouse.
         var controls = new OrbitControls(camera, renderer.domElement);
-        controls.maxDistance = 100;
-        controls.minDistance = 100;
-            //controls.maxPolarAngle = (Math.PI / 4) * 3;
-            controls.maxPolarAngle = Math.PI/2 ;
-            controls.minPolarAngle = 0;
-            controls.autoRotate = false;
-            controls.autoRotateSpeed = 0;
-            controls.rotateSpeed = 0.4;
-            controls.enableDamping = false;
-            controls.dampingFactor = 0.1;
-            controls.enableZoom = false;
-            controls.enablePan = false;
-            controls.minAzimuthAngle = - Math.PI/2; // radians
-            controls.maxAzimuthAngle = Math.PI/4 // radians
+		controls.maxPolarAngle = Math.PI / 5;
+		controls.minPolarAngle = Math.PI / 5;
+		controls.maxAzimuthAngle = Math.PI / 5;
+		controls.enablePan = false
+		controls.enableDamping = true;
+        controls.enableZoom = false;
+		controls.update();
         //mesh
         var geometry = new THREE.BoxGeometry(5,5,5);
         var cubeMaterial = new THREE.MeshNormalMaterial(); 
         var mesh = new THREE.Mesh( geometry, cubeMaterial );
         scene.add( mesh ); 
-        camera.lookAt(0,-4,0);
         // -----------------------------------------------------
 
 
@@ -1025,35 +1017,35 @@ class world {
                         )
                     }
                 
-                    if (bkdValue > 0) {
-                        tempVector
-                        .set(0, 0, bkdValue)
-                        .applyAxisAngle(upVector, angle)
-                        mesh.position.addScaledVector(
-                        tempVector,
-                        1
-                        )
-                    }
+                    // if (bkdValue > 0) {
+                    //     tempVector
+                    //     .set(0, 0, bkdValue)
+                    //     .applyAxisAngle(upVector, angle)
+                    //     mesh.position.addScaledVector(
+                    //     tempVector,
+                    //     1
+                    //     )
+                    // }
         
-                    if (lftValue > 0) {
-                        tempVector
-                        .set(-lftValue, 0, 0)
-                        .applyAxisAngle(upVector, angle)
-                        mesh.position.addScaledVector(
-                        tempVector,
-                        1
-                        )
-                    }
+                    // if (lftValue > 0) {
+                    //     tempVector
+                    //     .set(-lftValue, 0, 0)
+                    //     .applyAxisAngle(upVector, angle)
+                    //     mesh.position.addScaledVector(
+                    //     tempVector,
+                    //     1
+                    //     )
+                    // }
         
-                    if (rgtValue > 0) {
-                        tempVector
-                        .set(rgtValue, 0, 0)
-                        .applyAxisAngle(upVector, angle)
-                        mesh.position.addScaledVector(
-                        tempVector,
-                        1
-                        )
-                    }
+                    // if (rgtValue > 0) {
+                    //     tempVector
+                    //     .set(rgtValue, 0, 0)
+                    //     .applyAxisAngle(upVector, angle)
+                    //     mesh.position.addScaledVector(
+                    //     tempVector,
+                    //     1
+                    //     )
+                    // }
                 
                 mesh.updateMatrixWorld()
                 // controls.target.copy(mesh.position)
