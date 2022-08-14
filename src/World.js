@@ -37,22 +37,7 @@ class world {
 
         var width = window.innerWidth,
             height = window.innerHeight;
-        // // Add OrbitControls so that we can pan around with the mouse.
-        // var controls = new OrbitControls(camera, renderer.domElement);
-        // controls.maxDistance = 100;
-        // controls.minDistance = 100;
-            // //controls.maxPolarAngle = (Math.PI / 4) * 3;
-            // controls.maxPolarAngle = Math.PI/2 ;
-            // controls.minPolarAngle = 0;
-            // controls.autoRotate = false;
-            // controls.autoRotateSpeed = 0;
-            // controls.rotateSpeed = 0.4;
-            // controls.enableDamping = false;
-            // controls.dampingFactor = 0.1;
-            // controls.enableZoom = false;
-            // controls.enablePan = false;
-            // controls.minAzimuthAngle = - Math.PI/2; // radians
-            // controls.maxAzimuthAngle = Math.PI/4 // radians
+
         //Car
         var CarMesh;
         var mailAnimationMesh;
@@ -95,6 +80,32 @@ class world {
             camera.updateProjectionMatrix();
             renderer.setSize(w, h);
         })
+        // -----------------------------------------------------
+
+        // Add OrbitControls so that we can pan around with the mouse.
+        var controls = new OrbitControls(camera, renderer.domElement);
+        controls.maxDistance = 100;
+        controls.minDistance = 100;
+            //controls.maxPolarAngle = (Math.PI / 4) * 3;
+            controls.maxPolarAngle = Math.PI/2 ;
+            controls.minPolarAngle = 0;
+            controls.autoRotate = false;
+            controls.autoRotateSpeed = 0;
+            controls.rotateSpeed = 0.4;
+            controls.enableDamping = false;
+            controls.dampingFactor = 0.1;
+            controls.enableZoom = false;
+            controls.enablePan = false;
+            controls.minAzimuthAngle = - Math.PI/2; // radians
+            controls.maxAzimuthAngle = Math.PI/4 // radians
+        //mesh
+        var geometry = new THREE.BoxGeometry(5,5,5);
+        var cubeMaterial = new THREE.MeshNormalMaterial(); 
+        var mesh = new THREE.Mesh( geometry, cubeMaterial );
+        scene.add( mesh ); 
+        camera.lookAt(0,-4,0);
+        // -----------------------------------------------------
+
 
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
         // var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide}); //green
@@ -610,8 +621,6 @@ class world {
             }
         );
 
-
-
         /**
          * Main
          **/
@@ -628,6 +637,7 @@ class world {
             // update the icosahedron position
             icosahedronMesh.position.copy(icosahedronBody.position);
             icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
+            
 
             camera.position.x = chassisBody.position.x + cameraOffset.x;
             camera.position.z = chassisBody.position.z + cameraOffset.z;
@@ -635,8 +645,6 @@ class world {
             sunlight.position.copy(chassisBody.position).add(lightOffset);
             plane.position.x = chassisBody.position.x + planeOffset.x;
             plane.position.z = chassisBody.position.z + planeOffset.z;
-
-
         }
         
         clockButterfly = new THREE.Clock();
@@ -645,7 +653,7 @@ class world {
         clockGithub= new THREE.Clock();
         
         function render() {           
-
+            updatePlayer();
 
             requestAnimationFrame(render);
             renderer.render(scene, camera);
@@ -967,8 +975,7 @@ class world {
                     mode: 'static',
                     restJoystick: true,
                     shape: 'circle',
-                    // position: { top: 20, left: 20 },
-                    position: { top: '60px', left: '60px' },
+                    position: { top: '600px', left: '100px' },
                     dynamicPage: true,
                 }
             
@@ -1004,6 +1011,61 @@ class world {
                 })
             
             }
+            function updatePlayer(){
+                // move the player
+                const angle = controls.getAzimuthalAngle()
+                
+                    if (fwdValue > 0) {
+                        tempVector
+                        .set(0, 0, -fwdValue)
+                        .applyAxisAngle(upVector, angle)
+                        mesh.position.addScaledVector(
+                        tempVector,
+                        1
+                        )
+                    }
+                
+                    if (bkdValue > 0) {
+                        tempVector
+                        .set(0, 0, bkdValue)
+                        .applyAxisAngle(upVector, angle)
+                        mesh.position.addScaledVector(
+                        tempVector,
+                        1
+                        )
+                    }
+        
+                    if (lftValue > 0) {
+                        tempVector
+                        .set(-lftValue, 0, 0)
+                        .applyAxisAngle(upVector, angle)
+                        mesh.position.addScaledVector(
+                        tempVector,
+                        1
+                        )
+                    }
+        
+                    if (rgtValue > 0) {
+                        tempVector
+                        .set(rgtValue, 0, 0)
+                        .applyAxisAngle(upVector, angle)
+                        mesh.position.addScaledVector(
+                        tempVector,
+                        1
+                        )
+                    }
+                
+                mesh.updateMatrixWorld()
+                // controls.target.copy(mesh.position)
+                
+                //controls.target.set( mesh.position.x, mesh.position.y, mesh.position.z );
+                // reposition camera
+                
+                // camera.position.sub(controls.target)
+                // camera.position.add(mesh.position)
+                
+                
+            };    
         window.addEventListener('keydown', contactLinks)
         window.addEventListener('keyup', contactLinks)
         
