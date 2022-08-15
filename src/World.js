@@ -1037,8 +1037,9 @@ class world {
         
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
-            
-        addJoystick();
+        if (screen.width <= 700) {    
+            addJoystick();
+        }    
         render();
     }
 }
