@@ -641,7 +641,7 @@ class world {
         
         function render() { 
             if (screen.width <= 700) {
-                updatePlayer();
+                updateJoysitck();
             }          
 
             requestAnimationFrame(render);
@@ -1001,42 +1001,36 @@ class world {
                 })
             
             }
-            function updatePlayer(){
+            function updateJoysitck(){
                 vehicle.setBrake(4, 0);
                 vehicle.setBrake(4, 1);
                 vehicle.setBrake(4, 2);
                 vehicle.setBrake(4, 3);
     
-                var engineForce = 1000
-                if (fwdValue > 0) {
-
+                var engineForce = 1000,
+                maxSteerVal = 0.5;
+                if (fwdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
-                }else if(bkdValue > 0) {
+                }else if (bkdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
                     vehicle.applyEngineForce(engineForce, 2);
                     vehicle.applyEngineForce(engineForce, 3);
+                }else if (rgtValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
+                    vehicle.setSteeringValue(maxSteerVal, 2);
+                    vehicle.setSteeringValue(maxSteerVal, 3);
+                    vehicle.applyEngineForce(-engineForce, 2);
+                    vehicle.applyEngineForce(-engineForce, 3);
+                }else if (lftValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
+                    vehicle.setSteeringValue(-maxSteerVal, 2);
+                    vehicle.setSteeringValue(-maxSteerVal, 3);
+                    vehicle.applyEngineForce(-engineForce, 2);
+                    vehicle.applyEngineForce(-engineForce, 3);
                 }else{
                     vehicle.applyEngineForce(0, 2);
                     vehicle.applyEngineForce(0, 3);
+                    vehicle.setSteeringValue(0, 2);
+                    vehicle.setSteeringValue(0, 3);
                 }
-                // if (lftValue > 0) {
-                //     tempVector
-                //     .set(-lftValue, 0, 0)
-                //     .applyAxisAngle(upVector, angle)
-                //     mesh.position.addScaledVector(
-                //     tempVector,
-                //     1
-                //     )
-                // }
-                // if (rgtValue > 0) {
-                //     tempVector
-                //     .set(rgtValue, 0, 0)
-                //     .applyAxisAngle(upVector, angle)
-                //     mesh.position.addScaledVector(
-                //     tempVector,
-                //     1
-                //     )
-                // }
             };    
         window.addEventListener('keydown', contactLinks)
         window.addEventListener('keyup', contactLinks)
