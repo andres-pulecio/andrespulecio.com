@@ -91,11 +91,6 @@ class world {
 		controls.enableDamping = true;
         controls.enableZoom = false;
 		controls.update();
-        //mesh
-        var geometry = new THREE.BoxGeometry(5,5,5);
-        var cubeMaterial = new THREE.MeshNormalMaterial(); 
-        var mesh = new THREE.Mesh( geometry, cubeMaterial );
-        scene.add( mesh ); 
         // -----------------------------------------------------
 
 
@@ -644,8 +639,10 @@ class world {
         clockLinkedin = new THREE.Clock();
         clockGithub= new THREE.Clock();
         
-        function render() {           
-            updatePlayer();
+        function render() { 
+            if (screen.width <= 700) {
+                updatePlayer();
+            }          
 
             requestAnimationFrame(render);
             renderer.render(scene, camera);
@@ -794,6 +791,7 @@ class world {
         }
 
         function navigate(e) {
+            
             if (e.type != 'keydown' && e.type != 'keyup') return;
             var keyup = e.type == 'keyup';
             vehicle.setBrake(4, 0);
@@ -1004,66 +1002,48 @@ class world {
             
             }
             function updatePlayer(){
-                // move the player
-                const angle = controls.getAzimuthalAngle()
-                
-                    if (fwdValue > 0) {
-                        tempVector
-                        .set(0, 0, -fwdValue)
-                        .applyAxisAngle(upVector, angle)
-                        mesh.position.addScaledVector(
-                        tempVector,
-                        1
-                        )
-                    }
-                
-                    // if (bkdValue > 0) {
-                    //     tempVector
-                    //     .set(0, 0, bkdValue)
-                    //     .applyAxisAngle(upVector, angle)
-                    //     mesh.position.addScaledVector(
-                    //     tempVector,
-                    //     1
-                    //     )
-                    // }
-        
-                    // if (lftValue > 0) {
-                    //     tempVector
-                    //     .set(-lftValue, 0, 0)
-                    //     .applyAxisAngle(upVector, angle)
-                    //     mesh.position.addScaledVector(
-                    //     tempVector,
-                    //     1
-                    //     )
-                    // }
-        
-                    // if (rgtValue > 0) {
-                    //     tempVector
-                    //     .set(rgtValue, 0, 0)
-                    //     .applyAxisAngle(upVector, angle)
-                    //     mesh.position.addScaledVector(
-                    //     tempVector,
-                    //     1
-                    //     )
-                    // }
-                
-                mesh.updateMatrixWorld()
-                // controls.target.copy(mesh.position)
-                
-                //controls.target.set( mesh.position.x, mesh.position.y, mesh.position.z );
-                // reposition camera
-                
-                // camera.position.sub(controls.target)
-                // camera.position.add(mesh.position)
-                
-                
+                vehicle.setBrake(4, 0);
+                vehicle.setBrake(4, 1);
+                vehicle.setBrake(4, 2);
+                vehicle.setBrake(4, 3);
+    
+                var engineForce = 1000
+                if (fwdValue > 0) {
+
+                    vehicle.applyEngineForce(-engineForce, 2);
+                    vehicle.applyEngineForce(-engineForce, 3);
+                }else if(bkdValue > 0) {
+                    vehicle.applyEngineForce(engineForce, 2);
+                    vehicle.applyEngineForce(engineForce, 3);
+                }else{
+                    vehicle.applyEngineForce(0, 2);
+                    vehicle.applyEngineForce(0, 3);
+                }
+                // if (lftValue > 0) {
+                //     tempVector
+                //     .set(-lftValue, 0, 0)
+                //     .applyAxisAngle(upVector, angle)
+                //     mesh.position.addScaledVector(
+                //     tempVector,
+                //     1
+                //     )
+                // }
+                // if (rgtValue > 0) {
+                //     tempVector
+                //     .set(rgtValue, 0, 0)
+                //     .applyAxisAngle(upVector, angle)
+                //     mesh.position.addScaledVector(
+                //     tempVector,
+                //     1
+                //     )
+                // }
             };    
         window.addEventListener('keydown', contactLinks)
         window.addEventListener('keyup', contactLinks)
         
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
-
+            
         addJoystick();
         render();
     }
