@@ -83,14 +83,16 @@ class world {
         // ------------------------------MOVILE-----------------------
 
         // Add OrbitControls so that we can pan around with the mouse.
-        var controls = new OrbitControls(camera, renderer.domElement);
-		controls.maxPolarAngle = Math.PI / 5;
-		controls.minPolarAngle = Math.PI / 5;
-		controls.maxAzimuthAngle = Math.PI / 5;
-		controls.enablePan = false
-		controls.enableDamping = true;
-        controls.enableZoom = false;
-		controls.update();
+        if (screen.width <= 700) {    
+            var controls = new OrbitControls(camera, renderer.domElement);
+            controls.maxPolarAngle = Math.PI / 5;
+            controls.minPolarAngle = Math.PI / 5;
+            controls.maxAzimuthAngle = Math.PI / 5;
+            controls.enablePan = false
+            controls.enableDamping = true;
+            controls.enableZoom = false;
+            controls.update();
+        }    
         // -----------------------------------------------------
 
 
@@ -614,13 +616,6 @@ class world {
 
         function updatePhysics() {
             world.step(1/60);
-            // console.log(chassisBody.position);
-            // update the chassis position
-            // box.position.copy(chassisBody.position);
-            // box.quaternion.copy(chassisBody.quaternion);
-            // box.getWorldPosition(objectPosition);
-            // update the sphare position
-
             // update the icosahedron position
             icosahedronMesh.position.copy(icosahedronBody.position);
             icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
