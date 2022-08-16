@@ -64,6 +64,7 @@ class world {
         h = container.clientHeight,
         scene = new THREE.Scene(),
         camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
+        cameraMovile = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
         renderConfig = {antialias: true, alpha: true},
         renderer = new THREE.WebGLRenderer(renderConfig);
 
@@ -84,7 +85,7 @@ class world {
 
         // Add OrbitControls so that we can pan around with the mouse.
         if (screen.width <= 700) {    
-            var controls = new OrbitControls(camera, renderer.domElement);
+            var controls = new OrbitControls(cameraMovile, renderer.domElement);
             controls.maxPolarAngle = Math.PI / 5;
             controls.minPolarAngle = Math.PI / 5;
             controls.maxAzimuthAngle = Math.PI / 5;
