@@ -1012,13 +1012,13 @@ class world {
                     vehicle.applyEngineForce(engineForce, 2);
                     vehicle.applyEngineForce(engineForce, 3);
                 }else if (rgtValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
-                    vehicle.setSteeringValue(maxSteerVal, 2);
-                    vehicle.setSteeringValue(maxSteerVal, 3);
+                    vehicle.setSteeringValue(-maxSteerVal, 2);
+                    vehicle.setSteeringValue(-maxSteerVal, 3);
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
                 }else if (lftValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
-                    vehicle.setSteeringValue(-maxSteerVal, 2);
-                    vehicle.setSteeringValue(-maxSteerVal, 3);
+                    vehicle.setSteeringValue(maxSteerVal, 2);
+                    vehicle.setSteeringValue(maxSteerVal, 3);
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
                 }else{
