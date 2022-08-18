@@ -284,11 +284,21 @@ class world {
         treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, 97 , 0, 70, 0.4, 3, 0.4, 0, 1);
         treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, -9, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -45 , 0, 110, 0.4, 3, 0.4, 0, 1);
+        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -65 , 0, 110, 0.4, 3, 0.4, 0, 1);
 
         //fence    
         const fence = new importModels();
         fence.init('../models/fence.glb', scene, world, normalMaterial, q, 2, 90, 0, 72, 0.4, 1, 2, 0, 1);
+        
+        //charizard
+        const hightSkills = new importModels();
+        hightSkills.init('../models/hightSkills.glb', scene, world, normalMaterial, q, 0.07, -45 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
+        //charmeleon
+        const mediumSkills = new importModels();
+        mediumSkills.init('../models/mediumSkills.glb', scene, world, normalMaterial, q, 0.07, -30 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
+        //charmander
+        const basicSkills = new importModels();
+        basicSkills.init('../models/basicSkills.glb', scene, world, normalMaterial, q, 0.07, -15 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
 
         //Path start to center
         const tile = new importModels();
@@ -377,6 +387,8 @@ class world {
         signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
         const signStudies = new importModels();
         signStudies.init('../models/signStudies.glb', scene, world, normalMaterial, q, 0.4, 6 , 0, 120, 0.2, 2, 0.2, 0, 1);
+        const signSkills = new importModels();
+        signSkills.init('../models/signSkills.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 120, 0.2, 2, 0.2, 0, 1);
         const signContact = new importModels();
         signContact.init('../models/signContact.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 155, 0.2, 2, 0.2, 0, 1);
         const signConstruction = new importModels();
