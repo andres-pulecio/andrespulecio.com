@@ -64,7 +64,7 @@ class world {
         h = container.clientHeight,
         scene = new THREE.Scene(),
         camera = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
-        cameraMovile = new THREE.PerspectiveCamera(75, w/h, 0.001, 100),
+        cameraMovile = new THREE.PerspectiveCamera(75, w/h, 0.001, 50),
         renderConfig = {antialias: true, alpha: true},
         renderer = new THREE.WebGLRenderer(renderConfig);
 
