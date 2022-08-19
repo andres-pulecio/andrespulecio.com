@@ -1020,11 +1020,10 @@ class world {
                 var engineForce = 1000,
                 maxSteerVal = 0.5;
                 if (fwdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
-                    vehicle.applyEngineForce(-engineForce/2, 0);
-                    vehicle.applyEngineForce(-engineForce/2, 1);
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
-    
+                    vehicle.applyEngineForce(-engineForce/2, 0);
+                    vehicle.applyEngineForce(-engineForce/2, 1);
                 }else if (bkdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
                     vehicle.applyEngineForce(engineForce, 0);
                     vehicle.applyEngineForce(engineForce, 1);
@@ -1041,6 +1040,8 @@ class world {
                 }else{
                     vehicle.applyEngineForce(0, 0);
                     vehicle.applyEngineForce(0, 1);
+                    vehicle.applyEngineForce(0, 2);
+                    vehicle.applyEngineForce(0, 3);
                     vehicle.setSteeringValue(0, 2);
                     vehicle.setSteeringValue(0, 3);
                 }
