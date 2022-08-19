@@ -1039,8 +1039,8 @@ class world {
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
                 }else{
-                    vehicle.applyEngineForce(0, 2);
-                    vehicle.applyEngineForce(0, 3);
+                    vehicle.applyEngineForce(0, 0);
+                    vehicle.applyEngineForce(0, 1);
                     vehicle.setSteeringValue(0, 2);
                     vehicle.setSteeringValue(0, 3);
                 }
