@@ -812,13 +812,17 @@ class world {
             switch(e.keyCode) {
 
                 case 38: // forward
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 1);
                 vehicle.applyEngineForce(keyup ? 0 : -engineForce, 2);
                 vehicle.applyEngineForce(keyup ? 0 : -engineForce, 3);
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 4);
                 break;
 
                 case 40: // backward
-                vehicle.applyEngineForce(keyup ? 0 : engineForce, 2);
-                vehicle.applyEngineForce(keyup ? 0 : engineForce, 3);
+                vehicle.applyEngineForce(keyup ? 0 : engineForce, 1);
+                vehicle.applyEngineForce(keyup ? 0 : engineForce/2, 2);
+                vehicle.applyEngineForce(keyup ? 0 : engineForce/2, 3);
+                vehicle.applyEngineForce(keyup ? 0 : engineForce, 4);
                 break;
 
                 case 39: // right
