@@ -812,17 +812,15 @@ class world {
             switch(e.keyCode) {
 
                 case 38: // forward
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 1);
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce/2, 0);
+                vehicle.applyEngineForce(keyup ? 0 : -engineForce/2, 1);
                 vehicle.applyEngineForce(keyup ? 0 : -engineForce, 2);
                 vehicle.applyEngineForce(keyup ? 0 : -engineForce, 3);
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 4);
                 break;
 
                 case 40: // backward
+                vehicle.applyEngineForce(keyup ? 0 : engineForce, 0);
                 vehicle.applyEngineForce(keyup ? 0 : engineForce, 1);
-                vehicle.applyEngineForce(keyup ? 0 : engineForce/2, 2);
-                vehicle.applyEngineForce(keyup ? 0 : engineForce/2, 3);
-                vehicle.applyEngineForce(keyup ? 0 : engineForce, 4);
                 break;
 
                 case 39: // right
@@ -1022,11 +1020,14 @@ class world {
                 var engineForce = 1000,
                 maxSteerVal = 0.5;
                 if (fwdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
+                    vehicle.applyEngineForce(-engineForce/2, 0);
+                    vehicle.applyEngineForce(-engineForce/2, 1);
                     vehicle.applyEngineForce(-engineForce, 2);
                     vehicle.applyEngineForce(-engineForce, 3);
+    
                 }else if (bkdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
-                    vehicle.applyEngineForce(engineForce, 2);
-                    vehicle.applyEngineForce(engineForce, 3);
+                    vehicle.applyEngineForce(engineForce, 0);
+                    vehicle.applyEngineForce(engineForce, 1);
                 }else if (rgtValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
                     vehicle.setSteeringValue(-maxSteerVal, 2);
                     vehicle.setSteeringValue(-maxSteerVal, 3);
