@@ -60,3 +60,8 @@ docker push public.ecr.aws/z6s0c3o0/my-porfolio:latest
 - Update task in Cluster(ECR), open [myPortfolioCluster/tasks](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/myPortfolioCluster/tasks) 
 
 - open [andrespulecio.com](https://andrespulecio.com/)
+
+## Architecture diagram
+![Diagram](https://user-images.githubusercontent.com/53886913/185727754-ef528c3f-edae-4a19-aeaa-0aa44759a342.jpeg)
+
+
