@@ -31,4 +31,6 @@ jobs:
         with:
           push: true
           tags: user/app:latest
+          username: andrespulecio
+          password: Andres1802148
     
