@@ -35,7 +35,11 @@ jobs:
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-        
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:        
       - 
         name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
