@@ -58,6 +58,7 @@ jobs:
           REPOSITORY: my-porfolio
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          ls -lh
           docker build -t my-porfolio ./Dockerfile
           docker tag my-porfolio:latest public.ecr.aws/z6s0c3o0/my-porfolio:latest
           docker push public.ecr.aws/z6s0c3o0/my-porfolio:latest
