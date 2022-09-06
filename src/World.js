@@ -95,8 +95,6 @@ class world {
             controls.update();
         }    
         // -----------------------------------------------------
-
-
         var geometry = new THREE.PlaneGeometry(270, 270, 1);
         // var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide}); //green
         var material = new THREE.MeshStandardMaterial({color: 0x3498DB , side: THREE.DoubleSide}); //blue
