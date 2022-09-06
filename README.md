@@ -19,7 +19,6 @@ To build `npn run build`
 You can then start a local server by using `npm start` and open `http://localhost:3000/app/` for testing.
 
 ## How to execute with Docker?
-
 - To buil execute:
 ```sh
 docker build . -t andrespulecio/my-portfolio
