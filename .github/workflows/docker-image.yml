@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Deploy image to AWS
 
 on:
   push:
