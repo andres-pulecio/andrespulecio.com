@@ -14,7 +14,7 @@ This example demonstrates,
 ## How to execute?
 After downloading the repository, execute `npm install` once in the root directory to install all dependencies.
 
-To build `npn run build`
+To build `npm run build`
 
 You can then start a local server by using `npm start` and open `http://localhost:3000/app/` for testing.
 
