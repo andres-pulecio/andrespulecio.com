@@ -22,6 +22,7 @@ import Messages from './Messages.js';
 import updatePhysics from './functions/updatePhysics.js'
 import navigate from './functions/navigate.js';
 import initializeButterflyAnimation from './animation/butterflyAnimation.js';
+import { addJoystick } from './functions/joystick.js';
 
 import importModelsSphere from './importModelsSphere.js';
 import mailAnimation from './animation/mailAnimation.js';
@@ -298,36 +299,12 @@ class world {
         messages.initMessages();
 
         //Butterfly
-
         // Función para actualizar las referencias
         const setButterflyMesh = (mesh) => butterflyMesh = mesh;
         const setMixerButterfly = (mixer) => mixerButterfly = mixer;
-
         // Llamar a la función de animación de mariposa y obtener los relojes
         ({ clockButterfly, clockMail, clockLinkedin, clockGithub } = initializeButterflyAnimation(scene, setButterflyMesh, setMixerButterfly));
-        
-        // clockButterfly = new THREE.Clock();
-        // clockMail = new THREE.Clock();
-        // clockLinkedin = new THREE.Clock();
-        // clockGithub= new THREE.Clock();
-        // var animation = new GLTFLoader();
-        // animation.load('../models/butterfly.glb',
-        // (gltf) => {
-        //     butterflyMesh = gltf.scene;
-        //     var scale = 0.4;
-        //     butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
-        //     butterflyMesh.position.set(-13 , 1, 98);
-        //     scene.add(butterflyMesh);
-            
-        //     mixerButterfly = new THREE.AnimationMixer(butterflyMesh)
-        //     const clips = gltf.animations;
-        //     clips.forEach(function(clip) {
-        //         const action = mixerButterfly.clipAction(clip);
-        //         action.play();
-        //     });
-        // }
-        // );
-        
+          
         //Link Animation
         mailAnimation();
         linkedinAnimation();
@@ -356,11 +333,16 @@ class world {
         // Añadir el listener de eventos para la navegación
         window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
         window.addEventListener('keyup', (e) => navigate(e, vehicle, chassisBody));
+        window.addEventListener('keydown', contactLinks)
+        window.addEventListener('keyup', contactLinks)
+        
+        window.addEventListener('keydown', navigate)
+        window.addEventListener('keyup', navigate)
        
 
         function render() { 
             if (screen.width <= 700) {
-                updateJoysitck();
+                addJoystick(fwdValue, rgtValue, lftValue, bkdValue, vehicle);
             }          
         
             requestAnimationFrame(render);
@@ -380,6 +362,7 @@ class world {
 
             mixers();
             contactLinks();
+            updateJoysitck(vehicle, fwdValue.current, rgtValue.current, lftValue.current, bkdValue.current);
         }
         
 
@@ -505,94 +488,6 @@ class world {
                 window.open('https://github.com/andres-pulecio', '_blank').focus();
             }
         }
-        function addJoystick(){
-            const options = {
-                    zone: document.getElementById('joystickWrapper1'),
-                    size: 120,
-                    multitouch: true,
-                    maxNumberOfNipples: 2,
-                    mode: 'static',
-                    restJoystick: true,
-                    shape: 'circle',
-                    position: { top: '600px', left: '100px' },
-                    dynamicPage: true,
-                }
-            
-            
-            joyManager = nipplejs.create(options);
-            
-            joyManager['0'].on('move', function (evt, data) {
-                    const forward = data.vector.y
-                    const turn = data.vector.x
-    
-                    if (forward > 0) {
-                    fwdValue = Math.abs(forward)
-                    bkdValue = 0
-                    } else if (forward < 0) {
-                    fwdValue = 0
-                    bkdValue = Math.abs(forward)
-                    }
-    
-                    if (turn > 0) {
-                    lftValue = 0
-                    rgtValue = Math.abs(turn)
-                    } else if (turn < 0) {
-                    lftValue = Math.abs(turn)
-                    rgtValue = 0
-                    }
-                })
-    
-                joyManager['0'].on('end', function (evt) {
-                    bkdValue = 0
-                    fwdValue = 0
-                    lftValue = 0
-                    rgtValue = 0
-                })
-            
-            }
-            function updateJoysitck(){
-                vehicle.setBrake(4, 0);
-                vehicle.setBrake(4, 1);
-                vehicle.setBrake(4, 2);
-                vehicle.setBrake(4, 3);
-    
-                var engineForce = 1000,
-                maxSteerVal = 0.5;
-                if (fwdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
-                    vehicle.applyEngineForce(-engineForce, 2);
-                    vehicle.applyEngineForce(-engineForce, 3);
-                    vehicle.applyEngineForce(-engineForce/2, 0);
-                    vehicle.applyEngineForce(-engineForce/2, 1);
-                }else if (bkdValue > 0 && rgtValue < 0.5 && lftValue < 0.5) {
-                    vehicle.applyEngineForce(engineForce, 0);
-                    vehicle.applyEngineForce(engineForce, 1);
-                }else if (rgtValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
-                    vehicle.setSteeringValue(-maxSteerVal, 2);
-                    vehicle.setSteeringValue(-maxSteerVal, 3);
-                    vehicle.applyEngineForce(-engineForce, 2);
-                    vehicle.applyEngineForce(-engineForce, 3);
-                }else if (lftValue > 0 && fwdValue < 0.5 && bkdValue < 0.5) {
-                    vehicle.setSteeringValue(maxSteerVal, 2);
-                    vehicle.setSteeringValue(maxSteerVal, 3);
-                    vehicle.applyEngineForce(-engineForce, 2);
-                    vehicle.applyEngineForce(-engineForce, 3);
-                }else{
-                    vehicle.applyEngineForce(0, 0);
-                    vehicle.applyEngineForce(0, 1);
-                    vehicle.applyEngineForce(0, 2);
-                    vehicle.applyEngineForce(0, 3);
-                    vehicle.setSteeringValue(0, 2);
-                    vehicle.setSteeringValue(0, 3);
-                }
-            };    
-        window.addEventListener('keydown', contactLinks)
-        window.addEventListener('keyup', contactLinks)
-        
-        window.addEventListener('keydown', navigate)
-        window.addEventListener('keyup', navigate)
-        if (screen.width <= 700) {    
-            addJoystick();
-        }    
         render();
     }
 }
