@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
-import importModelsSphere from './importModelsSphere.js';
 import directionalLight from './directionalLight.js';
 import Icosahedron from './Icosahedron';
 import Stone from './Stone.js';
@@ -22,6 +21,9 @@ import Keys from './Keys.js'
 import Messages from './Messages.js';
 import updatePhysics from './functions/updatePhysics.js'
 import navigate from './functions/navigate.js';
+import initializeButterflyAnimation from './animation/butterflyAnimation.js';
+
+import importModelsSphere from './importModelsSphere.js';
 import mailAnimation from './animation/mailAnimation.js';
 
 import {
@@ -296,23 +298,35 @@ class world {
         messages.initMessages();
 
         //Butterfly
-        var animation = new GLTFLoader();
-        animation.load('../models/butterfly.glb',
-        (gltf) => {
-            butterflyMesh = gltf.scene;
-            var scale = 0.4;
-            butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
-            butterflyMesh.position.set(-13 , 1, 98);
-            scene.add(butterflyMesh);
+
+        // Función para actualizar las referencias
+        const setButterflyMesh = (mesh) => butterflyMesh = mesh;
+        const setMixerButterfly = (mixer) => mixerButterfly = mixer;
+
+        // Llamar a la función de animación de mariposa y obtener los relojes
+        ({ clockButterfly, clockMail, clockLinkedin, clockGithub } = initializeButterflyAnimation(scene, setButterflyMesh, setMixerButterfly));
+        
+        // clockButterfly = new THREE.Clock();
+        // clockMail = new THREE.Clock();
+        // clockLinkedin = new THREE.Clock();
+        // clockGithub= new THREE.Clock();
+        // var animation = new GLTFLoader();
+        // animation.load('../models/butterfly.glb',
+        // (gltf) => {
+        //     butterflyMesh = gltf.scene;
+        //     var scale = 0.4;
+        //     butterflyMesh.scale.set(butterflyMesh.scale.x * scale, butterflyMesh.scale.y * scale ,butterflyMesh.scale.z * scale);
+        //     butterflyMesh.position.set(-13 , 1, 98);
+        //     scene.add(butterflyMesh);
             
-            mixerButterfly = new THREE.AnimationMixer(butterflyMesh)
-            const clips = gltf.animations;
-            clips.forEach(function(clip) {
-                const action = mixerButterfly.clipAction(clip);
-                action.play();
-            });
-        }
-        );
+        //     mixerButterfly = new THREE.AnimationMixer(butterflyMesh)
+        //     const clips = gltf.animations;
+        //     clips.forEach(function(clip) {
+        //         const action = mixerButterfly.clipAction(clip);
+        //         action.play();
+        //     });
+        // }
+        // );
         
         //Link Animation
         mailAnimation();
@@ -337,12 +351,12 @@ class world {
 
         /**
          * Main
-         **/
-        
-        clockButterfly = new THREE.Clock();
-        clockMail = new THREE.Clock();
-        clockLinkedin = new THREE.Clock();
-        clockGithub= new THREE.Clock();
+        **/
+
+        // Añadir el listener de eventos para la navegación
+        window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
+        window.addEventListener('keyup', (e) => navigate(e, vehicle, chassisBody));
+       
 
         function render() { 
             if (screen.width <= 700) {
@@ -368,9 +382,6 @@ class world {
             contactLinks();
         }
         
-        // Añadir el listener de eventos para la navegación
-        window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
-        window.addEventListener('keyup', (e) => navigate(e, vehicle, chassisBody));
 
         function mixers() {
             if(mixerButterfly){
