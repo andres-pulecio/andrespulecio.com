@@ -4,10 +4,32 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
 import importModelsSphere from './importModelsSphere.js';
 import directionalLight from './directionalLight.js';
+import Icosahedron from './Icosahedron';
+import Stone from './Stone.js';
+import Tree from './Tree.js';
+import Pokemons from "./pokemons.js";
+import Path from './Path.js';
+import Word from './Word.js';
+import Sign from './Sign.js';
+import LocationColombia from './LocationColombia.js';
+import Cone from './Cone.js';
+import TechIcons from './TechIcons.js';
+import Fence from './Fence.js';
+import Bowling from './Bowling.js';
+import GameObjects from './GameObjects.js';
+import Brick from './Brick.js';
+import Keys from './Keys.js'
+import Messages from './Messages.js';
+import updatePhysics from './functions/updatePhysics.js'
+import navigate from './functions/navigate.js';
+import mailAnimation from './animation/mailAnimation.js';
+
 import {
     OrbitControls
 } from "three/examples/jsm/controls/OrbitControls.js"
 import nipplejs from 'nipplejs';
+
+
 let vehicle, 
     objectPosition,
     cameraOffset,
@@ -39,10 +61,6 @@ class world {
             height = window.innerHeight;
 
         //Car
-        var CarMesh;
-        var mailAnimationMesh;
-        var linkedinAnimationMesh;
-
 
         var CarMesh;
         var mailAnimationMesh;
@@ -129,7 +147,7 @@ class world {
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
         chassisBody.addShape(chassisShape);
-        chassisBody.position.set(0, 10, 0);
+        chassisBody.position.set(0, 3, 0);
         chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(chassisBody)
 
@@ -156,7 +174,8 @@ class world {
             axleLocal: new CANNON.Vec3(-1, 0, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
             maxSuspensionTravel: 1,
-            customSlidingRotationalSpeed: -30,
+            // customSlidingRotationalSpeed: -30,
+            customSlidingRotationalSpeed: -120,
             useCustomSlidingRotationalSpeed: true,
         };
 
@@ -222,298 +241,60 @@ class world {
         });
         world.addBody(planeBody)
 
-        //icosahedron physics body
-        var icosahedronShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1));
-        var icosahedronBody = new CANNON.Body({mass: 1});
-        icosahedronBody.addShape(icosahedronShape);
-        icosahedronBody.position.set(-85, 1, 93);
-        icosahedronBody.angularVelocity.set(0, 0, 0); // initial velocity
-        world.addBody(icosahedronBody)
-
-        //icosahedron visual body
-        var icosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
-        var icosahedronMesh = new THREE.Mesh(icosahedronGeometry, normalMaterial)
-        icosahedronMesh.castShadow = true
-        scene.add(icosahedronMesh)
-
-        //stones
-        const stoneBig1 = new importModels();
-        stoneBig1.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -8, 0, 0, 0.8, 0.8, 0.8, 0, 1);
-        const stoneBig2 = new importModels();
-        stoneBig2.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, -12, 0, -4, 0.8, 0.8, 0.8, 0, 1);
-        const stoneBig3 = new importModels();
-        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 4, 0, -8, 0.8, 0.8, 0.8, 0, 1);
-        stoneBig3.init('../models/stoneBig.glb', scene, world, normalMaterial, q, 1, 7, 0, 23, 0.8, 0.8, 0.8, 0, 1);
-
-        const stoneMedium1 = new importModels();
-        stoneMedium1.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, -10, 0, 2, 0.1, 0.1, 0.1, 0, 1);
-        const stoneMedium2 = new importModels();
-        stoneMedium2.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 2, 5.8, 0, -5.8, 0.1, 0.1, 0.1, 0, 1);
-        const stoneMedium3 = new importModels();
-        stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, 5, 0.1, 0.1, 0.1, 0, 1);
-        stoneMedium3.init('../models/stoneMedium.glb', scene, world, normalMaterial, q, 1, 8, 0, 21.3, 0.1, 0.1, 0.1, 0, 1);
-
-        const stoneSmall1 = new importModels();
-        stoneSmall1.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -6, 0, 3, 0.1, 0.1, 0.1, 0, 1);
-        const stoneSmall2 = new importModels();
-        stoneSmall2.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -7, 0, -3, 0.1, 0.1, 0.1, 0, 1);
-        const stoneSmall3 = new importModels();
-        stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, 11, 0, 5.5, 0.1, 0.1, 0.1, 0, 1);
-        
-        const treeMedium = new importModels();
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -12, 0, 3, 0.5, 1, 0.5, 0, 1);
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, -14, 0, -7, 0.5, 1, 0.5, 0, 1);
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 4, 0, -12, 0.5, 1, 0.5, 0, 1);
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 10, 0, -16, 0.5, 1, 0.5, 0, 1);
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 18, 0, 150, 0.5, 1, 0.5, 0, 1);
-        treeMedium.init('../models/treeMedium.glb', scene, world, normalMaterial, q, 1, 25, 0, 115, 0.5, 1, 0.5, 0, 1);
-        
-        //big Tree
-        const treeBig = new importModels();
-        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, -15 , 0, 60, 1.2, 3, 1.8, 0, 1);
-        treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, 20, 0, 52, 1.2, 3, 1.8, 0, 1);
-        treeBig.init('../models/treeBig.glb', scene, world, normalMaterial, q, 0.4, 30, 0, 100, 1.2, 3, 1.8, 0, 1);
-        treeBig.init('../models/treeBig2.glb', scene, world, normalMaterial, q, 0.4, -60, 0, 45, 1.2, 3, 1.8, 0, 1);
-        
-        //Dead tree
-        const treeDead = new importModels();
-        treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 150, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, -7 , 0, 200, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -30 , 0, 180, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead2.glb', scene, world, normalMaterial, q, 0.4, 97 , 0, 70, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead1.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, -9, 0.4, 3, 0.4, 0, 1);
-        treeDead.init('../models/treeDead3.glb', scene, world, normalMaterial, q, 0.4, -65 , 0, 110, 0.4, 3, 0.4, 0, 1);
-
-        //fence    
+        //Call icosahedron
+        const icosahedron = new Icosahedron(world, scene, normalMaterial);
+        //Call Stones
+        const stones = new Stone(scene, world, normalMaterial, q);
+        stones.initStones();    
+        //Call Trees
+        const trees = new Tree(scene, world, normalMaterial, q); 
+        trees.initTrees();
+        //Call fence
         const fence = new importModels();
         fence.init('../models/fence.glb', scene, world, normalMaterial, q, 2, 90, 0, 72, 0.4, 1, 2, 0, 1);
-        
-        //charizard
-        const hightSkills = new importModels();
-        hightSkills.init('../models/hightSkills.glb', scene, world, normalMaterial, q, 0.07, -45 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
-        //charmeleon
-        const mediumSkills = new importModels();
-        mediumSkills.init('../models/mediumSkills.glb', scene, world, normalMaterial, q, 0.07, -30 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
-        //charmander
-        const basicSkills = new importModels();
-        basicSkills.init('../models/basicSkills.glb', scene, world, normalMaterial, q, 0.07, -15 , 0.05, 123, 2.5, 2.5, 2, 0, 1);
-
-        //Path start to center
-        const tile = new importModels();
-        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1, 0.05, 9, 1, 0.1, 1, 0, 1);
-        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -1.2, 0.05, 15.2, 1, 0.1, 1, 0, 1);
-        tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, 1.8, 0.05, 11.3, 1, 0.1, 1, 0, 1);
-        stoneSmall3.init('../models/stoneSmall.glb', scene, world, normalMaterial, q, 3, -2, 0, 17, 0.1, 0.1, 0.1, 0, 1);
-
-        for (var i=0; i<15; i=i+1.2) {
-            zPosition = 27;
-            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0, zPosition + (i*3), 1, 0.1, 1, 0, 1);
-        }
-        //Path center to proyects
-        for (var i=0; i<30; i=i+1.2) {
-            zPosition = 72;
-            xPosition = 2;
-            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0.05, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
-            //Path center to proyects
-        }
-        //Path center to information
-        for (var i=0; i<35; i=i+1.2) {
-            zPosition = 74;
-            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, -2 + getRndInteger(1, 5), 0.05, zPosition + (i*3), 1, 0.1, 1, 0, 1);
-        }
-        //Path center to playzone
-        for (var i=0; i>-15; i=i-1.2) {
-            zPosition = 72;
-            xPosition = -2;
-            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0.05, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
-            //Path center to proyects
-        }
-        //Path to studies
-        for (var i=0; i<30; i=i+1.2) {
-            zPosition = 125;
-            xPosition = 2;
-            tile.init('../models/tile.glb', scene, world, normalMaterial, q, 1, xPosition + (i*3), 0.05, zPosition -2 + getRndInteger(1, 5) , 1, 0.1, 1, 0, 1);
-            //Path center to proyects
-        }
-        //Name
-        var xPosition = -18;
-        // var yPosition = ;
-        var zPosition = 18;
-        var modelscale = 1;
-        var xScale = 1.5;
-        var yScale = 1.5;
-        var zScale = 0.5;
-        var modelMass = 1;
-        var rotation = 1;
-        const A_Word = new importModels();
-        A_Word.init('../models/A.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const N_Word = new importModels();
-        N_Word.init('../models/N.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const D_Word = new importModels();
-        D_Word.init('../models/D.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const R_Word = new importModels();
-        R_Word.init('../models/R.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 6, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const E_Word = new importModels();
-        E_Word.init('../models/E.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 8, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const S_Word = new importModels();
-        S_Word.init('../models/S.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 10, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const P_Word = new importModels();
-
-        P_Word.init('../models/P.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 13, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const U_Word = new importModels();
-        U_Word.init('../models/U.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 15, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const L_Word = new importModels();
-        L_Word.init('../models/L.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 17, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const E2_Word = new importModels();
-        E2_Word.init('../models/E.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 19, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const C_Word = new importModels();
-        C_Word.init('../models/C.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 21, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const I_Word = new importModels();
-        I_Word.init('../models/I.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 23.3 , 1, zPosition, 0.6, yScale, zScale, modelMass, rotation);
-        const O_Word = new importModels();
-        O_Word.init('../models/O.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 25.3 , 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
+        //Call Pokemons
+        const pokemons = new Pokemons(scene, world, normalMaterial, q); pokemons.initPokemons();
+        //Call Paths
+        const paths = new Path(scene, world, normalMaterial, q); 
+        paths.initPaths();
+        // Call Name
         const DEVOPS_Word = new importModels();
-        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, modelscale/2, xPosition + 27, 1.5, zPosition + 4, 3.5, 0.3, 1, modelMass, rotation);
+        DEVOPS_Word.init('../models/DEVOPS.glb', scene, world, normalMaterial, q, 0.5, -18 + 27, 1.5, 18 + 4, 3.5, 0.3, 1, 1, 1);
 
-        //Signs
-        const signInformation = new importModels();
-        signInformation.init('../models/signInformation.glb', scene, world, normalMaterial, q, 0.4, -5 , 0, 80, 0.2, 2, 0.2, 0, 1);
-        const signPlayzone = new importModels();
-        signPlayzone.init('../models/signPlayzone.glb', scene, world, normalMaterial, q, 0.4, -8 , 0, 65, 0.2, 2, 0.2, 0, 1);
-        const signProjects = new importModels();
-        signProjects.init('../models/signProjects.glb', scene, world, normalMaterial, q, 0.4, 10 , 0, 64, 0.2, 2, 0.2, 0, 1);
-        const signStudies = new importModels();
-        signStudies.init('../models/signStudies.glb', scene, world, normalMaterial, q, 0.4, 6 , 0, 120, 0.2, 2, 0.2, 0, 1);
-        const signSkills = new importModels();
-        signSkills.init('../models/signSkills.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 120, 0.2, 2, 0.2, 0, 1);
-        const signContact = new importModels();
-        signContact.init('../models/signContact.glb', scene, world, normalMaterial, q, 0.4, -6 , 0, 155, 0.2, 2, 0.2, 0, 1);
-        const signConstruction = new importModels();
-        signConstruction.init('../models/signConstruction.glb', scene, world, normalMaterial, q, 2.6, 91, 0, 68, 0.2, 2, 0.2, 0, 1);
-        //location
-        const location = new importModels();
-        location.init('../models/location.glb', scene, world, normalMaterial, q, 1, -8 , 0, 100, 1, 2, 0.3, 0, 1);
-        //flag
-        const flag = new importModels();
-        flag.init('../models/flag.glb', scene, world, normalMaterial, q, 2.5, -7.6 , 0, 99, 0.2, 1.2, 0.2, 0, 1);
-        //cup
-        const cup = new importModels();
-        cup.init('../models/cup.glb', scene, world, normalMaterial, q, 1, -4.2 , 0.5, 103.7, 0.7, 0.5, 0.7, 1, 1);
-        //cones
-        const cone1 = new importModels();
-        cone1.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 70, 0.4, 0.9, 0.4, 1, 1);
-        const cone2 = new importModels();
-        cone2.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 72, 0.4, 0.9, 0.4, 1, 1);
-        const cone3 = new importModels();
-        cone3.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 74, 0.4, 0.9, 0.4, 1, 1);
-        const cone4 = new importModels();
-        cone4.init('../models/cone.glb', scene, world, normalMaterial, q, 2, 85 , 1, 76, 0.4, 0.9, 0.4, 1, 1);
-        //plate
-        const plate = new importModels();
-        plate.init('../models/plate.glb', scene, world, normalMaterial, q, 1, -4.2 , 0, 103.7, 2, 0.4, 2, 1, 1);
-        //Palm
-        const palm = new importModels();
-        palm.init('../models/palm.glb', scene, world, normalMaterial, q, 2, -11 , 0, 96, 0.3, 1.5, 0.3, 0, 1);
-        //Watermelon
-        const watermelon = new importModels();
-        watermelon.init('../models/watermelon.glb', scene, world, normalMaterial, q, 12, -5 , 0.5, 99, 1.1, 1.1, 0.5, 1, 1);
-        //Banana
-        const banana = new importModels();
-        banana.init('../models/banana.glb', scene, world, normalMaterial, q, 10, -5 , 0.5, 97.7, 1, 0.5, 0.5, 1, 1);
-        //Python
-        const python = new importModels();
-        python.init('../models/python.glb', scene, world, normalMaterial, q, 0.08, 59 , 2.5, 113, 2.6, 2.6, 0.5, 1, 1);
-        //linuxPenguin
-        const linuxPenguin = new importModels();
-        linuxPenguin.init('../models/linuxPenguin.glb', scene, world, normalMaterial, q, 0.15, 72 , 2, 113, 1.5, 2, 1, 1, 1);
-        //github
-        const github = new importModels();
-        github.init('../models/github.glb', scene, world, normalMaterial, q, 0.6, -33 , 4, 156, 1.5, 3.8, 1.5, 1, 1);
-        //linkedin
-        const linkedin = new importModels();
-        linkedin.init('../models/linkedin.glb', scene, world, normalMaterial, q, 1, -24 , 2.5, 156, 2.6, 2.6, 1, 1, 1);
-        //mailbox
-        const mailbox = new importModels();
-        mailbox.init('../models/mailbox.glb', scene, world, normalMaterial, q, 0.02, -15 , 0, 156, 0.3, 2, 0.3, 0, 1);      
-        //fenceWood    
-        const fenceWood = new importModels();
-        for (var i=0; i>-5; i=i-1.2) {
-            zPosition = 53;
-            xPosition = -65;
-            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
-        }
-        for (var i=0; i>-5; i=i-1.2) {
-            zPosition = 67;
-            xPosition = -65;
-            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
-        }
-        for (var i=0; i>-5; i=i-1.2) {
-            zPosition = 81;
-            xPosition = -65;
-            fenceWood.init('../models/fenceWood.glb', scene, world, normalMaterial, q, 2, xPosition + (i*7) , 0, zPosition -2, 3.7, 1, 0.4, 0, 1);
-        }
-        //bowlingBall
-        const bowlingBall = new importModelsSphere();
-        bowlingBall.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 72, 1, 0.5);
-        const bowlingBall2 = new importModelsSphere();
-        bowlingBall2.init('../models/bowlingBall.glb', scene, world, normalMaterial, q, 10, -70 , 2, 58, 1, 0.5);
-        //pins
-        xPosition = -90;
-        zPosition = 72;
-        separation = 1;
-        const pin1 = new importModels();
-        pin1.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition , 2, zPosition, 0.4, 2, 0.4, 0.1, 1);
-        
-        const pin2 = new importModels();
-        pin2.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 1, 2, zPosition + separation * 1, 0.4, 2, 0.4, 0.1, 1);
-        const pin3 = new importModels();
-        pin3.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 1, 2, zPosition - separation * 1, 0.4, 2, 0.4, 0.1, 1);
-        
-        const pin4 = new importModels();
-        pin4.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition + separation * 2, 0.4, 2, 0.4, 0.1, 1);
-        const pin5 = new importModels();
-        pin5.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition                 , 0.4, 2, 0.4, 0.1, 1);
-        const pin6 = new importModels();
-        pin6.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 2, 2, zPosition - separation * 2, 0.4, 2, 0.4, 0.1, 1);
-        
-        const pin7 = new importModels();
-        pin7.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition + separation * 3, 0.4, 2, 0.4, 0.1, 1);
-        const pin8 = new importModels();
-        pin8.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition + separation * 1, 0.4, 2, 0.4, 0.1, 1);
-        const pin9 = new importModels();
-        pin9.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 1, 0.4, 2, 0.4, 0.1, 1);
-        const pin10 = new importModels();
-        pin10.init('../models/pins.glb', scene, world, normalMaterial, q, 10, xPosition - separation * 3, 2, zPosition - separation * 3, 0.4, 2, 0.4, 0.1, 1);
-        
-        const stoneDecoration1 = new importModels();
-        stoneDecoration1.init('../models/stoneDecoration.glb', scene, world, normalMaterial, q, 1, -85, 0, 87, 0.8, 0.8, 0.8, 0, 1);
-        stoneDecoration1.init('../models/stoneDecoration.glb', scene, world, normalMaterial, q, 1, 25, 0, 155, 0.8, 0.8, 0.8, 0, 1);
-        //Dice
-        const dice1 = new importModels();
-        dice1.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -75, 2, 90, 2, 2, 2, 1, 1);
-        const dice2 = new importModels();
-        dice2.init('../models/dice.glb', scene, world, normalMaterial, q, 0.2, -78, 2, 93, 2, 2, 2, 1, 1);
-        //Domino
-        separation = 4; 
-        const domino1 = new importModels();
-        domino1.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino2 = new importModels();
-        domino2.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 1, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino3 = new importModels();
-        domino3.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 2, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino4 = new importModels();
-        domino4.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 3, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino5 = new importModels();
-        domino5.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 4, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino6 = new importModels();
-        domino6.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 5, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino7 = new importModels();
-        domino7.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 6, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino8 = new importModels();
-        domino8.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 7, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
-        const domino9 = new importModels();
-        domino9.init('../models/domino.glb', scene, world, dominoMaterial, q, 40, -90 - separation * 8, 2.7, 58, 0.1, 2.7, 1.5, 1, 1);
+        const words = new Word(scene, world, normalMaterial, q); 
+        words.initWords();
+        //Call Signs
+        const signs = new Sign(scene, world, normalMaterial, q);
+        signs.initSigns();
+        //Call location
+        const locationColombia = new LocationColombia(scene, world, normalMaterial, q); 
+        locationColombia.initObjects();
+        //Call Cones
+        const cones = new Cone(scene, world, normalMaterial, q); 
+        cones.initCones();
+        //Call Tech Icons
+        const techIcons = new TechIcons(scene, world, normalMaterial, q); techIcons.initIcons();
+        //Call FenceWood
+        const fences = new Fence(scene, world, normalMaterial, q); 
+        fences.initFences();
+        //Call Bowling
+        const bowling = new Bowling(scene, world, normalMaterial, q); 
+        bowling.initBowling();
+        //Call Game Objects
+        const gameObjects = new GameObjects(scene, world, normalMaterial, dominoMaterial, q); 
+        gameObjects.initStoneDecorations(); 
+        gameObjects.initDices(); 
+        gameObjects.initDominos();
+        //Call Bricks
+        const bricks = new Brick(scene, world, normalMaterial, q); 
+        bricks.initBricks();
+        //Call Keys
+        const keys = new Keys(scene, world, normalMaterial, q); 
+        keys.initKeys();
+        //Call Messages
+        const messages = new Messages(scene, world, normalMaterial, q); 
+        messages.initMessages();
+
         //Butterfly
         var animation = new GLTFLoader();
         animation.load('../models/butterfly.glb',
@@ -538,76 +319,9 @@ class world {
         linkedinAnimation();
         githubAnimation();
 
-
         //R2*D2
         const R2D2 = new importModels();
         R2D2.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.05, 135, 3, 3.3, 2, 0, 1);
-        // Wall start left
-        var xPosition = -16;
-        // var yPosition = ;
-        var zPosition = 6;
-        var modelscale = 0.6;
-        var xScale = 1.08;
-        var yScale = 0.42;
-        var zScale = 0.6;
-        var modelMass = 0.5;
-        var rotation = 2;
-        const bricks1 = new importModels();
-        bricks1.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks2 = new importModels();
-        bricks2.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks3 = new importModels();
-        bricks3.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
-        const bricks4 = new importModels();
-        bricks4.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks5 = new importModels();
-        bricks5.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
-        // Wall start left
-        var xPosition = 14;
-        var zPosition = -12;
-        var modelscale = 0.6;
-        var xScale = 1.08;
-        var yScale = 0.42;
-        var zScale = 0.6;
-        var modelMass = 0.5;
-        var rotation = 2;
-        const bricks6 = new importModels();
-        bricks6.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + 0, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks7 = new importModels();
-        bricks7.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 2, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks8 = new importModels();
-        bricks8.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition +xScale * 4, 1, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
-        const bricks9 = new importModels();
-        bricks9.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale * 3, 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-        const bricks10 = new importModels();
-        bricks10.init('../models/brick.glb', scene, world, normalMaterial, q, modelscale, xPosition + xScale , 1 + yScale * 2, zPosition, xScale, yScale, zScale, modelMass, rotation);
-
-        //Messages
-        const keysMessage = new importModels();
-        keysMessage.init('../models/keysMessage.glb', scene, world, normalMaterial, q, 5, 0, 0.05, 3, 0.1, 0.1, 0.1, 0, 1);
-        const restartMessage = new importModels();
-        restartMessage.init('../models/restartMessage.glb', scene, world, normalMaterial, q, 5, 3, 0.05, 8, 0.1, 0.1, 0.1, 0, 1);
-        const certificationsMessage = new importModels();
-        certificationsMessage.init('../models/certificationsMessage.glb', scene, world, normalMaterial, q, 3, 35 , 0.05, 113, 0.1, 0.1, 0.1, 0, 1);
-        const activitiesMessage = new importModels();
-        activitiesMessage.init('../models/activitiesMessage.glb', scene, world, normalMaterial, q, 2, 0 , 0.05, 183, 0.1, 0.1, 0.1, 0, 1);
-        const mailMessage = new importModels();
-        mailMessage.init('../models/mailMessage.glb', scene, world, normalMaterial, q, 3, -15 , 0.05, 162, 0.1, 0.1, 0.1, 0, 1);
-
-        //Keys
-        const keysLeft = new importModels();
-        keysLeft.init('../models/keysLeft.glb', scene, world, normalMaterial, q, 5, 5.2, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
-        const keysUp = new importModels();
-        keysUp.init('../models/keysUp.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 1.2, 0.55, 0.5, 0.55, 1, 2);
-        const keysRight = new importModels();
-        keysRight.init('../models/keysRight.glb', scene, world, normalMaterial, q, 5, 7.6, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
-        const keysDown = new importModels();
-        keysDown.init('../models/keysDown.glb', scene, world, normalMaterial, q, 5, 6.4, 1, 2.3, 0.55, 0.5, 0.55, 1, 2);
-        const keysR = new importModels();
-        keysR.init('../models/keysR.glb', scene, world, normalMaterial, q, 5, 5.6, 1, 7.5, 0.55, 0.5, 0.55, 1, 2);
 
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -624,224 +338,40 @@ class world {
         /**
          * Main
          **/
-
-        function updatePhysics() {
-            world.step(1/60);
-            // update the icosahedron position
-            icosahedronMesh.position.copy(icosahedronBody.position);
-            icosahedronMesh.quaternion.copy(icosahedronBody.quaternion);
-            
-
-            camera.position.x = chassisBody.position.x + cameraOffset.x;
-            camera.position.z = chassisBody.position.z + cameraOffset.z;
-
-            sunlight.position.copy(chassisBody.position).add(lightOffset);
-            plane.position.x = chassisBody.position.x + planeOffset.x;
-            plane.position.z = chassisBody.position.z + planeOffset.z;
-        }
         
         clockButterfly = new THREE.Clock();
         clockMail = new THREE.Clock();
         clockLinkedin = new THREE.Clock();
         clockGithub= new THREE.Clock();
-        
+
         function render() { 
             if (screen.width <= 700) {
                 updateJoysitck();
             }          
-
+        
             requestAnimationFrame(render);
             renderer.render(scene, camera);
             CarMesh.position.copy(chassisBody.position);
             CarMesh.quaternion.copy(chassisBody.quaternion);
-            updatePhysics();
+            updatePhysics(world, icosahedron, camera, chassisBody, cameraOffset, sunlight, lightOffset, plane, planeOffset);
+            words.updateWords();
+            locationColombia.updateObjects();
+            cones.updateCones();
+            techIcons.updateIcons();
+            bowling.updateBowling();
+            gameObjects.updateDices(); 
+            gameObjects.updateDominos();
+            bricks.updateBricks();
+            keys.updateKeys();
 
-            bricks1.mesh_param.position.copy(bricks1.body_param.position);
-            bricks1.mesh_param.quaternion.copy(bricks1.body_param.quaternion);
-            bricks2.mesh_param.position.copy(bricks2.body_param.position);
-            bricks2.mesh_param.quaternion.copy(bricks2.body_param.quaternion);
-            bricks3.mesh_param.position.copy(bricks3.body_param.position);
-            bricks3.mesh_param.quaternion.copy(bricks3.body_param.quaternion);
-            bricks4.mesh_param.position.copy(bricks4.body_param.position);
-            bricks4.mesh_param.quaternion.copy(bricks4.body_param.quaternion);
-            bricks5.mesh_param.position.copy(bricks5.body_param.position);
-            bricks5.mesh_param.quaternion.copy(bricks5.body_param.quaternion);
-
-            bricks6.mesh_param.position.copy(bricks6.body_param.position);
-            bricks6.mesh_param.quaternion.copy(bricks6.body_param.quaternion);
-            bricks7.mesh_param.position.copy(bricks7.body_param.position);
-            bricks7.mesh_param.quaternion.copy(bricks7.body_param.quaternion);
-            bricks8.mesh_param.position.copy(bricks8.body_param.position);
-            bricks8.mesh_param.quaternion.copy(bricks8.body_param.quaternion);
-            bricks9.mesh_param.position.copy(bricks9.body_param.position);
-            bricks9.mesh_param.quaternion.copy(bricks9.body_param.quaternion);
-            bricks10.mesh_param.position.copy(bricks10.body_param.position);
-            bricks10.mesh_param.quaternion.copy(bricks10.body_param.quaternion);
-
-            keysLeft.mesh_param.position.copy(keysLeft.body_param.position);
-            keysLeft.mesh_param.quaternion.copy(keysLeft.body_param.quaternion);
-            keysUp.mesh_param.position.copy(keysUp.body_param.position);
-            keysUp.mesh_param.quaternion.copy(keysUp.body_param.quaternion);
-            keysRight.mesh_param.position.copy(keysRight.body_param.position);
-            keysRight.mesh_param.quaternion.copy(keysRight.body_param.quaternion);
-            keysDown.mesh_param.position.copy(keysDown.body_param.position);
-            keysDown.mesh_param.quaternion.copy(keysDown.body_param.quaternion);
-            keysR.mesh_param.position.copy(keysR.body_param.position);
-            keysR.mesh_param.quaternion.copy(keysR.body_param.quaternion);
-            A_Word.mesh_param.position.copy(A_Word.body_param.position);
-            A_Word.mesh_param.quaternion.copy(A_Word.body_param.quaternion);
-            N_Word.mesh_param.position.copy(N_Word.body_param.position);
-            N_Word.mesh_param.quaternion.copy(N_Word.body_param.quaternion);
-            D_Word.mesh_param.position.copy(D_Word.body_param.position);
-            D_Word.mesh_param.quaternion.copy(D_Word.body_param.quaternion);
-            R_Word.mesh_param.position.copy(R_Word.body_param.position);
-            R_Word.mesh_param.quaternion.copy(R_Word.body_param.quaternion);
-            E_Word.mesh_param.position.copy(E_Word.body_param.position);
-            E_Word.mesh_param.quaternion.copy(E_Word.body_param.quaternion);
-            S_Word.mesh_param.position.copy(S_Word.body_param.position);
-            S_Word.mesh_param.quaternion.copy(S_Word.body_param.quaternion);
-            P_Word.mesh_param.position.copy(P_Word.body_param.position);
-            P_Word.mesh_param.quaternion.copy(P_Word.body_param.quaternion);
-            U_Word.mesh_param.position.copy(U_Word.body_param.position);
-            U_Word.mesh_param.quaternion.copy(U_Word.body_param.quaternion);
-            L_Word.mesh_param.position.copy(L_Word.body_param.position);
-            L_Word.mesh_param.quaternion.copy(L_Word.body_param.quaternion);
-            E2_Word.mesh_param.position.copy(E2_Word.body_param.position);
-            E2_Word.mesh_param.quaternion.copy(E2_Word.body_param.quaternion);
-            C_Word.mesh_param.position.copy(C_Word.body_param.position);
-            C_Word.mesh_param.quaternion.copy(C_Word.body_param.quaternion);
-            I_Word.mesh_param.position.copy(I_Word.body_param.position);
-            I_Word.mesh_param.quaternion.copy(I_Word.body_param.quaternion);
-            O_Word.mesh_param.position.copy(O_Word.body_param.position);
-            O_Word.mesh_param.quaternion.copy(O_Word.body_param.quaternion);
-            DEVOPS_Word.mesh_param.position.copy(DEVOPS_Word.body_param.position);
-            DEVOPS_Word.mesh_param.quaternion.copy(DEVOPS_Word.body_param.quaternion);
-            cup.mesh_param.position.copy(cup.body_param.position);
-            cup.mesh_param.quaternion.copy(cup.body_param.quaternion);
-            plate.mesh_param.position.copy(plate.body_param.position);
-            plate.mesh_param.quaternion.copy(plate.body_param.quaternion);
-            watermelon.mesh_param.position.copy(watermelon.body_param.position);
-            watermelon.mesh_param.quaternion.copy(watermelon.body_param.quaternion);
-            banana.mesh_param.position.copy(banana.body_param.position);
-            banana.mesh_param.quaternion.copy(banana.body_param.quaternion);
-            python.mesh_param.position.copy(python.body_param.position);
-            python.mesh_param.quaternion.copy(python.body_param.quaternion);
-            linuxPenguin.mesh_param.position.copy(linuxPenguin.body_param.position);
-            linuxPenguin.mesh_param.quaternion.copy(linuxPenguin.body_param.quaternion);
-            linkedin.mesh_param.position.copy(linkedin.body_param.position);
-            linkedin.mesh_param.quaternion.copy(linkedin.body_param.quaternion);
-            github.mesh_param.position.copy(github.body_param.position);
-            github.mesh_param.quaternion.copy(github.body_param.quaternion);
-            cone1.mesh_param.position.copy(cone1.body_param.position);
-            cone1.mesh_param.quaternion.copy(cone1.body_param.quaternion);        
-            cone2.mesh_param.position.copy(cone2.body_param.position);
-            cone2.mesh_param.quaternion.copy(cone2.body_param.quaternion);        
-            cone3.mesh_param.position.copy(cone3.body_param.position);
-            cone3.mesh_param.quaternion.copy(cone3.body_param.quaternion);        
-            cone4.mesh_param.position.copy(cone4.body_param.position);
-            cone3.mesh_param.quaternion.copy(cone3.body_param.quaternion);        
-            cone4.mesh_param.position.copy(cone4.body_param.position);
-            cone4.mesh_param.quaternion.copy(cone4.body_param.quaternion);        
-            bowlingBall.mesh_param.position.copy(bowlingBall.body_param.position);
-            bowlingBall.mesh_param.quaternion.copy(bowlingBall.body_param.quaternion);        
-            bowlingBall2.mesh_param.position.copy(bowlingBall2.body_param.position);
-            bowlingBall2.mesh_param.quaternion.copy(bowlingBall2.body_param.quaternion);        
-            pin1.mesh_param.position.copy(pin1.body_param.position);
-            pin1.mesh_param.quaternion.copy(pin1.body_param.quaternion);        
-            pin2.mesh_param.position.copy(pin2.body_param.position);
-            pin2.mesh_param.quaternion.copy(pin2.body_param.quaternion);        
-            pin3.mesh_param.position.copy(pin3.body_param.position);
-            pin3.mesh_param.quaternion.copy(pin3.body_param.quaternion);        
-            pin4.mesh_param.position.copy(pin4.body_param.position);
-            pin4.mesh_param.quaternion.copy(pin4.body_param.quaternion);        
-            pin5.mesh_param.position.copy(pin5.body_param.position);
-            pin5.mesh_param.quaternion.copy(pin5.body_param.quaternion);        
-            pin6.mesh_param.position.copy(pin6.body_param.position);
-            pin6.mesh_param.quaternion.copy(pin6.body_param.quaternion);        
-            pin7.mesh_param.position.copy(pin7.body_param.position);
-            pin7.mesh_param.quaternion.copy(pin7.body_param.quaternion);        
-            pin8.mesh_param.position.copy(pin8.body_param.position);
-            pin8.mesh_param.quaternion.copy(pin8.body_param.quaternion);        
-            pin9.mesh_param.position.copy(pin9.body_param.position);
-            pin9.mesh_param.quaternion.copy(pin9.body_param.quaternion);        
-            pin10.mesh_param.position.copy(pin10.body_param.position);
-            pin10.mesh_param.quaternion.copy(pin10.body_param.quaternion);        
-            dice1.mesh_param.position.copy(dice1.body_param.position);
-            dice1.mesh_param.quaternion.copy(dice1.body_param.quaternion);        
-            dice2.mesh_param.position.copy(dice2.body_param.position);
-            dice2.mesh_param.quaternion.copy(dice2.body_param.quaternion);        
-            
-            domino1.mesh_param.position.copy(domino1.body_param.position);
-            domino1.mesh_param.quaternion.copy(domino1.body_param.quaternion);        
-            domino2.mesh_param.position.copy(domino2.body_param.position);
-            domino2.mesh_param.quaternion.copy(domino2.body_param.quaternion);        
-            domino3.mesh_param.position.copy(domino3.body_param.position);
-            domino3.mesh_param.quaternion.copy(domino3.body_param.quaternion);        
-            domino4.mesh_param.position.copy(domino4.body_param.position);
-            domino4.mesh_param.quaternion.copy(domino4.body_param.quaternion);        
-            domino5.mesh_param.position.copy(domino5.body_param.position);
-            domino5.mesh_param.quaternion.copy(domino5.body_param.quaternion);        
-            domino6.mesh_param.position.copy(domino6.body_param.position);
-            domino6.mesh_param.quaternion.copy(domino6.body_param.quaternion);        
-            domino7.mesh_param.position.copy(domino7.body_param.position);
-            domino7.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
-            domino8.mesh_param.position.copy(domino8.body_param.position);
-            domino8.mesh_param.quaternion.copy(domino8.body_param.quaternion);        
-            domino9.mesh_param.position.copy(domino9.body_param.position);
-            domino9.mesh_param.quaternion.copy(domino9.body_param.quaternion);        
             mixers();
             contactLinks();
-            //Test hitbox
-            // fence.boxMesh_param.position.copy(fence.body_param.position);
-            // fence.boxMesh_param.quaternion.co8y(fenc3.body_param.quaternion);
         }
+        
+        // Añadir el listener de eventos para la navegación
+        window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
+        window.addEventListener('keyup', (e) => navigate(e, vehicle, chassisBody));
 
-        function navigate(e) {
-            
-            if (e.type != 'keydown' && e.type != 'keyup') return;
-            var keyup = e.type == 'keyup';
-            vehicle.setBrake(4, 0);
-            vehicle.setBrake(4, 1);
-            vehicle.setBrake(4, 2);
-            vehicle.setBrake(4, 3);
-
-            var engineForce = 1000,
-                maxSteerVal = 0.5;
-            switch(e.keyCode) {
-
-                case 38: // forward
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce/2, 0);
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce/2, 1);
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 2);
-                vehicle.applyEngineForce(keyup ? 0 : -engineForce, 3);
-                break;
-
-                case 40: // backward
-                vehicle.applyEngineForce(keyup ? 0 : engineForce, 0);
-                vehicle.applyEngineForce(keyup ? 0 : engineForce, 1);
-                break;
-
-                case 39: // right
-                vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 2);
-                vehicle.setSteeringValue(keyup ? 0 : -maxSteerVal, 3);
-                break;
-
-                case 37: // left
-                vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 2);
-                vehicle.setSteeringValue(keyup ? 0 : maxSteerVal, 3);
-                break;
-              
-                case 82: // restart
-                chassisBody.position.x = 0;
-                chassisBody.position.y = 5;
-                chassisBody.position.z = 0;
-                chassisBody.quaternion.set(0,0,0,1);
-                break;
-            }
-        }
-        function getRndInteger(min, max) {
-            return Math.floor(Math.random() * (max - min) ) + min;
-        }
         function mixers() {
             if(mixerButterfly){
                 mixerButterfly.update(clockButterfly.getDelta());

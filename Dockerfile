@@ -1,4 +1,5 @@
 FROM node:18.4.0
+# FROM public.ecr.aws/lambda/nodejs:18.2024.11.22.14
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies
