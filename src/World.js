@@ -23,6 +23,7 @@ import updatePhysics from './functions/updatePhysics.js'
 import navigate from './functions/navigate.js';
 import initializeButterflyAnimation from './animation/butterflyAnimation.js';
 import { addJoystick } from './functions/joystick.js';
+import contactLinks from './functions/contactLinks.js';
 
 import importModelsSphere from './importModelsSphere.js';
 import mailAnimation from './animation/mailAnimation.js';
@@ -333,9 +334,8 @@ class world {
         // Añadir el listener de eventos para la navegación
         window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
         window.addEventListener('keyup', (e) => navigate(e, vehicle, chassisBody));
-        window.addEventListener('keydown', contactLinks)
-        window.addEventListener('keyup', contactLinks)
-        
+        window.addEventListener('keydown', (e) => contactLinks(e, chassisBody)); 
+        window.addEventListener('keyup', (e) => contactLinks(e, chassisBody));
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
        
@@ -361,7 +361,7 @@ class world {
             keys.updateKeys();
 
             mixers();
-            contactLinks();
+            contactLinks(null, chassisBody);
             updateJoysitck(vehicle, fwdValue.current, rgtValue.current, lftValue.current, bkdValue.current);
         }
         
@@ -463,31 +463,6 @@ class world {
             );
         }
 
-        function contactLinks(e) {
-            if (e.type != 'keydown' && e.type != 'keyup') return;
-            var keyup = e.type == 'keyup';
-            
-            var mixMailPositionX = -15;
-            var mixMailPositionZ = 162;
-            var squMailTrig = 3;
-            if(e.keyCode == 13 && chassisBody.position.x < (mixMailPositionX + squMailTrig) && chassisBody.position.x > (mixMailPositionX - squMailTrig) && chassisBody.position.z < (mixMailPositionZ + squMailTrig) && chassisBody.position.z > (mixMailPositionZ - squMailTrig)){
-                window.open('mailto:andresfelipepulecio@gmail.com', '_blank').focus();
-            }
-            
-            var mixLinkPositionX = -24;
-            var mixLinkPositionZ = 162;
-            var squLinkTrig = 3;
-            if (e.keyCode == 13 && chassisBody.position.x < (mixLinkPositionX + squLinkTrig) && chassisBody.position.x > (mixLinkPositionX - squLinkTrig) && chassisBody.position.z < (mixLinkPositionZ + squLinkTrig) && chassisBody.position.z > (mixLinkPositionZ - squLinkTrig)) {
-                window.open('https://www.linkedin.com/in/andres-pulecio/', '_blank').focus();
-            }
-            
-            var mixGitPositionX = -33;
-            var mixGitPositionZ = 162;
-            var squGitTrig = 3;
-            if (e.keyCode == 13 && chassisBody.position.x < (mixGitPositionX + squGitTrig) && chassisBody.position.x > (mixGitPositionX - squGitTrig) && chassisBody.position.z < (mixGitPositionZ + squGitTrig) && chassisBody.position.z > (mixGitPositionZ - squGitTrig)) {
-                window.open('https://github.com/andres-pulecio', '_blank').focus();
-            }
-        }
         render();
     }
 }
