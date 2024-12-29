@@ -24,6 +24,8 @@ import navigate from './functions/navigate.js';
 import initializeButterflyAnimation from './animation/butterflyAnimation.js';
 import { addJoystick } from './functions/joystick.js';
 import contactLinks from './functions/contactLinks.js';
+import githubAnimation from './animation/githubAnimation.js';
+import linkedinAnimation from './animation/linkedinAnimation.js';
 
 import importModelsSphere from './importModelsSphere.js';
 import mailAnimation from './animation/mailAnimation.js';
@@ -48,7 +50,7 @@ let vehicle,
     clockMail,
     clockLinkedin,
     clockGithub,
-    separation
+    githubAnimationMesh
     ;
 
 class world {
@@ -303,13 +305,17 @@ class world {
         // Función para actualizar las referencias
         const setButterflyMesh = (mesh) => butterflyMesh = mesh;
         const setMixerButterfly = (mixer) => mixerButterfly = mixer;
+        const setLinkedinAnimationMesh = (mesh) => linkedinAnimationMesh = mesh;
+        const setMixerLinkedin = (mixer) => mixerLinkedin = mixer;
+        const setGithubAnimationMesh = (mesh) => githubAnimationMesh = mesh; 
+        const setMixerGithub = (mixer) => mixerGithub = mixer;
         // Llamar a la función de animación de mariposa y obtener los relojes
         ({ clockButterfly, clockMail, clockLinkedin, clockGithub } = initializeButterflyAnimation(scene, setButterflyMesh, setMixerButterfly));
           
         //Link Animation
         mailAnimation();
-        linkedinAnimation();
-        githubAnimation();
+        linkedinAnimation(scene, setLinkedinAnimationMesh, setMixerLinkedin);
+        githubAnimation(scene, setGithubAnimationMesh, setMixerGithub);
 
         //R2*D2
         const R2D2 = new importModels();
@@ -417,46 +423,6 @@ class world {
                 const clips = gltf.animations;
                 clips.forEach(function(clip) {
                     const action = mixerMail.clipAction(clip);
-                    action.play();
-                });
-            }
-            );
-        }
-
-        function linkedinAnimation(){
-            var linkedinAnimation = new GLTFLoader();
-            linkedinAnimation.load('../models/mailAnimation.glb',
-            (gltf) => {
-                linkedinAnimationMesh = gltf.scene;
-                var scale = 3;
-                linkedinAnimationMesh.scale.set(linkedinAnimationMesh.scale.x * scale, linkedinAnimationMesh.scale.y * scale ,linkedinAnimationMesh.scale.z * scale);
-                linkedinAnimationMesh.position.set(-15 , -10, 162);
-                scene.add(linkedinAnimationMesh);
-                
-                mixerLinkedin = new THREE.AnimationMixer(linkedinAnimationMesh)
-                const clips = gltf.animations;
-                clips.forEach(function(clip) {
-                    const action = mixerLinkedin.clipAction(clip);
-                    action.play();
-                });
-            }
-            );
-        }
-
-        function githubAnimation(){
-            var githubAnimation = new GLTFLoader();
-            githubAnimation.load('../models/mailAnimation.glb',
-            (gltf) => {
-                githubAnimationMesh = gltf.scene;
-                var scale = 3;
-                githubAnimationMesh.scale.set(githubAnimationMesh.scale.x * scale, githubAnimationMesh.scale.y * scale ,githubAnimationMesh.scale.z * scale);
-                githubAnimationMesh.position.set(-15 , -10, 162);
-                scene.add(githubAnimationMesh);
-                
-                mixerGithub = new THREE.AnimationMixer(githubAnimationMesh)
-                const clips = gltf.animations;
-                clips.forEach(function(clip) {
-                    const action = mixerGithub.clipAction(clip);
                     action.play();
                 });
             }
