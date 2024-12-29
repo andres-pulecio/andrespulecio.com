@@ -29,13 +29,8 @@ import mailAnimation from './animation/mailAnimation.js';
 import mixers from './animation/mixers.js';
 import initializePhysics from './functions/physics.js';
 import initializeScene from './functions/sceneSetup.js';
-import render from './functions/render.js';
-import importModelsSphere from './importModelsSphere.js';
-
-import {
-    OrbitControls
-} from "three/examples/jsm/controls/OrbitControls.js"
-import nipplejs from 'nipplejs';
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
+import initializePlaneBody from './functions/planeSetup.js';
 
 
 let vehicle, 
@@ -64,13 +59,8 @@ class world {
         let tempVector = new THREE.Vector3();
         let upVector = new THREE.Vector3(0, 1, 0);
         let joyManager;
-
         var width = window.innerWidth,
             height = window.innerHeight;
-
-        //Car
-
-        var CarMesh;
         var mailAnimationMesh;
         var linkedinAnimationMesh;
         var githubAnimationMesh;
@@ -78,13 +68,10 @@ class world {
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
         planeOffset = new THREE.Vector3(0, -0.1, 0);
-
         var normalMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
-        normalMaterial.friction = 0.25;
-        normalMaterial.restitution = 0.25;
-
+            normalMaterial.friction = 0.25;
+            normalMaterial.restitution = 0.25;
         var dominoMaterial = new THREE.MeshStandardMaterial({color: 0xCB4335, side: THREE.DoubleSide})
-
         var container = document.querySelector('body'),
         w = container.clientWidth,
         h = container.clientHeight,
@@ -93,13 +80,11 @@ class world {
         cameraMovile = new THREE.PerspectiveCamera(75, w/h, 0.001, 50),
         renderConfig = {antialias: true, alpha: true},
         renderer = new THREE.WebGLRenderer(renderConfig);
-
         camera.position.set(10, 11, 11);
         camera.lookAt(0,-4,0);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(w, h);
         container.appendChild(renderer.domElement);
-
         window.addEventListener('resize', function() {
             w = container.clientWidth;
             h = container.clientHeight;
@@ -109,22 +94,36 @@ class world {
         })
         // ------------------------------MOVILE-----------------------
 
-        // Add OrbitControls so that we can pan around with the mouse.
-        if (screen.width <= 700) {    
-            var controls = new OrbitControls(cameraMovile, renderer.domElement);
-            controls.maxPolarAngle = Math.PI / 5;
-            controls.minPolarAngle = Math.PI / 5;
-            controls.maxAzimuthAngle = Math.PI / 5;
-            controls.enablePan = false
-            controls.enableDamping = true;
-            controls.enableZoom = false;
-            controls.update();
-        }          
+        // // Add OrbitControls so that we can pan around with the mouse.
+        // if (screen.width <= 700) {    
+        //     var controls = new OrbitControls(cameraMovile, renderer.domElement);
+        //     controls.maxPolarAngle = Math.PI / 5;
+        //     controls.minPolarAngle = Math.PI / 5;
+        //     controls.maxAzimuthAngle = Math.PI / 5;
+        //     controls.enablePan = false
+        //     controls.enableDamping = true;
+        //     controls.enableZoom = false;
+        //     controls.update();
+        // }          
         // Inicializar el plano y las luces
         const { plane, lightOffset, sunlight } = initializeScene(scene);
         // Inicializar la física
         const { world, groundMaterial, wheelMaterial } = initializePhysics();
-
+        
+        //----------------------------------------------------------------------------------------------------
+        //********         CAR         ********
+        //----------------------------------------------------------------------------------------------------
+        var CarMesh;        // import car from blender
+        var loaderCar = new GLTFLoader();
+        loaderCar.load('../models/poly-car.glb',
+            (gltf) => {
+                CarMesh = gltf.scene;
+                var scale = 1.09;
+                CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale ,CarMesh.scale.z * scale);
+                CarMesh.position.set(0, 0, 0);
+                scene.add(CarMesh);
+            }
+        );
         // car physics body
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
@@ -213,15 +212,17 @@ class world {
                 wheelVisuals[i].quaternion.copy(t.quaternion);
             }
         });
-
-        var q = plane.quaternion;
-        var planeBody = new CANNON.Body({
-            mass: 0, // mass = 0 makes the body static
-            material: groundMaterial,
-            shape: new CANNON.Plane(),
-            quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-        });
-        world.addBody(planeBody)
+        //----------------------------------------------------------------------------------------------------
+        // Inicializar el cuerpo del plano y obtener `q`
+        const { planeBody, q } = initializePlaneBody(world, plane, groundMaterial);
+        // var q = plane.quaternion;
+        // var planeBody = new CANNON.Body({
+        //     mass: 0, // mass = 0 makes the body static
+        //     material: groundMaterial,
+        //     shape: new CANNON.Plane(),
+        //     quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
+        // });
+        // world.addBody(planeBody)
 
         //Call icosahedron
         const icosahedron = new Icosahedron(world, scene, normalMaterial);
@@ -297,23 +298,6 @@ class world {
         mailAnimation(scene, setMailAnimationMesh, setMixerMail);
         linkedinAnimation(scene, setLinkedinAnimationMesh, setMixerLinkedin);
         githubAnimation(scene, setGithubAnimationMesh, setMixerGithub);
-
-
-        // import car from blender
-        var loaderCar = new GLTFLoader();
-        loaderCar.load('../models/poly-car.glb',
-            (gltf) => {
-                CarMesh = gltf.scene;
-                var scale = 1.09;
-                CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale ,CarMesh.scale.z * scale);
-                CarMesh.position.set(0, 0, 0);
-                scene.add(CarMesh);
-            }
-        );
-
-        /**
-         * Main
-        **/
 
         // Añadir el listener de eventos para la navegación
         window.addEventListener('keydown', (e) => navigate(e, vehicle, chassisBody));
