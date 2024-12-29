@@ -2,6 +2,7 @@ function mixers(mixerButterfly, clockButterfly, mixerMail, clockMail, chassisBod
     if (mixerButterfly) {
         mixerButterfly.update(clockButterfly.getDelta());
     }
+    
     const mixMailPositionX = -15;
     const mixMailPositionZ = 162;
     const squMailTrig = 3;
@@ -27,6 +28,7 @@ function mixers(mixerButterfly, clockButterfly, mixerMail, clockMail, chassisBod
     const mixGitPositionX = -33;
     const mixGitPositionZ = 162;
     const squGitTrig = 3;
+
     if (mixerGithub && chassisBody.position.x < (mixGitPositionX + squGitTrig) && chassisBody.position.x > (mixGitPositionX - squGitTrig) && chassisBody.position.z < (mixGitPositionZ + squGitTrig) && chassisBody.position.z > (mixGitPositionZ - squGitTrig)) {
         mixerGithub.update(clockLinkedin.getDelta());
         githubAnimationMesh.position.set(mixGitPositionX, 0, mixGitPositionZ);

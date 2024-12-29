@@ -27,6 +27,7 @@ import contactLinks from './functions/contactLinks.js';
 import githubAnimation from './animation/githubAnimation.js';
 import linkedinAnimation from './animation/linkedinAnimation.js';
 import mailAnimation from './animation/mailAnimation.js';
+import mixers from './animation/mixers.js';
 
 import importModelsSphere from './importModelsSphere.js';
 
@@ -315,7 +316,6 @@ class world {
         ({ clockButterfly, clockMail, clockLinkedin, clockGithub } = initializeButterflyAnimation(scene, setButterflyMesh, setMixerButterfly));
           
         //Link Animation
-        // mailAnimation();
         mailAnimation(scene, setMailAnimationMesh, setMixerMail);
         linkedinAnimation(scene, setLinkedinAnimationMesh, setMixerLinkedin);
         githubAnimation(scene, setGithubAnimationMesh, setMixerGithub);
@@ -369,69 +369,12 @@ class world {
             bricks.updateBricks();
             keys.updateKeys();
 
-            mixers();
+            // mixers();
+            mixers(mixerButterfly, clockButterfly, mixerMail, clockMail, chassisBody, mailAnimationMesh, mixerLinkedin, clockLinkedin, linkedinAnimationMesh, mixerGithub, githubAnimationMesh);
             contactLinks(null, chassisBody);
             updateJoysitck(vehicle, fwdValue.current, rgtValue.current, lftValue.current, bkdValue.current);
         }
         
-
-        function mixers() {
-            if(mixerButterfly){
-                mixerButterfly.update(clockButterfly.getDelta());
-            }
-            var mixMailPositionX = -15;
-            var mixMailPositionZ = 162;
-            var squMailTrig = 3;
-            
-            if(mixerMail && chassisBody.position.x < (mixMailPositionX + squMailTrig) && chassisBody.position.x > (mixMailPositionX - squMailTrig) && chassisBody.position.z < (mixMailPositionZ + squMailTrig) && chassisBody.position.z > (mixMailPositionZ - squMailTrig)){
-                mixerMail.update(clockMail.getDelta());
-                mailAnimationMesh.position.set(mixMailPositionX , 0, mixMailPositionZ);
-            }else{
-                mailAnimationMesh.position.set(mixMailPositionX , -10, mixMailPositionZ);
-            }
-
-            var mixLinkPositionX = -24;
-            var mixLinkPositionZ = 162;
-            var squLinkTrig = 3;
-            
-            if(mixerLinkedin && chassisBody.position.x < (mixLinkPositionX + squLinkTrig) && chassisBody.position.x > (mixLinkPositionX - squLinkTrig) && chassisBody.position.z < (mixLinkPositionZ + squLinkTrig) && chassisBody.position.z > (mixLinkPositionZ - squLinkTrig)){
-                mixerLinkedin.update(clockLinkedin.getDelta());
-                linkedinAnimationMesh.position.set(mixLinkPositionX , 0, mixLinkPositionZ);
-            }else{
-                linkedinAnimationMesh.position.set(mixLinkPositionX  , -10, mixLinkPositionZ);
-            }
-            
-            var mixGitPositionX = -33;
-            var mixGitPositionZ = 162;
-            var squGitTrig = 3;
-            if(mixerGithub && chassisBody.position.x < (mixGitPositionX + squGitTrig) && chassisBody.position.x > (mixGitPositionX - squGitTrig) && chassisBody.position.z < (mixGitPositionZ + squGitTrig) && chassisBody.position.z > (mixGitPositionZ - squGitTrig)){
-                mixerGithub.update(clockLinkedin.getDelta());
-                githubAnimationMesh.position.set(mixGitPositionX , 0, mixGitPositionZ);
-            }else{
-                githubAnimationMesh.position.set(mixGitPositionX  , -10, mixGitPositionZ);
-            }
-        }
-        
-        // function mailAnimation(){
-        //     var mailAnimation = new GLTFLoader();
-        //     mailAnimation.load('../models/mailAnimation.glb',
-        //     (gltf) => {
-        //         mailAnimationMesh = gltf.scene;
-        //         var scale = 3;
-        //         mailAnimationMesh.scale.set(mailAnimationMesh.scale.x * scale, mailAnimationMesh.scale.y * scale ,mailAnimationMesh.scale.z * scale);
-        //         mailAnimationMesh.position.set(-15 , -10, 162);
-        //         scene.add(mailAnimationMesh);
-                
-        //         mixerMail = new THREE.AnimationMixer(mailAnimationMesh)
-        //         const clips = gltf.animations;
-        //         clips.forEach(function(clip) {
-        //             const action = mixerMail.clipAction(clip);
-        //             action.play();
-        //         });
-        //     }
-        //     );
-        // }
-
         render();
     }
 }
