@@ -28,7 +28,8 @@ import githubAnimation from './animation/githubAnimation.js';
 import linkedinAnimation from './animation/linkedinAnimation.js';
 import mailAnimation from './animation/mailAnimation.js';
 import mixers from './animation/mixers.js';
-
+import initializePhysics from './functions/physics.js';
+import render from './functions/render.js';
 import importModelsSphere from './importModelsSphere.js';
 
 import {
@@ -127,28 +128,17 @@ class world {
         plane.receiveShadow = true;
         plane.rotation.x = Math.PI/2;
         scene.add(plane);
-
+        
         //light or sun
         lightOffset = new THREE.Vector3(7, 60, 30);
         const sunlight = new THREE.PointLight(0xffffff, 1.5, 120);
         scene.add( sunlight );
-
+        
         const light = new directionalLight();
         light.init(scene);
 
-        /**
-         * Physics
-         **/
-        const world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
-
-        var groundMaterial = new CANNON.Material('groundMaterial');
-        groundMaterial.friction = 0.25;
-        groundMaterial.restitution = 0.25;
-
-        var wheelMaterial = new CANNON.Material('wheelMaterial');
-        wheelMaterial.friction = 0.25;
-        wheelMaterial.restitution = 0.25;
+        // Inicializar la física
+        const { world, groundMaterial, wheelMaterial } = initializePhysics();
 
         // car physics body
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
@@ -301,6 +291,9 @@ class world {
         //Call Messages
         const messages = new Messages(scene, world, normalMaterial, q); 
         messages.initMessages();
+        //Call R2D2
+        const R2D2 = new importModels();
+        R2D2.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.05, 135, 3, 3.3, 2, 0, 1);
 
         // Función para actualizar las referencias
         const setButterflyMesh = (mesh) => butterflyMesh = mesh;
@@ -320,9 +313,6 @@ class world {
         linkedinAnimation(scene, setLinkedinAnimationMesh, setMixerLinkedin);
         githubAnimation(scene, setGithubAnimationMesh, setMixerGithub);
 
-        //R2*D2
-        const R2D2 = new importModels();
-        R2D2.init('../models/r2d2.glb', scene, world, normalMaterial, q, 3, 12 , 0.05, 135, 3, 3.3, 2, 0, 1);
 
         // import car from blender
         var loaderCar = new GLTFLoader();
@@ -369,7 +359,6 @@ class world {
             bricks.updateBricks();
             keys.updateKeys();
 
-            // mixers();
             mixers(mixerButterfly, clockButterfly, mixerMail, clockMail, chassisBody, mailAnimationMesh, mixerLinkedin, clockLinkedin, linkedinAnimationMesh, mixerGithub, githubAnimationMesh);
             contactLinks(null, chassisBody);
             updateJoysitck(vehicle, fwdValue.current, rgtValue.current, lftValue.current, bkdValue.current);
