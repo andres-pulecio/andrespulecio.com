@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import * as CANNON from "cannon-es";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import importModels from './importModels.js';
-import directionalLight from './directionalLight.js';
 import Icosahedron from './Icosahedron';
 import Stone from './Stone.js';
 import Tree from './Tree.js';
@@ -29,6 +28,7 @@ import linkedinAnimation from './animation/linkedinAnimation.js';
 import mailAnimation from './animation/mailAnimation.js';
 import mixers from './animation/mixers.js';
 import initializePhysics from './functions/physics.js';
+import initializeScene from './functions/sceneSetup.js';
 import render from './functions/render.js';
 import importModelsSphere from './importModelsSphere.js';
 
@@ -119,24 +119,9 @@ class world {
             controls.enableDamping = true;
             controls.enableZoom = false;
             controls.update();
-        }    
-        // -----------------------------------------------------
-        var geometry = new THREE.PlaneGeometry(270, 270, 1);
-        // var material = new THREE.MeshStandardMaterial({color: 0x1E8449, side: THREE.DoubleSide}); //green
-        var material = new THREE.MeshStandardMaterial({color: 0x3498DB , side: THREE.DoubleSide}); //blue
-        var plane = new THREE.Mesh(geometry, material);
-        plane.receiveShadow = true;
-        plane.rotation.x = Math.PI/2;
-        scene.add(plane);
-        
-        //light or sun
-        lightOffset = new THREE.Vector3(7, 60, 30);
-        const sunlight = new THREE.PointLight(0xffffff, 1.5, 120);
-        scene.add( sunlight );
-        
-        const light = new directionalLight();
-        light.init(scene);
-
+        }          
+        // Inicializar el plano y las luces
+        const { plane, lightOffset, sunlight } = initializeScene(scene);
         // Inicializar la física
         const { world, groundMaterial, wheelMaterial } = initializePhysics();
 
