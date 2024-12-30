@@ -101,34 +101,36 @@ class world {
         //----------------------------------------------------------------------------------------------------
         //********         CAR         ********
         //----------------------------------------------------------------------------------------------------
-        var CarMesh;        // import car from blender
-        var loaderCar = new GLTFLoader();
-        loaderCar.load('../models/poly-car.glb',
-            (gltf) => {
-                CarMesh = gltf.scene;
-                var scale = 1.09;
-                CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale ,CarMesh.scale.z * scale);
-                CarMesh.position.set(0, 0, 0);
-                scene.add(CarMesh);
-            }
-        );
-        // car physics body
-        var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
-        var chassisBody = new CANNON.Body({mass: 150});
-        chassisBody.addShape(chassisShape);
-        chassisBody.position.set(0, 10, 0);
-        chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
-        world.addBody(chassisBody)
 
-        // parent vehicle object
-        vehicle = new CANNON.RaycastVehicle({
-        chassisBody: chassisBody,
-        indexRightAxis: 0, // x
-        indexUpAxis: 1, // y
-        indexForwardAxis: 2, // z
+        var CarMesh; // Declarar la variable para almacenar el modelo del coche
+
+        // Importar el coche desde Blender
+        var loaderCar = new GLTFLoader();
+        loaderCar.load('../models/poly-car.glb', (gltf) => {
+            CarMesh = gltf.scene; // Asignar el modelo del coche a CarMesh
+            var scale = 1.09;
+            CarMesh.scale.set(CarMesh.scale.x * scale, CarMesh.scale.y * scale, CarMesh.scale.z * scale); // Escalar el modelo del coche
+            CarMesh.position.set(0, 0, 0); // Establecer la posición inicial del coche
+            scene.add(CarMesh); // Añadir el coche a la escena
         });
 
-        // wheel options
+        // Cuerpo físico del coche (chasis)
+        var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
+        var chassisBody = new CANNON.Body({ mass: 150 });
+        chassisBody.addShape(chassisShape);
+        chassisBody.position.set(0, 10, 0); // Posición inicial del coche (cae desde el cielo)
+        chassisBody.angularVelocity.set(0, 0, 0); // Velocidad angular inicial
+        world.addBody(chassisBody); // Añadir el chasis al mundo de física
+
+        // Objeto vehículo principal
+        vehicle = new CANNON.RaycastVehicle({
+            chassisBody: chassisBody,
+            indexRightAxis: 0, // Eje x
+            indexUpAxis: 1, // Eje y
+            indexForwardAxis: 2, // Eje z
+        });
+
+        // Opciones de las ruedas
         var options = {
             // radius: 0.3,
             radius: 0.4,
@@ -138,9 +140,8 @@ class world {
             frictionSlip: 5,
             dampingRelaxation: 2.3,
             dampingCompression: 4.5,
-            // maxSuspensionForce: 200000,
             maxSuspensionForce: 2000,
-            rollInfluence:  0.01,
+            rollInfluence: 0.01,
             axleLocal: new CANNON.Vec3(-1, 0, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
             maxSuspensionTravel: 1,
@@ -149,6 +150,7 @@ class world {
             useCustomSlidingRotationalSpeed: true,
         };
 
+        // Añadir ruedas al vehículo
         var axlewidth = 0.9;
         options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
         vehicle.addWheel(options);
@@ -158,20 +160,20 @@ class world {
         vehicle.addWheel(options);
         options.chassisConnectionPointLocal.set(-axlewidth, 0, 1);
         vehicle.addWheel(options);
-        vehicle.addToWorld(world);
+        vehicle.addToWorld(world); // Añadir el vehículo al mundo de física
 
-        // car wheels
-        var wheelBodies = [],
-        wheelVisuals = [];
+        // Ruedas del coche
+        var wheelBodies = [], wheelVisuals = [];
         vehicle.wheelInfos.forEach(function(wheel) {
             var shape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20);
-            var body = new CANNON.Body({mass: 1, material: wheelMaterial});
+            var body = new CANNON.Body({ mass: 1, material: wheelMaterial });
             var q = new CANNON.Quaternion();
             q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
             body.addShape(shape, new CANNON.Vec3(), q);
             wheelBodies.push(body);
-            // wheel visual body
-            var geometry = new THREE.CylinderGeometry( wheel.radius, wheel.radius, 0.5, 12 );
+
+            // Cuerpo visual de la rueda
+            var geometry = new THREE.CylinderGeometry(wheel.radius, wheel.radius, 0.5, 12);
             var material = new THREE.MeshPhongMaterial({
                 color: 0x283747,
                 // emissive: 0xaa0000,
@@ -179,22 +181,29 @@ class world {
                 flatShading: true,
             });
             var cylinder = new THREE.Mesh(geometry, material);
-            cylinder.geometry.rotateZ(Math.PI/2);
+            cylinder.geometry.rotateZ(Math.PI / 2);
             wheelVisuals.push(cylinder);
-            scene.add(cylinder);
+            scene.add(cylinder); // Añadir la rueda visual a la escena
         });
 
-        // update the wheels to match the physics
+        // Actualizar las ruedas para que coincidan con la física
         world.addEventListener('postStep', function() {
-            for (var i=0; i<vehicle.wheelInfos.length; i++) {
+            for (var i = 0; i < vehicle.wheelInfos.length; i++) {
                 vehicle.updateWheelTransform(i);
                 var t = vehicle.wheelInfos[i].worldTransform;
-                // update wheel physics
+
+                // Actualizar la física de las ruedas
                 wheelBodies[i].position.copy(t.position);
                 wheelBodies[i].quaternion.copy(t.quaternion);
-                // update wheel visuals
+
+                // Actualizar el cuerpo visual de las ruedas
                 wheelVisuals[i].position.copy(t.position);
                 wheelVisuals[i].quaternion.copy(t.quaternion);
+            }
+            // Sincronizar la posición y orientación del modelo del coche con el chasis
+            if (CarMesh) {
+                CarMesh.position.copy(chassisBody.position);
+                CarMesh.quaternion.copy(chassisBody.quaternion);
             }
         });
         //----------------------------------------------------------------------------------------------------
