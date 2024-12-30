@@ -64,6 +64,7 @@ class world {
         var mailAnimationMesh;
         var linkedinAnimationMesh;
         var githubAnimationMesh;
+        
         objectPosition = new THREE.Vector3();
         cameraOffset = new THREE.Vector3(10, 11, 11);
         // cameraOffset = new THREE.Vector3(5, 2, 0); //calibration
@@ -92,19 +93,6 @@ class world {
             camera.updateProjectionMatrix();
             renderer.setSize(w, h);
         })
-        // ------------------------------MOVILE-----------------------
-
-        // // Add OrbitControls so that we can pan around with the mouse.
-        // if (screen.width <= 700) {    
-        //     var controls = new OrbitControls(cameraMovile, renderer.domElement);
-        //     controls.maxPolarAngle = Math.PI / 5;
-        //     controls.minPolarAngle = Math.PI / 5;
-        //     controls.maxAzimuthAngle = Math.PI / 5;
-        //     controls.enablePan = false
-        //     controls.enableDamping = true;
-        //     controls.enableZoom = false;
-        //     controls.update();
-        // }          
         // Inicializar el plano y las luces
         const { plane, lightOffset, sunlight } = initializeScene(scene);
         // Inicializar la física
@@ -128,7 +116,7 @@ class world {
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
         var chassisBody = new CANNON.Body({mass: 150});
         chassisBody.addShape(chassisShape);
-        chassisBody.position.set(0, 3, 0);
+        chassisBody.position.set(0, 10, 0);
         chassisBody.angularVelocity.set(0, 0, 0); // initial velocity
         world.addBody(chassisBody)
 
@@ -150,7 +138,8 @@ class world {
             frictionSlip: 5,
             dampingRelaxation: 2.3,
             dampingCompression: 4.5,
-            maxSuspensionForce: 200000,
+            // maxSuspensionForce: 200000,
+            maxSuspensionForce: 2000,
             rollInfluence:  0.01,
             axleLocal: new CANNON.Vec3(-1, 0, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
@@ -163,16 +152,12 @@ class world {
         var axlewidth = 0.9;
         options.chassisConnectionPointLocal.set(axlewidth, 0, -1);
         vehicle.addWheel(options);
-
         options.chassisConnectionPointLocal.set(-axlewidth, 0, -1);
         vehicle.addWheel(options);
-
         options.chassisConnectionPointLocal.set(axlewidth, 0, 1);
         vehicle.addWheel(options);
-
         options.chassisConnectionPointLocal.set(-axlewidth, 0, 1);
         vehicle.addWheel(options);
-
         vehicle.addToWorld(world);
 
         // car wheels
@@ -215,15 +200,6 @@ class world {
         //----------------------------------------------------------------------------------------------------
         // Inicializar el cuerpo del plano y obtener `q`
         const { planeBody, q } = initializePlaneBody(world, plane, groundMaterial);
-        // var q = plane.quaternion;
-        // var planeBody = new CANNON.Body({
-        //     mass: 0, // mass = 0 makes the body static
-        //     material: groundMaterial,
-        //     shape: new CANNON.Plane(),
-        //     quaternion: new CANNON.Quaternion(-q._x, q._y, q._z, q._w)
-        // });
-        // world.addBody(planeBody)
-
         //Call icosahedron
         const icosahedron = new Icosahedron(world, scene, normalMaterial);
         //Call Stones
@@ -306,7 +282,6 @@ class world {
         window.addEventListener('keyup', (e) => contactLinks(e, chassisBody));
         window.addEventListener('keydown', navigate)
         window.addEventListener('keyup', navigate)
-       
 
         function render() { 
             if (screen.width <= 700) {
@@ -332,7 +307,6 @@ class world {
             contactLinks(null, chassisBody);
             updateJoysitck(vehicle, fwdValue.current, rgtValue.current, lftValue.current, bkdValue.current);
         }
-        
         render();
     }
 }
