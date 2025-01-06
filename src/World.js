@@ -116,7 +116,8 @@ class world {
 
         // Cuerpo físico del coche (chasis)
         var chassisShape = new CANNON.Box(new CANNON.Vec3(0.8, 0.3, 2));
-        var chassisBody = new CANNON.Body({ mass: 150 });
+        var chassisBody = new CANNON.Body({ mass: 100 });
+        // var chassisBody = new CANNON.Body({ mass: 150 });
         chassisBody.addShape(chassisShape);
         chassisBody.position.set(0, 10, 0); // Posición inicial del coche (cae desde el cielo)
         chassisBody.angularVelocity.set(0, 0, 0); // Velocidad angular inicial
@@ -132,14 +133,48 @@ class world {
 
         // Opciones de las ruedas
         var options = {
-            // radius: 0.3,
+            radius: 0.5,
+            directionLocal: new CANNON.Vec3(0, -1, 0),
+            suspensionStiffness: 30,
+            suspensionRestLength: 0.3,
+            frictionSlip: 1.4,
+            dampingRelaxation: 2.3,
+            dampingCompression: 4.4,
+            maxSuspensionForce: 100000,
+            rollInfluence: 0.01,
+            axleLocal: new CANNON.Vec3(-1, 0, 0),
+            chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
+            maxSuspensionTravel: 0.3,
+            customSlidingRotationalSpeed: -30,
+            useCustomSlidingRotationalSpeed: true,
+        };
+        // var options = {
+        //     radius: 0.4,
+        //     directionLocal: new CANNON.Vec3(0, -1, 0),
+        //     suspensionStiffness: 45,
+        //     suspensionRestLength: 0.4,
+        //     frictionSlip: 5,
+        //     dampingRelaxation: 2.3,
+        //     dampingCompression: 9,
+        //     // dampingCompression: 4.5,
+        //     maxSuspensionForce: 2000,
+        //     rollInfluence: 0.01,
+        //     axleLocal: new CANNON.Vec3(-1, 0, 0),
+        //     chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
+        //     maxSuspensionTravel: 1,
+        //     // customSlidingRotationalSpeed: -30,
+        //     customSlidingRotationalSpeed: -120,
+        //     useCustomSlidingRotationalSpeed: true,
+        // };
+        var options = {
             radius: 0.4,
             directionLocal: new CANNON.Vec3(0, -1, 0),
             suspensionStiffness: 45,
             suspensionRestLength: 0.4,
             frictionSlip: 5,
             dampingRelaxation: 2.3,
-            dampingCompression: 4.5,
+            dampingCompression: 9,
+            // dampingCompression: 4.5,
             maxSuspensionForce: 2000,
             rollInfluence: 0.01,
             axleLocal: new CANNON.Vec3(-1, 0, 0),
@@ -200,7 +235,7 @@ class world {
                 wheelVisuals[i].position.copy(t.position);
                 wheelVisuals[i].quaternion.copy(t.quaternion);
             }
-            // Sincronizar la posición y orientación del modelo del coche con el chasis
+                // Sincronizar la posición y orientación del modelo del coche con el chasis
             if (CarMesh) {
                 CarMesh.position.copy(chassisBody.position);
                 CarMesh.quaternion.copy(chassisBody.quaternion);

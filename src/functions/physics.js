@@ -9,12 +9,16 @@ function initializePhysics() {
     const world = new CANNON.World();
     // Configurar la gravedad del mundo
     // world.gravity.set(0, -9.82, 0); // La gravedad es negativa en el eje Y (hacia abajo)
+    // world.gravity.set(0, -30, 0); // La gravedad es mas fuerte para mayor control en el eje Y (hacia abajo)
     world.gravity.set(0, -30, 0); // La gravedad es mas fuerte para mayor control en el eje Y (hacia abajo)
 
     // Crear material para el suelo
     const groundMaterial = new CANNON.Material('groundMaterial');
-    groundMaterial.friction = 0.25; // Configurar la fricción del material del suelo
-    groundMaterial.restitution = 0.25; // Configurar la restitución (rebote) del material del suelo
+    groundMaterial.friction = 0.3; // Configurar la fricción del material del suelo
+    groundMaterial.restitution = 0; // Configurar la restitución (rebote) del material del suelo
+    groundMaterial.contactEquationStiffness = 1000; // Configurar la restitución (rebote) del material del suelo
+    // groundMaterial.friction = 0.25; // Configurar la fricción del material del suelo
+    // groundMaterial.restitution = 0.25; // Configurar la restitución (rebote) del material del suelo
 
     // Crear material para las ruedas
     const wheelMaterial = new CANNON.Material('wheelMaterial');
