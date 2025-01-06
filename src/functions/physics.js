@@ -8,8 +8,6 @@ function initializePhysics() {
     // Crear un nuevo mundo de física
     const world = new CANNON.World();
     // Configurar la gravedad del mundo
-    // world.gravity.set(0, -9.82, 0); // La gravedad es negativa en el eje Y (hacia abajo)
-    // world.gravity.set(0, -30, 0); // La gravedad es mas fuerte para mayor control en el eje Y (hacia abajo)
     world.gravity.set(0, -30, 0); // La gravedad es mas fuerte para mayor control en el eje Y (hacia abajo)
 
     // Crear material para el suelo

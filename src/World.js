@@ -148,24 +148,6 @@ class world {
             customSlidingRotationalSpeed: -30,
             useCustomSlidingRotationalSpeed: true,
         };
-        // var options = {
-        //     radius: 0.4,
-        //     directionLocal: new CANNON.Vec3(0, -1, 0),
-        //     suspensionStiffness: 45,
-        //     suspensionRestLength: 0.4,
-        //     frictionSlip: 5,
-        //     dampingRelaxation: 2.3,
-        //     dampingCompression: 9,
-        //     // dampingCompression: 4.5,
-        //     maxSuspensionForce: 2000,
-        //     rollInfluence: 0.01,
-        //     axleLocal: new CANNON.Vec3(-1, 0, 0),
-        //     chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
-        //     maxSuspensionTravel: 1,
-        //     // customSlidingRotationalSpeed: -30,
-        //     customSlidingRotationalSpeed: -120,
-        //     useCustomSlidingRotationalSpeed: true,
-        // };
         var options = {
             radius: 0.4,
             directionLocal: new CANNON.Vec3(0, -1, 0),
@@ -174,13 +156,11 @@ class world {
             frictionSlip: 5,
             dampingRelaxation: 2.3,
             dampingCompression: 9,
-            // dampingCompression: 4.5,
             maxSuspensionForce: 2000,
             rollInfluence: 0.01,
             axleLocal: new CANNON.Vec3(-1, 0, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
             maxSuspensionTravel: 1,
-            // customSlidingRotationalSpeed: -30,
             customSlidingRotationalSpeed: -120,
             useCustomSlidingRotationalSpeed: true,
         };
