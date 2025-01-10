@@ -22,7 +22,7 @@ jobs:
       -
         name: Build and push
         env:
-          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+          REGISTRY: public.ecr.aws
           REGISTRY_ALIAS: z6s0c3o0
           REPOSITORY: my-porfolio
           IMAGE_TAG: ${{ github.sha }}
