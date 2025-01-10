@@ -19,13 +19,13 @@ jobs:
           role-to-assume: arn:aws:iam::677615602730:role/github-actions
           aws-region: us-east-1
           mask-aws-account-id: 'false'
-      # -
-      #   name: Build and push
-      #   env:
-      #     REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-      #     REGISTRY_ALIAS: z6s0c3o0
-      #     REPOSITORY: my-porfolio
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-      #     docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+      -
+        name: Build and push
+        env:
+          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+          REGISTRY_ALIAS: z6s0c3o0
+          REPOSITORY: my-porfolio
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
