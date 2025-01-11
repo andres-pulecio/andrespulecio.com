@@ -1,0 +1,29 @@
+name: Deploy insfrastructure to AWS
+
+# this allows me to manually trigger this job through the Github interface if needed. Then I also have a configuration for push to the main branch or to a pull_request to the main branch.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["deploy/**"]
+
+  pull_request:
+    branches: [main]
+    paths: ["deploy/**"]
+
+jobs:
+  deploy-infra-to-AWS:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 # Check out the repository code from GitHub
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::677615602730:role/github-actions
+          aws-region: us-east-1
+          mask-aws-account-id: 'true' # Set up AWS credentials for authentication
