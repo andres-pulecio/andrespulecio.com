@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_ecs_cluster" "default" {
-  name = "my-cluster"
+  name = "my-porfolio"
 }
 
 resource "aws_ecs_task_definition" "task" {
