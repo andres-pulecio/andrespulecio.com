@@ -22,7 +22,11 @@ jobs:
           aws-region: us-east-1
           mask-aws-account-id: 'false'
       - name: Verify AWS role
-        run: aws sts get-caller-identity          
+        run: aws sts get-caller-identity  
+      - name: Authenticate Docker to ECR Public
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+        
       - name: Build and push
         env:
           REGISTRY: public.ecr.aws
