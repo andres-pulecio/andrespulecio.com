@@ -27,7 +27,7 @@ jobs:
           REPOSITORY: my-porfolio
           IMAGE_TAG: latest
         run: |
-          find ../../ -iname 'Dockerfile'
+          ls -lh ../
           pwd
           # docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           # docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
