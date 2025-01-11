@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  login-to-amazon-ecr:
+  deploy-image-to-AWS-ECR:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -20,9 +20,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::677615602730:role/github-actions
           aws-region: us-east-1
-          mask-aws-account-id: 'false'
-      - name: Verify AWS role
-        run: aws sts get-caller-identity  
+          mask-aws-account-id: 'true'
       - name: Authenticate Docker to ECR Public
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
@@ -32,7 +30,7 @@ jobs:
           REGISTRY: public.ecr.aws
           REGISTRY_ALIAS: z6s0c3o0
           REPOSITORY: my-porfolio
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
