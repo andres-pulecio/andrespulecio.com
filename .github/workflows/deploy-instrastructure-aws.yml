@@ -19,23 +19,19 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 # Check out the repository code from GitHub
+        uses: actions/checkout@v2
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::677615602730:role/github-actions
           aws-region: us-east-1
-          mask-aws-account-id: 'true' # Set up AWS credentials for authentication
+          mask-aws-account-id: 'true'
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
-      - name: Change directory to deploy
-        run: cd deploy
       - name: Terraform Init
         run: terraform init
         working-directory: deploy
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+  
