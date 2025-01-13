@@ -19,8 +19,8 @@ resource "aws_ecs_task_definition" "task" {
       memory = 512,  # Memory allocated to the container
       cpu    = 256,  # CPU units allocated to the container
       portMappings = [{
-        containerPort = 3000,  # Port number on the container
-        hostPort      = 3000,  # Port number on the host
+        containerPort = 80,  # Port number on the container
+        hostPort      = 80,  # Port number on the host
       }],
     },
   ])
