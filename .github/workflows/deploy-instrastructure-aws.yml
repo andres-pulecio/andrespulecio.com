@@ -39,6 +39,10 @@ jobs:
         run: terraform init
         working-directory: deploy  # Changes to the deploy directory to initialize Terraform.
 
+      - name: Terraform Refresh
+        run: terraform refresh
+        working-directory: deploy  # Changes to the deploy directory to refresh the Terraform configuration.
+
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: deploy  # Changes to the deploy directory to apply the Terraform configuration.
