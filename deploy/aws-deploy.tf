@@ -33,8 +33,8 @@ resource "aws_ecs_task_definition" "task" {
 # Define an ECS service
 resource "aws_ecs_service" "service" {
   name            = "my-service"  # Name of the ECS service
-  cluster         = aws_ecs_cluster.default.id  # ID of the ECS cluster
-  task_definition = aws_ecs_task_definition.task.arn  # ARN of the task definition
+  cluster         = "arn:aws:ecs:us-east-1:677615602730:cluster/my-portfolio"  # ID of the ECS cluster
+  task_definition = "arn:aws:ecs:us-east-1:677615602730:task-definition/my-portfolio:1"  # ARN of the task definition
   desired_count   = 1  # Number of tasks to run
   launch_type     = "FARGATE"  # Specify that the service runs on Fargate
 
