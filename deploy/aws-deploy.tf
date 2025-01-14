@@ -1,3 +1,4 @@
+
 # Configure the AWS provider
 provider "aws" {
   region = "us-east-1"  # Specify the AWS region
@@ -70,7 +71,7 @@ resource "aws_ecs_task_definition" "task" {
 
 # Define an ECS service
 resource "aws_ecs_service" "service" {
-  name            = "my-service"  # Name of the ECS service
+  name            = "my-portfolio"  # Name of the ECS service
   cluster         = aws_ecs_cluster.default.id  # ID of the ECS cluster
   task_definition = aws_ecs_task_definition.task.arn  # ARN of the task definition
   desired_count   = 1  # Number of tasks to run
