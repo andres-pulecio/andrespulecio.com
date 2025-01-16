@@ -33,6 +33,28 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+# Define a Security Group
+resource "aws_security_group" "my-portfolio" {
+  name        = "my-portfolio"
+  description = "Allow inbound traffic"
+  vpc_id      = aws_vpc.my-portfolio.id
+
+  # Allow inbound traffic on port 443 for HTTPS
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow inbound traffic on port 3000 for your application
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Allow all outbound traffic
   egress {
     from_port   = 0
@@ -41,6 +63,7 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
 
 # Define an ECS cluster
 resource "aws_ecs_cluster" "default" {
