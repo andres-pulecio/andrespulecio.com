@@ -21,7 +21,7 @@ data "aws_security_groups" "my_security_groups" {
 # Destroy instances
 resource "aws_instance" "my_instance_delete" {
   for_each = toset(data.aws_instances.my_instances.ids)
-  instance_id = each.value
+  id       = each.value
 
   lifecycle {
     create_before_destroy = false
@@ -31,7 +31,7 @@ resource "aws_instance" "my_instance_delete" {
 # Destroy security groups
 resource "aws_security_group" "my_security_group_delete" {
   for_each = toset(data.aws_security_groups.my_security_groups.ids)
-  security_group_id = each.value
+  id       = each.value
 
   lifecycle {
     create_before_destroy = false
