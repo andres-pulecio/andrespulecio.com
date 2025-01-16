@@ -39,7 +39,7 @@ data "aws_ecs_services" "my_services" {
 resource "aws_ecs_service" "my_service_delete" {
   for_each = toset(data.aws_ecs_services.my_services.arns)
   cluster = data.aws_ecs_services.my_services.cluster_arn
-  name    = aws_ecs_service.my_service_delete.value
+  name    = each.value
 
   force_delete = true
   lifecycle {
@@ -50,7 +50,7 @@ resource "aws_ecs_service" "my_service_delete" {
 # Delete ECS clusters
 resource "aws_ecs_cluster" "my_cluster_delete" {
   for_each = toset(data.aws_ecs_clusters.my_clusters.arns)
-  cluster_name = aws_ecs_cluster.my_cluster_delete.value
+  cluster_name = each.value
 
   lifecycle {
     create_before_destroy = false
@@ -59,4 +59,12 @@ resource "aws_ecs_cluster" "my_cluster_delete" {
 
 # Delete Security Groups
 resource "aws_security_group" "my_security_group_delete" {
-  for_each = toset(data.aws_security_groups.my_security
+  for_each = toset(data.aws_security_groups.my_security_groups.ids)
+  security_group_id = each.value
+
+  lifecycle {
+    create_before_destroy = false
+  }
+}
+
+# Delete
