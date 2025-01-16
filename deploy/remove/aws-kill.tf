@@ -11,8 +11,11 @@ data "aws_vpcs" "my_vpcs" {
 }
 
 # List all Subnets with the tag "my-portfolio"
-data "aws_subnet_ids" "my_subnets" {
-  vpc_id = tolist(data.aws_vpcs.my_vpcs.ids)[0]
+data "aws_subnets" "my_subnets" {
+  filter {
+    name   = "tag:Name"
+    values = ["my-portfolio"]
+  }
 }
 
 # List all Security Groups with the tag "my-portfolio"
@@ -23,18 +26,21 @@ data "aws_security_groups" "my_security_groups" {
   }
 }
 
-# List all ECS Clusters
-data "aws_ecs_cluster" "my_clusters" {
-  tags = {
-    Name = "my-portfolio"
-  }
+# List all ECS Clusters with the tag "my-portfolio"
+data "aws_ecs_cluster" "my_cluster" {
+  cluster_name = "my-portfolio"
+}
+
+# List all ECS Services within the ECS Cluster
+data "aws_ecs_service" "my_service" {
+  cluster = data.aws_ecs_cluster.my_cluster.id
 }
 
 # Delete ECS services
 resource "aws_ecs_service" "my_service_delete" {
-  for_each = toset(data.aws_ecs_service.my_services.arns)
-  cluster = data.aws_ecs_cluster.my_clusters.arn
-  name    = each.value
+  count    = length(data.aws_ecs_service.my_service.arns)
+  cluster  = data.aws_ecs_service.my_service[count.index].cluster
+  name     = data.aws_ecs_service.my_service[count.index].name
 
   force_delete = true
   lifecycle {
@@ -44,8 +50,8 @@ resource "aws_ecs_service" "my_service_delete" {
 
 # Delete ECS clusters
 resource "aws_ecs_cluster" "my_cluster_delete" {
-  for_each = toset(data.aws_ecs_cluster.my_clusters.arns)
-  name = each.value
+  count = length(data.aws_ecs_cluster.my_cluster.ids)
+  name  = data.aws_ecs_cluster.my_cluster[count.index].name
 
   lifecycle {
     create_before_destroy = false
@@ -54,8 +60,8 @@ resource "aws_ecs_cluster" "my_cluster_delete" {
 
 # Delete Security Groups
 resource "aws_security_group" "my_security_group_delete" {
-  for_each = toset(data.aws_security_groups.my_security_groups.ids)
-  security_group_id = each.value
+  count             = length(data.aws_security_groups.my_security_groups.ids)
+  security_group_id = data.aws_security_groups.my_security_groups[count.index].id
 
   lifecycle {
     create_before_destroy = false
@@ -64,10 +70,9 @@ resource "aws_security_group" "my_security_group_delete" {
 
 # Delete Subnets
 resource "aws_subnet" "my_subnet_delete" {
-  for_each = toset(data.aws_subnet_ids.my_subnets.ids)
-  id = each.value
-
-  vpc_id = tolist(data.aws_vpcs.my_vpcs.ids)[0]
+  count   = length(data.aws_subnets.my_subnets.ids)
+  id      = data.aws_subnets.my_subnets[count.index].id
+  vpc_id  = data.aws_vpcs.my_vpcs.ids[0]
 
   lifecycle {
     create_before_destroy = false
@@ -76,8 +81,8 @@ resource "aws_subnet" "my_subnet_delete" {
 
 # Delete VPCs
 resource "aws_vpc" "my_vpc_delete" {
-  for_each = toset(data.aws_vpcs.my_vpcs.ids)
-  id = each.value
+  count = length(data.aws_vpcs.my_vpcs.ids)
+  id    = data.aws_vpcs.my_vpcs[count.index].id
 
   lifecycle {
     create_before_destroy = false
