@@ -7,11 +7,11 @@ on:
 
   push:
     branches: [main]
-    paths: ["deploy/aws-deploy.tf"]
+    paths: ["deploy/create/**"]
 
   pull_request:
     branches: [main]
-    paths: ["deploy/aws-deploy.tf"]
+    paths: ["deploy/create/**"]
 
 jobs:
   deploy-infra-to-AWS:
@@ -37,8 +37,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: deploy  # Changes to the deploy directory to initialize Terraform.
+        working-directory: deploy/create # Changes to the deploy directory to initialize Terraform.
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: deploy  # Changes to the deploy directory to apply the Terraform configuration.
+        working-directory: deploy/create # Changes to the deploy directory to apply the Terraform configuration.
