@@ -1,4 +1,3 @@
-
 # Configure the AWS provider
 provider "aws" {
   region = "us-east-1"  # Specify the AWS region
@@ -18,20 +17,6 @@ resource "aws_subnet" "my-portfolio" {
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 }
-
-# Define a Security Group
-resource "aws_security_group" "my-portfolio" {
-  name        = "my-portfolio"
-  description = "Allow inbound traffic"
-  vpc_id      = aws_vpc.my-portfolio.id
-
-  # Allow inbound traffic
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
 # Define a Security Group
 resource "aws_security_group" "my-portfolio" {
@@ -63,7 +48,6 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 
 # Define an ECS cluster
 resource "aws_ecs_cluster" "default" {
