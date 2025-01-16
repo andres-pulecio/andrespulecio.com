@@ -8,6 +8,10 @@ resource "aws_vpc" "my-portfolio" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 # Define a Subnet
@@ -16,6 +20,10 @@ resource "aws_subnet" "my-portfolio" {
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 # Define a Security Group
@@ -47,11 +55,19 @@ resource "aws_security_group" "my-portfolio" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 # Define an ECS cluster
 resource "aws_ecs_cluster" "default" {
   name = "my-portfolio"  # Name of the ECS cluster
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 # Define an ECS task definition
@@ -74,6 +90,10 @@ resource "aws_ecs_task_definition" "task" {
   network_mode             = "awsvpc"  # Network mode for the task
   memory                   = "512"  # Memory allocated to the task
   cpu                      = "256"  # CPU units allocated to the task
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 # Define an ECS service
@@ -89,5 +109,9 @@ resource "aws_ecs_service" "service" {
     subnets          = [aws_subnet.my-portfolio.id]  # Use the Subnet ID created
     security_groups  = [aws_security_group.my-portfolio.id]  # Use the Security Group ID created
     assign_public_ip = true  # Assign a public IP to the tasks
+  }
+
+  tags = {
+    Name = "my-portfolio"
   }
 }
