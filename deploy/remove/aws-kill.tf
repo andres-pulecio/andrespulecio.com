@@ -10,28 +10,28 @@ data "aws_vpc" "my_vpc" {
   }
 }
 
-data "aws_subnet" "my_subnet" {
+data "aws_subnet" "my-portfolio" {
   filter {
     name   = "tag:Name"
     values = ["my-portfolio"]
   }
 }
 
-data "aws_security_group" "my_security_group" {
+data "aws_security_group" "my-portfolio" {
   filter {
     name   = "tag:Name"
     values = ["my-portfolio"]
   }
 }
 
-data "aws_ecs_cluster" "my_cluster" {
+data "aws_ecs_cluster" "my-portfolio" {
   filter {
     name   = "tag:Name"
     values = ["my-portfolio"]
   }
 }
 
-data "aws_ecs_service" "my_service" {
+data "aws_ecs_service" "my-portfolio" {
   filter {
     name   = "tag:Name"
     values = ["my-portfolio"]
@@ -39,7 +39,7 @@ data "aws_ecs_service" "my_service" {
 }
 
 # Delete ECS service
-resource "aws_ecs_service" "my_service_delete" {
+resource "aws_ecs_service" "my-portfolio" {
   count = length(data.aws_ecs_service.my_service.arns)
   cluster = data.aws_ecs_service.my_service[count.index].cluster_arn
   name    = data.aws_ecs_service.my_service[count.index].service_name
@@ -51,7 +51,7 @@ resource "aws_ecs_service" "my_service_delete" {
 }
 
 # Delete ECS cluster
-resource "aws_ecs_cluster" "my_cluster_delete" {
+resource "aws_ecs_cluster" "my-portfolio" {
   count = length(data.aws_ecs_cluster.my_cluster.arns)
   cluster_name = data.aws_ecs_cluster.my_cluster[count.index].name
 
@@ -61,7 +61,7 @@ resource "aws_ecs_cluster" "my_cluster_delete" {
 }
 
 # Delete Security Group
-resource "aws_security_group" "my_security_group_delete" {
+resource "aws_security_group" "my-portfolio" {
   count = length(data.aws_security_group.my_security_group.ids)
   security_group_id = data.aws_security_group.my_security_group[count.index].id
 
@@ -71,7 +71,7 @@ resource "aws_security_group" "my_security_group_delete" {
 }
 
 # Delete Subnet
-resource "aws_subnet" "my_subnet_delete" {
+resource "aws_subnet" "my-portfolio" {
   count = length(data.aws_subnet.my_subnet.ids)
   subnet_id = data.aws_subnet.my_subnet[count.index].id
 
@@ -81,7 +81,7 @@ resource "aws_subnet" "my_subnet_delete" {
 }
 
 # Delete VPC
-resource "aws_vpc" "my_vpc_delete" {
+resource "aws_vpc" "my-portfolio" {
   count = length(data.aws_vpc.my_vpc.ids)
   vpc_id = data.aws_vpc.my_vpc[count.index].id
 
