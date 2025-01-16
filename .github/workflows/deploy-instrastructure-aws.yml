@@ -7,11 +7,11 @@ on:
 
   push:
     branches: [main]
-    paths: ["deploy/**"]
+    paths: ["deploy/aws-deploy.tf"]
 
   pull_request:
     branches: [main]
-    paths: ["deploy/**"]
+    paths: ["deploy/aws-deploy.tf"]
 
 jobs:
   deploy-infra-to-AWS:
