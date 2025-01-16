@@ -14,7 +14,7 @@ on:
     paths: ["deploy/remove/**"]
 
 jobs:
-  deploy-infra-to-AWS:
+  kill-infra-to-AWS:
     runs-on: ubuntu-latest  # Specifies that the job will run on an Ubuntu machine.
 
     permissions:
