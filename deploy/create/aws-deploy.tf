@@ -125,6 +125,56 @@ resource "aws_ecs_task_definition" "task" {
   }
 }
 
+# Define a Load Balancer
+resource "aws_lb" "my-portfolio" {
+  name               = "my-portfolio"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.my-portfolio.id]
+  subnets            = [aws_subnet.my-portfolio.id]
+
+  tags = {
+    Name = "my-portfolio"
+  }
+}
+
+# Define a Target Group
+resource "aws_lb_target_group" "my-portfolio" {
+  name     = "my-portfolio"
+  port     = 3000
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.my-portfolio.id
+
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
+  tags = {
+    Name = "my-portfolio"
+  }
+}
+
+# Define a Listener
+resource "aws_lb_listener" "my-portfolio" {
+  load_balancer_arn = aws_lb.my-portfolio.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.my-portfolio.arn
+  }
+
+  tags = {
+    Name = "my-portfolio"
+  }
+}
+
 # Define an ECS service
 resource "aws_ecs_service" "service" {
   name            = "my-portfolio"  # Name of the ECS service
@@ -138,6 +188,13 @@ resource "aws_ecs_service" "service" {
     subnets          = [aws_subnet.my-portfolio.id]  # Use the Subnet ID created
     security_groups  = [aws_security_group.my-portfolio.id]  # Use the Security Group ID created
     assign_public_ip = true  # Assign a public IP to the tasks
+  }
+
+  # Attach the Load Balancer
+  load_balancer {
+    target_group_arn = aws_lb_target_group.my-portfolio.arn
+    container_name   = "my-portfolio"
+    container_port   = 3000
   }
 
   tags = {
