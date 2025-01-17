@@ -39,19 +39,31 @@ resource "aws_route_table" "my-portfolio" {
 
 # Associate the Route Table with the Subnet
 resource "aws_route_table_association" "my-portfolio" {
-  subnet_id      = aws_subnet.my-portfolio.id
+  subnet_id      = aws_subnet.my-portfolio-1.id
   route_table_id = aws_route_table.my-portfolio.id
 }
 
-# Define a Subnet
-resource "aws_subnet" "my-portfolio" {
+# Define Subnet 1
+resource "aws_subnet" "my-portfolio-1" {
   vpc_id                  = aws_vpc.my-portfolio.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "my-portfolio"
+    Name = "my-portfolio-1"
+  }
+}
+
+# Define Subnet 2
+resource "aws_subnet" "my-portfolio-2" {
+  vpc_id                  = aws_vpc.my-portfolio.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "my-portfolio-2"
   }
 }
 
@@ -131,7 +143,7 @@ resource "aws_lb" "my-portfolio" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.my-portfolio.id]
-  subnets            = [aws_subnet.my-portfolio.id]
+  subnets            = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]
 
   tags = {
     Name = "my-portfolio"
@@ -185,7 +197,7 @@ resource "aws_ecs_service" "service" {
 
   # Configure the network settings for the service
   network_configuration {
-    subnets          = [aws_subnet.my-portfolio.id]  # Use the Subnet ID created
+    subnets          = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]  # Use the Subnet IDs created
     security_groups  = [aws_security_group.my-portfolio.id]  # Use the Security Group ID created
     assign_public_ip = true  # Assign a public IP to the tasks
   }
