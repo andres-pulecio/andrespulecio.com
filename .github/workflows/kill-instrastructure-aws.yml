@@ -43,7 +43,7 @@ jobs:
           TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text)
           LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
           TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text)
-          SERVICE_ARN=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceArn" --output text)
+          SERVICE_NAME=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceName" --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
@@ -54,7 +54,7 @@ jobs:
           echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
           echo "LISTENER_ARN=$LISTENER_ARN" >> $GITHUB_ENV
           echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
-          echo "SERVICE_ARN=$SERVICE_ARN" >> $GITHUB_ENV
+          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
 
       - name: Terraform Init
         run: terraform init
@@ -71,7 +71,7 @@ jobs:
           terraform import aws_lb_target_group.my-portfolio ${{ env.TG_ARN }}
           terraform import aws_lb_listener.my-portfolio ${{ env.LISTENER_ARN }}
           terraform import aws_ecs_task_definition.task ${{ env.TASK_DEF_ARN }}
-          terraform import aws_ecs_service.service ${{ env.SERVICE_ARN }}
+          terraform import aws_ecs_service.service my-portfolio/${{ env.SERVICE_NAME }}
         working-directory: deploy/remove
 
       - name: Terraform Destroy
