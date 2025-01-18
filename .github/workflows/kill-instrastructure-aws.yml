@@ -58,9 +58,11 @@ jobs:
           # Delete Load Balancer resources
           LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text || true)
           TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text || true)
-          LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text || true)
+          LISTENER_ARNS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text || true)
 
-          aws elbv2 delete-listener --listener-arn $LISTENER_ARN || echo "Listener $LISTENER_ARN not deleted" >> failed_resources.log
+          for LISTENER_ARN in $LISTENER_ARNS; do
+            aws elbv2 delete-listener --listener-arn $LISTENER_ARN || echo "Listener $LISTENER_ARN not deleted" >> failed_resources.log
+          done
           aws elbv2 delete-target-group --target-group-arn $TG_ARN || echo "Target Group $TG_ARN not deleted" >> failed_resources.log
           aws elbv2 delete-load-balancer --load-balancer-arn $LB_ARN || echo "Load Balancer $LB_ARN not deleted" >> failed_resources.log
 
@@ -82,8 +84,8 @@ jobs:
           # Delete ECS cluster
           aws ecs delete-cluster --cluster ${{ env.CLUSTER_ARN }} || echo "Cluster ${{ env.CLUSTER_ARN }} not deleted" >> failed_resources.log
 
-          # Delete Security Group
-          aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
+          # Delete Route Table associations
+          aws ec2 disassociate-route-table --association-id $(aws ec2 describe-route-tables --route-table-ids ${{ env.ROUTE_TABLE_ID }} --query "RouteTables[*].Associations[*].RouteTableAssociationId" --output text) || echo "Route Table Association not deleted" >> failed_resources.log
 
           # Delete Route Table
           aws ec2 delete-route-table --route-table-id ${{ env.ROUTE_TABLE_ID }} || echo "Route Table ${{ env.ROUTE_TABLE_ID }} not deleted" >> failed_resources.log
@@ -92,12 +94,21 @@ jobs:
           aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
           aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }} || echo "Subnet ${{ env.SUBNET_2_ID }} not deleted" >> failed_resources.log
 
-          # Detach and delete Internet Gateway
+          # Detach Internet Gateway
           aws ec2 detach-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} --vpc-id ${{ env.VPC_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not detached" >> failed_resources.log
+          # Release Elastic IPs
+          ALLOC_IDS=$(aws ec2 describe-addresses --filters "Name=domain,Values=vpc" --query "Addresses[*].AllocationId" --output text || true)
+          for ALLOC_ID in $ALLOC_IDS; do
+            aws ec2 release-address --allocation-id $ALLOC_ID || echo "Elastic IP $ALLOC_ID not released" >> failed_resources.log
+          done
+          # Delete Internet Gateway
           aws ec2 delete-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not deleted" >> failed_resources.log
 
           # Delete the VPC
           aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }} || echo "VPC ${{ env.VPC_ID }} not deleted" >> failed_resources.log
+
+          # Delete Security Group
+          aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
 
           # Delete the Route 53 record
           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.ZONE_ID }} --change-batch '
@@ -110,12 +121,13 @@ jobs:
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "'${{ env.ZONE_ID }}'",
-                  "DNSName": "'${{ env.LB_DNS_NAME }}'",
+                  "DNSName": "'${{ env.LB_ARN }}'",
                   "EvaluateTargetHealth": false
                 }
               }
             }]
           }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
+
 
       - name: Show Failed Resources
         if: always()
