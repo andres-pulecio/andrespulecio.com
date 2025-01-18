@@ -184,11 +184,23 @@ resource "aws_lb_target_group" "my-portfolio" {
   }
 }
 
-# Define a Listener for HTTP
-resource "aws_lb_listener" "my-portfolio" {
+# Fetch the ACM certificate with the tag my-portfolio
+data "aws_acm_certificate" "my-portfolio" {
+  domain = "andrespulecio.com"
+  most_recent = true
+  tags = {
+    Name = "my-portfolio"
+  }
+}
+
+# Define an HTTPS Listener for the Load Balancer
+resource "aws_lb_listener" "my-portfolio-https" {
   load_balancer_arn = aws_lb.my-portfolio.arn  # ARN of the Load Balancer
-  port              = "80"  # Port number for the Listener
-  protocol          = "HTTP"  # Protocol for the Listener
+  port              = "443"  # Port number for HTTPS
+  protocol          = "HTTPS"  # Protocol for the Listener
+
+  ssl_policy = "ELBSecurityPolicy-2016-08"  # SSL Policy
+  certificate_arn = data.aws_acm_certificate.my-portfolio.arn  # ARN of the ACM certificate
 
   default_action {
     type             = "forward"  # Forward traffic to the Target Group
@@ -196,7 +208,27 @@ resource "aws_lb_listener" "my-portfolio" {
   }
 
   tags = {
-    Name = "my-portfolio"  # Tag for the Listener
+    Name = "my-portfolio-https"  # Tag for the Listener
+  }
+}
+
+# Define a Listener for HTTP to redirect to HTTPS
+resource "aws_lb_listener" "my-portfolio-http" {
+  load_balancer_arn = aws_lb.my-portfolio.arn  # ARN of the Load Balancer
+  port              = "80"  # Port number for HTTP
+  protocol          = "HTTP"  # Protocol for the Listener
+
+  default_action {
+    type = "redirect"  # Redirect HTTP to HTTPS
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  tags = {
+    Name = "my-portfolio-http"  # Tag for the Listener
   }
 }
 
