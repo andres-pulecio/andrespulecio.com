@@ -38,6 +38,8 @@ jobs:
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
           ROUTE_TABLE_ID=$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=my-portfolio" --query "RouteTables[*].RouteTableId" --output text)
           CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
+          ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name "andrespulecio.com" --query "HostedZones[0].Id" --output text)
+          RECORD_SET_NAME="andres.com.andrespulecio.com"
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
@@ -46,6 +48,8 @@ jobs:
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
           echo "ROUTE_TABLE_ID=$ROUTE_TABLE_ID" >> $GITHUB_ENV
           echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
+          echo "ZONE_ID=$ZONE_ID" >> $GITHUB_ENV
+          echo "RECORD_SET_NAME=$RECORD_SET_NAME" >> $GITHUB_ENV
 
       - name: Delete Resources
         run: |
@@ -94,6 +98,24 @@ jobs:
 
           # Delete the VPC
           aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }} || echo "VPC ${{ env.VPC_ID }} not deleted" >> failed_resources.log
+
+          # Delete the Route 53 record
+          aws route53 change-resource-record-sets --hosted-zone-id ${{ env.ZONE_ID }} --change-batch '
+          {
+            "Comment": "Deleting Record Set",
+            "Changes": [{
+              "Action": "DELETE",
+              "ResourceRecordSet": {
+                "Name": "'${{ env.RECORD_SET_NAME }}'",
+                "Type": "A",
+                "AliasTarget": {
+                  "HostedZoneId": "'${{ env.ZONE_ID }}'",
+                  "DNSName": "'${{ env.LB_DNS_NAME }}'",
+                  "EvaluateTargetHealth": false
+                }
+              }
+            }]
+          }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
 
       - name: Show Failed Resources
         if: always()
