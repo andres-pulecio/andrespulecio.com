@@ -84,25 +84,30 @@ jobs:
           # Delete ECS cluster
           aws ecs delete-cluster --cluster ${{ env.CLUSTER_ARN }} || echo "Cluster ${{ env.CLUSTER_ARN }} not deleted" >> failed_resources.log
 
-          # Delete Route Table associations
-          aws ec2 disassociate-route-table --association-id $(aws ec2 describe-route-tables --route-table-ids ${{ env.ROUTE_TABLE_ID }} --query "RouteTables[*].Associations[*].RouteTableAssociationId" --output text) || echo "Route Table Association not deleted" >> failed_resources.log
+          # Disassociate Route Table from subnets
+          ASSOCIATION_IDS=$(aws ec2 describe-route-tables --route-table-ids ${{ env.ROUTE_TABLE_ID }} --query "RouteTables[*].Associations[*].RouteTableAssociationId" --output text)
+          for ASSOCIATION_ID in $ASSOCIATION_IDS; do
+            aws ec2 disassociate-route-table --association-id $ASSOCIATION_ID || echo "Route Table Association $ASSOCIATION_ID not deleted" >> failed_resources.log
+          done
 
           # Delete Route Table
           aws ec2 delete-route-table --route-table-id ${{ env.ROUTE_TABLE_ID }} || echo "Route Table ${{ env.ROUTE_TABLE_ID }} not deleted" >> failed_resources.log
 
-          # Delete Subnets
-          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
-          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }} || echo "Subnet ${{ env.SUBNET_2_ID }} not deleted" >> failed_resources.log
-
           # Detach Internet Gateway
           aws ec2 detach-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} --vpc-id ${{ env.VPC_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not detached" >> failed_resources.log
+
           # Release Elastic IPs
           ALLOC_IDS=$(aws ec2 describe-addresses --filters "Name=domain,Values=vpc" --query "Addresses[*].AllocationId" --output text || true)
           for ALLOC_ID in $ALLOC_IDS; do
             aws ec2 release-address --allocation-id $ALLOC_ID || echo "Elastic IP $ALLOC_ID not released" >> failed_resources.log
           done
+
           # Delete Internet Gateway
           aws ec2 delete-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not deleted" >> failed_resources.log
+
+          # Delete Subnets
+          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
+          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }} || echo "Subnet ${{ env.SUBNET_2_ID }} not deleted" >> failed_resources.log
 
           # Delete the VPC
           aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }} || echo "VPC ${{ env.VPC_ID }} not deleted" >> failed_resources.log
@@ -127,6 +132,7 @@ jobs:
               }
             }]
           }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
+
 
 
       - name: Show Failed Resources
