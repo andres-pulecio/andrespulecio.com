@@ -64,12 +64,18 @@ jobs:
 
       - name: Terraform Import
         run: |
+          COUNT=1
           for VPC_ID in ${{ env.VPC_IDS }}; do
-            terraform import aws_vpc.my-portfolio $VPC_ID
+            terraform import aws_vpc.my-portfolio-${COUNT} $VPC_ID
+            COUNT=$((COUNT + 1))
           done
+
+          COUNT=1
           for IGW_ID in ${{ env.IGW_IDS }}; do
-            terraform import aws_internet_gateway.my-portfolio $IGW_ID
+            terraform import aws_internet_gateway.my-portfolio-${COUNT} $IGW_ID
+            COUNT=$((COUNT + 1))
           done
+
           terraform import aws_subnet.my-portfolio-1 ${{ env.SUBNET_1_ID }}
           terraform import aws_subnet.my-portfolio-2 ${{ env.SUBNET_2_ID }}
           terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}
