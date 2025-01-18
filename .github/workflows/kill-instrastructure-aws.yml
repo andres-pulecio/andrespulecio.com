@@ -31,23 +31,50 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
+      - name: Fetch Resource IDs
+        id: fetch-ids
+        run: |
+          VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-portfolio" --query "Vpcs[*].VpcId" --output text)
+          IGW_ID=$(aws ec2 describe-internet-gateways --filters "Name=tag:Name,Values=my-portfolio" --query "InternetGateways[*].InternetGatewayId" --output text)
+          SUBNET_1_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-1" --query "Subnets[*].SubnetId" --output text)
+          SUBNET_2_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[*].SubnetId" --output text)
+          SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
+          LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text)
+          TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text)
+          LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
+          CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
+          TASK_DEF_ARN=$(aws ecs list-task-definitions --query "taskDefinitionArns[?contains(@, 'my-portfolio')]" --output text)
+          SERVICE_ARN=$(aws ecs list-services --cluster my-portfolio --query "serviceArns[?contains(@, 'my-portfolio')]" --output text)
+
+          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+          echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
+          echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
+          echo "SUBNET_2_ID=$SUBNET_2_ID" >> $GITHUB_ENV
+          echo "SG_ID=$SG_ID" >> $GITHUB_ENV
+          echo "LB_ARN=$LB_ARN" >> $GITHUB_ENV
+          echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
+          echo "LISTENER_ARN=$LISTENER_ARN" >> $GITHUB_ENV
+          echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
+          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
+          echo "SERVICE_ARN=$SERVICE_ARN" >> $GITHUB_ENV
+
       - name: Terraform Init
         run: terraform init
         working-directory: deploy/remove
 
       - name: Terraform Import
         run: |
-          terraform import aws_vpc.my-portfolio vpc-12345678
-          terraform import aws_internet_gateway.my-portfolio igw-12345678
-          terraform import aws_subnet.my-portfolio-1 subnet-12345678
-          terraform import aws_subnet.my-portfolio-2 subnet-87654321
-          terraform import aws_security_group.my-portfolio sg-12345678
-          terraform import aws_lb.my-portfolio lb-12345678
-          terraform import aws_lb_target_group.my-portfolio tg-12345678
-          terraform import aws_lb_listener.my-portfolio listener-12345678
-          terraform import aws_ecs_cluster.default my-portfolio
-          terraform import aws_ecs_task_definition.task my-portfolio
-          terraform import aws_ecs_service.service my-portfolio
+          terraform import aws_vpc.my-portfolio ${{ env.VPC_ID }}
+          terraform import aws_internet_gateway.my-portfolio ${{ env.IGW_ID }}
+          terraform import aws_subnet.my-portfolio-1 ${{ env.SUBNET_1_ID }}
+          terraform import aws_subnet.my-portfolio-2 ${{ env.SUBNET_2_ID }}
+          terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}
+          terraform import aws_lb.my-portfolio ${{ env.LB_ARN }}
+          terraform import aws_lb_target_group.my-portfolio ${{ env.TG_ARN }}
+          terraform import aws_lb_listener.my-portfolio ${{ env.LISTENER_ARN }}
+          terraform import aws_ecs_cluster.default ${{ env.CLUSTER_ARN }}
+          terraform import aws_ecs_task_definition.task ${{ env.TASK_DEF_ARN }}
+          terraform import aws_ecs_service.service ${{ env.SERVICE_ARN }}
         working-directory: deploy/remove
 
       - name: Terraform Destroy
