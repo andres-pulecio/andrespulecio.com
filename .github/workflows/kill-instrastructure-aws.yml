@@ -41,7 +41,7 @@ jobs:
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
           LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text)
           TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text)
-          LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
+          LISTENER_ARN=$(aws elbv2.describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
           CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
           TASK_DEF_ARN=$(aws ecs list-task-definitions --query "taskDefinitionArns[?contains(@, 'my-portfolio')]" --output text)
           SERVICE_ARN=$(aws ecs list-services --cluster my-portfolio --query "serviceArns[?contains(@, 'my-portfolio')]" --output text)
