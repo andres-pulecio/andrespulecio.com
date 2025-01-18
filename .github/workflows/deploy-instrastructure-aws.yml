@@ -1,44 +1,44 @@
-name: Deploy infrastructure to AWS
+name: Destroy infrastructure in AWS
 
-# This event allows me to manually trigger this job through the GitHub interface if needed.
-# Additionally, it will run on push to the main branch or on a pull request to the main branch.
+# Este evento permite que este trabajo se active manualmente a través de la interfaz de GitHub si es necesario.
+# Adicionalmente, se ejecutará en push a la rama principal o en una solicitud de extracción a la rama principal.
 on:
   workflow_dispatch:
 
   push:
     branches: [main]
-    paths: ["deploy/create/**"]
+    paths: ["deploy/destroy/**"]
 
   pull_request:
     branches: [main]
-    paths: ["deploy/create/**"]
+    paths: ["deploy/destroy/**"]
 
 jobs:
-  deploy-infra-to-AWS:
-    runs-on: ubuntu-latest  # Specifies that the job will run on an Ubuntu machine.
+  destroy-infra-in-AWS:
+    runs-on: ubuntu-latest  # Especifica que el trabajo se ejecutará en una máquina con Ubuntu.
 
     permissions:
-      id-token: write      # Allows generating ID tokens for authentication with AWS.
-      contents: read       # Allows reading the repository contents.
+      id-token: write      # Permite generar tokens de identificación para la autenticación con AWS.
+      contents: read       # Permite leer el contenido del repositorio.
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # This step checks out the code from the repository.
+        uses: actions/checkout@v2  # Este paso extrae el código del repositorio.
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4  # Configures AWS credentials.
+        uses: aws-actions/configure-aws-credentials@v4  # Configura las credenciales de AWS.
         with:
-          role-to-assume: arn:aws:iam::677615602730:role/github-actions  # Specifies the IAM role to assume.
-          aws-region: us-east-1  # Specifies the AWS region to use.
-          mask-aws-account-id: 'true'  # Masks the AWS account ID in logs.
+          role-to-assume: arn:aws:iam::677615602730:role/github-actions  # Especifica el rol de IAM a asumir.
+          aws-region: us-east-1  # Especifica la región de AWS a usar.
+          mask-aws-account-id: 'true'  # Oculta el ID de la cuenta de AWS en los registros.
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1  # Sets up Terraform.
+        uses: hashicorp/setup-terraform@v1  # Configura Terraform.
 
       - name: Terraform Init
         run: terraform init
-        working-directory: deploy/create # Changes to the deploy directory to initialize Terraform.
+        working-directory: deploy/destroy # Cambia al directorio de deploy para inicializar Terraform.
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-        working-directory: deploy/create # Changes to the deploy directory to apply the Terraform configuration.
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: deploy/destroy # Cambia al directorio de deploy para aplicar la configuración de Terraform.
