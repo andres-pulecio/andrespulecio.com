@@ -61,6 +61,12 @@ jobs:
           aws ecs update-service --cluster my-portfolio --service $SERVICE_NAME --desired-count 0
           aws ecs delete-service --cluster my-portfolio --service $SERVICE_NAME
 
+          # Stop ECS tasks
+          TASK_ARNS=$(aws ecs list-tasks --cluster my-portfolio --query "taskArns[*]" --output text)
+          for TASK_ARN in $TASK_ARNS; do
+            aws ecs stop-task --cluster my-portfolio --task $TASK_ARN
+          done
+
           # Delete ECS task definition
           TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text)
           aws ecs deregister-task-definition --task-definition $TASK_DEF_ARN
