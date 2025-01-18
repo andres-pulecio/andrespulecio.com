@@ -235,7 +235,7 @@ data "aws_route53_zone" "my-portfolio" {
 # Define a Route 53 Record
 resource "aws_route53_record" "my-portfolio" {
   zone_id = data.aws_route53_zone.my-portfolio.id  # ID de la zona de hospedaje en Route 53
-  name    = "andres.com"  # Nombre de dominio
+  name    = "andrespulecio.com"  # Nombre de dominio
   type    = "A"  # Tipo de registro
   alias {
     name                   = aws_lb.my-portfolio.dns_name  # Nombre DNS del Load Balancer
