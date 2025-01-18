@@ -1,4 +1,4 @@
-name: Kill infrastructure to AWS
+name: Destroy infrastructure on AWS
 
 # This event allows me to manually trigger this job through the GitHub interface if needed.
 # Additionally, it will run on push to the main branch or on a pull request to the main branch.
@@ -14,7 +14,7 @@ on:
     paths: ["deploy/remove/**"]
 
 jobs:
-  kill-infra-to-AWS:
+  destroy-infra-on-AWS:
     runs-on: ubuntu-latest  # Specifies that the job will run on an Ubuntu machine.
 
     permissions:
@@ -39,6 +39,6 @@ jobs:
         run: terraform init
         working-directory: deploy/remove # Changes to the deploy directory to initialize Terraform.
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-        working-directory: deploy/remove # Changes to the deploy directory to apply the Terraform configuration.
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: deploy/remove # Changes to the deploy directory to destroy the Terraform configuration.
