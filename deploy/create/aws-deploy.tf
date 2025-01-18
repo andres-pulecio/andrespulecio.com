@@ -227,18 +227,15 @@ resource "aws_ecs_service" "service" {
   }
 }
 
-# Fetch the Route 53 Hosted Zone using a tag filter
+# Fetch the Route 53 Hosted Zone using the exact name
 data "aws_route53_zone" "my-portfolio" {
-  filter {
-    name   = "tag:Name"
-    values = ["my-portfolio"]
-  }
+  name = "andrespulecio.com"  # Nombre exacto de tu zona de hospedaje en Route 53
 }
 
 # Define a Route 53 Record
 resource "aws_route53_record" "my-portfolio" {
   zone_id = data.aws_route53_zone.my-portfolio.id  # ID de la zona de hospedaje en Route 53
-  name    = "andrespulecio.com"  # Nombre de dominio
+  name    = "andres.com"  # Nombre de dominio
   type    = "A"  # Tipo de registro
   alias {
     name                   = aws_lb.my-portfolio.dns_name  # Nombre DNS del Load Balancer
