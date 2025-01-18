@@ -122,7 +122,7 @@ jobs:
             "Changes": [{
               "Action": "DELETE",
               "ResourceRecordSet": {
-                "Name": "'${{ env.RECORD_SET_NAME }}'",
+                "Name": "andrespulecio.com",
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
