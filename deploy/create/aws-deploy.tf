@@ -156,6 +156,7 @@ resource "aws_lb_target_group" "my-portfolio" {
   port     = 3000
   protocol = "HTTP"
   vpc_id   = aws_vpc.my-portfolio.id
+  target_type = "ip"  # Set target type to "ip" for compatibility with awsvpc network mode
 
   health_check {
     path                = "/"
