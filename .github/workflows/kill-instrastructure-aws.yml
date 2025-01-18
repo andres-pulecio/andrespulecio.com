@@ -36,6 +36,7 @@ jobs:
           SUBNET_1_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-1" --query "Subnets[*].SubnetId" --output text)
           SUBNET_2_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[*].SubnetId" --output text)
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
+          ROUTE_TABLE_ID=$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=my-portfolio" --query "RouteTables[*].RouteTableId" --output text)
           CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
@@ -43,6 +44,7 @@ jobs:
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
           echo "SUBNET_2_ID=$SUBNET_2_ID" >> $GITHUB_ENV
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
+          echo "ROUTE_TABLE_ID=$ROUTE_TABLE_ID" >> $GITHUB_ENV
           echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
 
       - name: Delete Resources
@@ -78,6 +80,9 @@ jobs:
 
           # Delete Security Group
           aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
+
+          # Delete Route Table
+          aws ec2 delete-route-table --route-table-id ${{ env.ROUTE_TABLE_ID }} || echo "Route Table ${{ env.ROUTE_TABLE_ID }} not deleted" >> failed_resources.log
 
           # Delete Subnets
           aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
