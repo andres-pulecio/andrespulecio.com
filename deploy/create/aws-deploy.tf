@@ -81,6 +81,14 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Allow inbound traffic on port 80 for HTTP
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Allow inbound traffic on port 3000 for your application
   ingress {
     from_port   = 3000
@@ -152,10 +160,10 @@ resource "aws_lb" "my-portfolio" {
 
 # Define a Target Group
 resource "aws_lb_target_group" "my-portfolio" {
-  name     = "my-portfolio"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.my-portfolio.id
+  name        = "my-portfolio"
+  port        = 3000
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.my-portfolio.id
   target_type = "ip"  # Set target type to "ip" for compatibility with awsvpc network mode
 
   health_check {
@@ -172,7 +180,7 @@ resource "aws_lb_target_group" "my-portfolio" {
   }
 }
 
-# Define a Listener
+# Define a Listener for HTTP
 resource "aws_lb_listener" "my-portfolio" {
   load_balancer_arn = aws_lb.my-portfolio.arn
   port              = "80"
