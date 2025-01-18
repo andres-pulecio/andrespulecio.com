@@ -225,21 +225,21 @@ resource "aws_ecs_service" "service" {
   tags = {
     Name = "my-portfolio"
   }
+}
 
-  # Fetch the Route 53 Hosted Zone
-  data "aws_route53_zone" "my-portfolio" {
-    name = "my-portfolio"  # Tag of the Route 53 hosted zone
-  }
-  # Define a Route 53 Record
-  resource "aws_route53_record" "my-portfolio" {
-    zone_id = aws_route53_zone.my-portfolio.id  # ID of the Route 53 hosted zone
-    name    = "andresfelipepulecio.com"  # Domain name
-    type    = "A"  # Record type
-    alias {
-      name                   = aws_lb.my-portfolio.dns_name  # DNS name of the Load Balancer
-      zone_id                = aws_lb.my-portfolio.zone_id  # Hosted zone ID of the Load Balancer
-      evaluate_target_health = false  # Do not evaluate target health
-    }
-  }
+# Fetch the Route 53 Hosted Zone
+data "aws_route53_zone" "my-portfolio" {
+  name = "my-portfolio"  # Tag of the Route 53 hosted zone
+}
 
+# Define a Route 53 Record
+resource "aws_route53_record" "my-portfolio" {
+  zone_id = data.aws_route53_zone.my-portfolio.id  # ID of the Route 53 hosted zone
+  name    = "andresfelipepulecio.com"  # Domain name
+  type    = "A"  # Record type
+  alias {
+    name                   = aws_lb.my-portfolio.dns_name  # DNS name of the Load Balancer
+    zone_id                = aws_lb.my-portfolio.zone_id  # Hosted zone ID of the Load Balancer
+    evaluate_target_health = false  # Do not evaluate target health
+  }
 }
