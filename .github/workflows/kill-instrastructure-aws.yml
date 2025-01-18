@@ -28,9 +28,6 @@ jobs:
           aws-region: us-east-1
           mask-aws-account-id: 'true'
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-
       - name: Fetch Resource IDs
         id: fetch-ids
         run: |
@@ -39,41 +36,48 @@ jobs:
           SUBNET_1_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-1" --query "Subnets[*].SubnetId" --output text)
           SUBNET_2_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[*].SubnetId" --output text)
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
-          LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text)
-          TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text)
-          LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
-          TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text)
-          SERVICE_NAME=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceName" --output text)
+          CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
           echo "SUBNET_2_ID=$SUBNET_2_ID" >> $GITHUB_ENV
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
-          echo "LB_ARN=$LB_ARN" >> $GITHUB_ENV
-          echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
-          echo "LISTENER_ARN=$LISTENER_ARN" >> $GITHUB_ENV
-          echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
-          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
+          echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: deploy/remove
-
-      - name: Terraform Import
+      - name: Delete Resources
         run: |
-          terraform import aws_vpc.my-portfolio ${{ env.VPC_ID }}
-          terraform import aws_internet_gateway.my-portfolio ${{ env.IGW_ID }}
-          terraform import aws_subnet.my-portfolio-1 ${{ env.SUBNET_1_ID }}
-          terraform import aws_subnet.my-portfolio-2 ${{ env.SUBNET_2_ID }}
-          terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}
-          terraform import aws_lb.my-portfolio ${{ env.LB_ARN }}
-          terraform import aws_lb_target_group.my-portfolio ${{ env.TG_ARN }}
-          terraform import aws_lb_listener.my-portfolio ${{ env.LISTENER_ARN }}
-          terraform import aws_ecs_task_definition.task ${{ env.TASK_DEF_ARN }}
-          terraform import aws_ecs_service.service my-portfolio/${{ env.SERVICE_NAME }}
-        working-directory: deploy/remove
+          # Delete Load Balancer resources
+          LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text)
+          TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text)
+          LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text)
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
-        working-directory: deploy/remove
+          aws elbv2 delete-listener --listener-arn $LISTENER_ARN
+          aws elbv2 delete-target-group --target-group-arn $TG_ARN
+          aws elbv2 delete-load-balancer --load-balancer-arn $LB_ARN
+
+          # Delete ECS service
+          SERVICE_NAME=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceName" --output text)
+          aws ecs update-service --cluster my-portfolio --service $SERVICE_NAME --desired-count 0
+          aws ecs delete-service --cluster my-portfolio --service $SERVICE_NAME
+
+          # Delete ECS task definition
+          TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text)
+          aws ecs deregister-task-definition --task-definition $TASK_DEF_ARN
+
+          # Delete ECS cluster
+          aws ecs delete-cluster --cluster ${{ env.CLUSTER_ARN }}
+
+          # Delete Security Group
+          aws ec2 delete-security-group --group-id ${{ env.SG_ID }}
+
+          # Delete Subnets
+          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }}
+          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }}
+
+          # Detach and delete Internet Gateway
+          aws ec2 detach-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} --vpc-id ${{ env.VPC_ID }}
+          aws ec2 delete-internet-gateway --internet-gateway-id ${{ env.IGW_ID }}
+
+          # Delete the VPC
+          aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }}
