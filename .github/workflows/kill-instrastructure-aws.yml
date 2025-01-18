@@ -35,6 +35,21 @@ jobs:
         run: terraform init
         working-directory: deploy/remove
 
+      - name: Terraform Import
+        run: |
+          terraform import aws_vpc.my-portfolio vpc-12345678
+          terraform import aws_internet_gateway.my-portfolio igw-12345678
+          terraform import aws_subnet.my-portfolio-1 subnet-12345678
+          terraform import aws_subnet.my-portfolio-2 subnet-87654321
+          terraform import aws_security_group.my-portfolio sg-12345678
+          terraform import aws_lb.my-portfolio lb-12345678
+          terraform import aws_lb_target_group.my-portfolio tg-12345678
+          terraform import aws_lb_listener.my-portfolio listener-12345678
+          terraform import aws_ecs_cluster.default my-portfolio
+          terraform import aws_ecs_task_definition.task my-portfolio
+          terraform import aws_ecs_service.service my-portfolio
+        working-directory: deploy/remove
+
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
         working-directory: deploy/remove
