@@ -34,8 +34,8 @@ jobs:
       - name: Fetch Resource IDs
         id: fetch-ids
         run: |
-          VPC_IDS=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-portfolio" --query "Vpcs[*].VpcId" --output text)
-          IGW_IDS=$(aws ec2 describe-internet-gateways --filters "Name=tag:Name,Values=my-portfolio" --query "InternetGateways[*].InternetGatewayId" --output text)
+          VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-portfolio" --query "Vpcs[*].VpcId" --output text)
+          IGW_ID=$(aws ec2 describe-internet-gateways --filters "Name=tag:Name,Values=my-portfolio" --query "InternetGateways[*].InternetGatewayId" --output text)
           SUBNET_1_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-1" --query "Subnets[*].SubnetId" --output text)
           SUBNET_2_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[*].SubnetId" --output text)
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
@@ -46,8 +46,8 @@ jobs:
           TASK_DEF_ARN=$(aws ecs list-task-definitions --query "taskDefinitionArns[?contains(@, 'my-portfolio')]" --output text)
           SERVICE_ARN=$(aws ecs list-services --cluster my-portfolio --query "serviceArns[?contains(@, 'my-portfolio')]" --output text)
 
-          echo "VPC_IDS=$VPC_IDS" >> $GITHUB_ENV
-          echo "IGW_IDS=$IGW_IDS" >> $GITHUB_ENV
+          echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
+          echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
           echo "SUBNET_2_ID=$SUBNET_2_ID" >> $GITHUB_ENV
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
@@ -64,18 +64,8 @@ jobs:
 
       - name: Terraform Import
         run: |
-          COUNT=1
-          for VPC_ID in ${{ env.VPC_IDS }}; do
-            terraform import aws_vpc.my-portfolio-${COUNT} $VPC_ID
-            COUNT=$((COUNT + 1))
-          done
-
-          COUNT=1
-          for IGW_ID in ${{ env.IGW_IDS }}; do
-            terraform import aws_internet_gateway.my-portfolio-${COUNT} $IGW_ID
-            COUNT=$((COUNT + 1))
-          done
-
+          terraform import aws_vpc.my-portfolio ${{ env.VPC_ID }}
+          terraform import aws_internet_gateway.my-portfolio ${{ env.IGW_ID }}
           terraform import aws_subnet.my-portfolio-1 ${{ env.SUBNET_1_ID }}
           terraform import aws_subnet.my-portfolio-2 ${{ env.SUBNET_2_ID }}
           terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}

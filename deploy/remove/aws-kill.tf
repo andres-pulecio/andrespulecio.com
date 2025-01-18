@@ -1,10 +1,10 @@
 # Configure the AWS provider
 provider "aws" {
-  region = "us-east-1"  # Specify the AWS region
+  region = "us-east-1"
 }
 
-# Define multiple VPCs
-resource "aws_vpc" "my-portfolio-1" {
+# Define a VPC
+resource "aws_vpc" "my-portfolio" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -14,27 +14,9 @@ resource "aws_vpc" "my-portfolio-1" {
   }
 }
 
-resource "aws_vpc" "my-portfolio-2" {
-  cidr_block           = "10.1.0.0/16"
-  enable_dns_support   = true
-  enable_dns_hostnames = true
-
-  tags = {
-    Name = "my-portfolio"
-  }
-}
-
-# Define multiple Internet Gateways
-resource "aws_internet_gateway" "my-portfolio-1" {
-  vpc_id = aws_vpc.my-portfolio-1.id
-
-  tags = {
-    Name = "my-portfolio"
-  }
-}
-
-resource "aws_internet_gateway" "my-portfolio-2" {
-  vpc_id = aws_vpc.my-portfolio-2.id
+# Define an Internet Gateway
+resource "aws_internet_gateway" "my-portfolio" {
+  vpc_id = aws_vpc.my-portfolio.id
 
   tags = {
     Name = "my-portfolio"
@@ -43,11 +25,11 @@ resource "aws_internet_gateway" "my-portfolio-2" {
 
 # Define a Route Table
 resource "aws_route_table" "my-portfolio" {
-  vpc_id = aws_vpc.my-portfolio-1.id
+  vpc_id = aws_vpc.my-portfolio.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.my-portfolio-1.id
+    gateway_id = aws_internet_gateway.my-portfolio.id
   }
 
   tags = {
@@ -63,7 +45,7 @@ resource "aws_route_table_association" "my-portfolio" {
 
 # Define Subnet 1
 resource "aws_subnet" "my-portfolio-1" {
-  vpc_id                  = aws_vpc.my-portfolio-1.id
+  vpc_id                  = aws_vpc.my-portfolio.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
@@ -75,7 +57,7 @@ resource "aws_subnet" "my-portfolio-1" {
 
 # Define Subnet 2
 resource "aws_subnet" "my-portfolio-2" {
-  vpc_id                  = aws_vpc.my-portfolio-1.id
+  vpc_id                  = aws_vpc.my-portfolio.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
@@ -89,9 +71,8 @@ resource "aws_subnet" "my-portfolio-2" {
 resource "aws_security_group" "my-portfolio" {
   name        = "my-portfolio"
   description = "Allow inbound traffic"
-  vpc_id      = aws_vpc.my-portfolio-1.id
+  vpc_id      = aws_vpc.my-portfolio.id
 
-  # Allow inbound traffic on port 443 for HTTPS
   ingress {
     from_port   = 443
     to_port     = 443
@@ -99,15 +80,6 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow inbound traffic on port 80 for HTTP
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow inbound traffic on port 3000 for your application
   ingress {
     from_port   = 3000
     to_port     = 3000
@@ -115,7 +87,6 @@ resource "aws_security_group" "my-portfolio" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
@@ -130,7 +101,7 @@ resource "aws_security_group" "my-portfolio" {
 
 # Define an ECS cluster
 resource "aws_ecs_cluster" "default" {
-  name = "my-portfolio"  # Name of the ECS cluster
+  name = "my-portfolio"
 
   tags = {
     Name = "my-portfolio"
@@ -139,24 +110,24 @@ resource "aws_ecs_cluster" "default" {
 
 # Define an ECS task definition
 resource "aws_ecs_task_definition" "task" {
-  family                   = "my-portfolio"  # Name of the task definition family
+  family                   = "my-portfolio"
   container_definitions    = jsonencode([
     {
-      name  = "my-portfolio",  # Name of the container
-      image = "public.ecr.aws/z6s0c3o0/my-porfolio:latest",  # URL of the container image in ECR
-      essential = true,  # Specify if the container is essential
-      memory = 512,  # Memory allocated to the container
-      cpu    = 256,  # CPU units allocated to the container
+      name  = "my-portfolio",
+      image = "public.ecr.aws/z6s0c3o0/my-porfolio:latest",
+      essential = true,
+      memory = 512,
+      cpu    = 256,
       portMappings = [{
-        containerPort = 3000,  # Port number on the container
-        hostPort      = 3000,  # Port number on the host
+        containerPort = 3000,
+        hostPort      = 3000,
       }],
     },
   ])
-  requires_compatibilities = ["FARGATE"]  # Specify that the task runs on Fargate
-  network_mode             = "awsvpc"  # Network mode for the task
-  memory                   = "512"  # Memory allocated to the task
-  cpu                      = "256"  # CPU units allocated to the task
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  memory                   = "512"
+  cpu                      = "256"
 
   tags = {
     Name = "my-portfolio"
@@ -178,11 +149,10 @@ resource "aws_lb" "my-portfolio" {
 
 # Define a Target Group
 resource "aws_lb_target_group" "my-portfolio" {
-  name        = "my-portfolio"
-  port        = 3000
-  protocol    = "HTTP"
-  vpc_id      = aws_vpc.my-portfolio-1.id
-  target_type = "ip"  # Set target type to "ip" for compatibility with awsvpc network mode
+  name     = "my-portfolio"
+  port     = 3000
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.my-portfolio.id
 
   health_check {
     path                = "/"
@@ -198,7 +168,7 @@ resource "aws_lb_target_group" "my-portfolio" {
   }
 }
 
-# Define a Listener for HTTP
+# Define a Listener
 resource "aws_lb_listener" "my-portfolio" {
   load_balancer_arn = aws_lb.my-portfolio.arn
   port              = "80"
@@ -216,20 +186,18 @@ resource "aws_lb_listener" "my-portfolio" {
 
 # Define an ECS service
 resource "aws_ecs_service" "service" {
-  name            = "my-portfolio"  # Name of the ECS service
-  cluster         = aws_ecs_cluster.default.id  # ID of the ECS cluster
-  task_definition = aws_ecs_task_definition.task.arn  # ARN of the task definition
-  desired_count   = 1  # Number of tasks to run
-  launch_type     = "FARGATE"  # Specify that the service runs on Fargate
+  name            = "my-portfolio"
+  cluster         = aws_ecs_cluster.default.id
+  task_definition = aws_ecs_task_definition.task.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
 
-  # Configure the network settings for the service
   network_configuration {
-    subnets          = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]  # Use the Subnet IDs created
-    security_groups  = [aws_security_group.my-portfolio.id]  # Use the Security Group ID created
-    assign_public_ip = true  # Assign a public IP to the tasks
+    subnets          = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]
+    security_groups  = [aws_security_group.my-portfolio.id]
+    assign_public_ip = true
   }
 
-  # Attach the Load Balancer
   load_balancer {
     target_group_arn = aws_lb_target_group.my-portfolio.arn
     container_name   = "my-portfolio"
