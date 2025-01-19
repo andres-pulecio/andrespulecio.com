@@ -199,8 +199,4 @@ resource "aws_route53_record" "my-portfolio" {
     zone_id                = aws_lb.my-portfolio.zone_id
     evaluate_target_health = false
   }
-
-  tags = {
-    Name = "my-portfolio"
-  }
 }
