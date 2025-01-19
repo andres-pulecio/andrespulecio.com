@@ -13,41 +13,54 @@ resource "aws_vpc" "my-portfolio" {
 }
 
 resource "aws_internet_gateway" "my-portfolio" {
-  count  = 0
   vpc_id = aws_vpc.my-portfolio.id
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_route_table" "my-portfolio" {
-  count  = 0
   vpc_id = aws_vpc.my-portfolio.id
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_route_table_association" "my-portfolio" {
-  count         = 0
-  subnet_id     = aws_subnet.my-portfolio-1.id
+  subnet_id      = aws_subnet.my-portfolio-1.id
   route_table_id = aws_route_table.my-portfolio.id
 }
 
 resource "aws_subnet" "my-portfolio-1" {
-  count          = 0
-  vpc_id         = aws_vpc.my-portfolio.id
-  cidr_block     = "10.0.1.0/24"
+  vpc_id      = aws_vpc.my-portfolio.id
+  cidr_block  = "10.0.1.0/24"
+
+  tags = {
+    Name = "my-portfolio-1"
+  }
 }
 
 resource "aws_subnet" "my-portfolio-2" {
-  count          = 0
-  vpc_id         = aws_vpc.my-portfolio.id
-  cidr_block     = "10.0.2.0/24"
+  vpc_id      = aws_vpc.my-portfolio.id
+  cidr_block  = "10.0.2.0/24"
+
+  tags = {
+    Name = "my-portfolio-2"
+  }
 }
 
 resource "aws_security_group" "my-portfolio" {
-  count     = 0
-  name      = "my-portfolio"
-  vpc_id    = aws_vpc.my-portfolio.id
+  name   = "my-portfolio"
+  vpc_id = aws_vpc.my-portfolio.id
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_ecs_task_definition" "task" {
-  count                  = 0
   family                 = "my-portfolio"
   container_definitions  = jsonencode([
     {
@@ -66,19 +79,25 @@ resource "aws_ecs_task_definition" "task" {
   network_mode             = "awsvpc"
   memory                   = "512"
   cpu                      = "256"
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_lb" "my-portfolio" {
-  count               = 0
   name                = "my-portfolio"
   internal            = false
   load_balancer_type  = "application"
   security_groups     = [aws_security_group.my-portfolio.id]
   subnets             = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_lb_target_group" "my-portfolio" {
-  count        = 0
   name         = "my-portfolio"
   port         = 3000
   protocol     = "HTTP"
@@ -93,10 +112,13 @@ resource "aws_lb_target_group" "my-portfolio" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 resource "aws_lb_listener" "my-portfolio-https" {
-  count              = 0
   load_balancer_arn  = aws_lb.my-portfolio.arn
   port               = "443"
   protocol           = "HTTPS"
@@ -108,10 +130,13 @@ resource "aws_lb_listener" "my-portfolio-https" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.my-portfolio.arn
   }
+
+  tags = {
+    Name = "my-portfolio-https"
+  }
 }
 
 resource "aws_lb_listener" "my-portfolio-http" {
-  count              = 0
   load_balancer_arn  = aws_lb.my-portfolio.arn
   port               = "80"
   protocol           = "HTTP"
@@ -124,10 +149,13 @@ resource "aws_lb_listener" "my-portfolio-http" {
       status_code = "HTTP_301"
     }
   }
+
+  tags = {
+    Name = "my-portfolio-http"
+  }
 }
 
 resource "aws_ecs_service" "service" {
-  count            = 0
   name             = "my-portfolio"
   task_definition  = aws_ecs_task_definition.task.arn
   desired_count    = 1
@@ -144,6 +172,10 @@ resource "aws_ecs_service" "service" {
     container_name   = "my-portfolio"
     container_port   = 3000
   }
+
+  tags = {
+    Name = "my-portfolio"
+  }
 }
 
 data "aws_acm_certificate" "my-portfolio" {
@@ -159,7 +191,6 @@ data "aws_route53_zone" "my-portfolio" {
 }
 
 resource "aws_route53_record" "my-portfolio" {
-  count   = 0
   zone_id = data.aws_route53_zone.my-portfolio.id
   name    = "andrespulecio.com"
   type    = "A"
@@ -167,5 +198,9 @@ resource "aws_route53_record" "my-portfolio" {
     name                   = aws_lb.my-portfolio.dns_name
     zone_id                = aws_lb.my-portfolio.zone_id
     evaluate_target_health = false
+  }
+
+  tags = {
+    Name = "my-portfolio"
   }
 }
