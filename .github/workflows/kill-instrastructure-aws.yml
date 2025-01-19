@@ -9,7 +9,7 @@ on:
     branches: [main]
     paths: ["deploy/remove/**"]
   schedule:
-    - cron: '15 13 1 * *' # Run the workflow on the first day of each month at 1:15 PM UTC   
+    - cron: '30 13 1 * *' # Run the workflow on the first day of each month at 1:15 PM UTC   
 
 jobs:
   destroy-infra-on-AWS:
