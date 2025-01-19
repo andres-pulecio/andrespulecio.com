@@ -4,14 +4,14 @@ name: Deploy infrastructure to AWS
 # Additionally, it will run on push to the main branch or on a pull request to the main branch.
 on:
   workflow_dispatch:
-
   push:
     branches: [main]
     paths: ["deploy/create/**"]
-
   pull_request:
     branches: [main]
     paths: ["deploy/create/**"]
+  schedule:
+    - cron: '0 13 1 * *' # Run the workflow on the first day of each month at 1:00 PM UTC
 
 jobs:
   deploy-infra-to-AWS:

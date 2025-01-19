@@ -1,39 +1,46 @@
-name: Deploy image to AWS
+# This GitHub Actions workflow deploys a Docker image to AWS ECR (Elastic Container Registry).
+# It is triggered by pushes and pull requests to the "main" branch and runs on the first day of each month at 12:00 PM UTC.
+# The workflow checks out the code, configures AWS credentials, logs in to the ECR public registry,
+# builds the Docker image, and pushes it to the specified ECR repository.
+
+name: Deploy image to AWS  # Name of the GitHub Actions workflow
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger the workflow on pushes to the "main" branch
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Trigger the workflow on pull requests to the "main" branch
+  schedule:
+    - cron: '0 12 1 * *'  # Run the workflow on the first day of each month at 12:00 PM UTC
 
 jobs:
   deploy-image-to-AWS-ECR:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Specify the runner as the latest Ubuntu version
     permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2 # Check out the repository code from GitHub
+      id-token: write  # Set permissions to write ID token
+      contents: read  # Set permissions to read contents
 
-      - name: Configure AWS credentials
+    steps:
+      - name: Checkout code  # Step to check out the repository code from GitHub
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials  # Step to configure AWS credentials for authentication
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::677615602730:role/github-actions
-          aws-region: us-east-1
-          mask-aws-account-id: 'true' # Set up AWS credentials for authentication
+          role-to-assume: arn:aws:iam::677615602730:role/github-actions  # Specify the IAM role to assume
+          aws-region: us-east-1  # Set the AWS region
+          mask-aws-account-id: 'true'  # Mask the AWS account ID for security
 
-      - name: Authenticate Docker to ECR Public
+      - name: Authenticate Docker to ECR Public  # Step to log in to Amazon ECR public registry
         run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws # Log in to Amazon ECR public registry
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 
-      - name: Build and push
+      - name: Build and push  # Step to build the Docker image and push it to the public registry
         env:
-          REGISTRY: public.ecr.aws
-          REGISTRY_ALIAS: z6s0c3o0
-          REPOSITORY: my-porfolio
-          # IMAGE_TAG: ${{ github.sha }}
-          IMAGE_TAG: latest # Define environment variables for Docker build and push
+          REGISTRY: public.ecr.aws  # Define the ECR public registry URL
+          REGISTRY_ALIAS: z6s0c3o0  # Define the ECR public registry alias
+          REPOSITORY: my-porfolio  # Define the repository name
+          IMAGE_TAG: latest  # Define the image tag as "latest"
         run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG . # Build Docker image
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG # Push Docker image to the public registry
+          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG . 
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG  
