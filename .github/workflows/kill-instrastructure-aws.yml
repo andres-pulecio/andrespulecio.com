@@ -55,65 +55,65 @@ jobs:
         run: |
           touch failed_resources.log
 
-          # Delete Load Balancer resources
-          LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text || true)
-          TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text || true)
-          LISTENER_ARNS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text || true)
+          # # Delete Load Balancer resources
+          # LB_ARN=$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[*].LoadBalancerArn" --output text || true)
+          # TG_ARN=$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[*].TargetGroupArn" --output text || true)
+          # LISTENER_ARNS=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[*].ListenerArn" --output text || true)
 
-          for LISTENER_ARN in $LISTENER_ARNS; do
-            aws elbv2 delete-listener --listener-arn $LISTENER_ARN || echo "Listener $LISTENER_ARN not deleted" >> failed_resources.log
-          done
-          aws elbv2 delete-target-group --target-group-arn $TG_ARN || echo "Target Group $TG_ARN not deleted" >> failed_resources.log
-          aws elbv2 delete-load-balancer --load-balancer-arn $LB_ARN || echo "Load Balancer $LB_ARN not deleted" >> failed_resources.log
+          # for LISTENER_ARN in $LISTENER_ARNS; do
+          #   aws elbv2 delete-listener --listener-arn $LISTENER_ARN || echo "Listener $LISTENER_ARN not deleted" >> failed_resources.log
+          # done
+          # aws elbv2 delete-target-group --target-group-arn $TG_ARN || echo "Target Group $TG_ARN not deleted" >> failed_resources.log
+          # aws elbv2 delete-load-balancer --load-balancer-arn $LB_ARN || echo "Load Balancer $LB_ARN not deleted" >> failed_resources.log
 
-          # Delete ECS service
-          SERVICE_NAME=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceName" --output text || true)
-          aws ecs update-service --cluster my-portfolio --service $SERVICE_NAME --desired-count 0 || echo "Service $SERVICE_NAME not updated" >> failed_resources.log
-          aws ecs delete-service --cluster my-portfolio --service $SERVICE_NAME || echo "Service $SERVICE_NAME not deleted" >> failed_resources.log
+          # # Delete ECS service
+          # SERVICE_NAME=$(aws ecs describe-services --cluster my-portfolio --services my-portfolio --query "services[*].serviceName" --output text || true)
+          # aws ecs update-service --cluster my-portfolio --service $SERVICE_NAME --desired-count 0 || echo "Service $SERVICE_NAME not updated" >> failed_resources.log
+          # aws ecs delete-service --cluster my-portfolio --service $SERVICE_NAME || echo "Service $SERVICE_NAME not deleted" >> failed_resources.log
 
-          # Stop ECS tasks
-          TASK_ARNS=$(aws ecs list-tasks --cluster my-portfolio --query "taskArns[*]" --output text || true)
-          for TASK_ARN in $TASK_ARNS; do
-            aws ecs stop-task --cluster my-portfolio --task $TASK_ARN || echo "Task $TASK_ARN not stopped" >> failed_resources.log
-          done
+          # # Stop ECS tasks
+          # TASK_ARNS=$(aws ecs list-tasks --cluster my-portfolio --query "taskArns[*]" --output text || true)
+          # for TASK_ARN in $TASK_ARNS; do
+          #   aws ecs stop-task --cluster my-portfolio --task $TASK_ARN || echo "Task $TASK_ARN not stopped" >> failed_resources.log
+          # done
 
-          # Delete ECS task definition
-          TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text || true)
-          aws ecs deregister-task-definition --task-definition $TASK_DEF_ARN || echo "Task Definition $TASK_DEF_ARN not deregistered" >> failed_resources.log
+          # # Delete ECS task definition
+          # TASK_DEF_ARN=$(aws ecs describe-task-definition --task-definition my-portfolio --query "taskDefinition.taskDefinitionArn" --output text || true)
+          # aws ecs deregister-task-definition --task-definition $TASK_DEF_ARN || echo "Task Definition $TASK_DEF_ARN not deregistered" >> failed_resources.log
 
-          # Delete ECS cluster
-          aws ecs delete-cluster --cluster ${{ env.CLUSTER_ARN }} || echo "Cluster ${{ env.CLUSTER_ARN }} not deleted" >> failed_resources.log
+          # # Delete ECS cluster
+          # aws ecs delete-cluster --cluster ${{ env.CLUSTER_ARN }} || echo "Cluster ${{ env.CLUSTER_ARN }} not deleted" >> failed_resources.log
 
-          # Disassociate Route Table from subnets
-          ASSOCIATION_IDS=$(aws ec2 describe-route-tables --route-table-ids ${{ env.ROUTE_TABLE_ID }} --query "RouteTables[*].Associations[*].RouteTableAssociationId" --output text)
-          for ASSOCIATION_ID in $ASSOCIATION_IDS; do
-            aws ec2 disassociate-route-table --association-id $ASSOCIATION_ID || echo "Route Table Association $ASSOCIATION_ID not deleted" >> failed_resources.log
-          done
+          # # Disassociate Route Table from subnets
+          # ASSOCIATION_IDS=$(aws ec2 describe-route-tables --route-table-ids ${{ env.ROUTE_TABLE_ID }} --query "RouteTables[*].Associations[*].RouteTableAssociationId" --output text)
+          # for ASSOCIATION_ID in $ASSOCIATION_IDS; do
+          #   aws ec2 disassociate-route-table --association-id $ASSOCIATION_ID || echo "Route Table Association $ASSOCIATION_ID not deleted" >> failed_resources.log
+          # done
 
-          # Delete Route Table
-          aws ec2 delete-route-table --route-table-id ${{ env.ROUTE_TABLE_ID }} || echo "Route Table ${{ env.ROUTE_TABLE_ID }} not deleted" >> failed_resources.log
+          # # Delete Route Table
+          # aws ec2 delete-route-table --route-table-id ${{ env.ROUTE_TABLE_ID }} || echo "Route Table ${{ env.ROUTE_TABLE_ID }} not deleted" >> failed_resources.log
 
-          # Detach Internet Gateway
-          aws ec2 detach-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} --vpc-id ${{ env.VPC_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not detached" >> failed_resources.log
+          # # Detach Internet Gateway
+          # aws ec2 detach-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} --vpc-id ${{ env.VPC_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not detached" >> failed_resources.log
 
-          # Release Elastic IPs
-          ALLOC_IDS=$(aws ec2 describe-addresses --filters "Name=domain,Values=vpc" --query "Addresses[*].AllocationId" --output text || true)
-          for ALLOC_ID in $ALLOC_IDS; do
-            aws ec2 release-address --allocation-id $ALLOC_ID || echo "Elastic IP $ALLOC_ID not released" >> failed_resources.log
-          done
+          # # Release Elastic IPs
+          # ALLOC_IDS=$(aws ec2 describe-addresses --filters "Name=domain,Values=vpc" --query "Addresses[*].AllocationId" --output text || true)
+          # for ALLOC_ID in $ALLOC_IDS; do
+          #   aws ec2 release-address --allocation-id $ALLOC_ID || echo "Elastic IP $ALLOC_ID not released" >> failed_resources.log
+          # done
 
-          # Delete Internet Gateway
-          aws ec2 delete-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not deleted" >> failed_resources.log
+          # # Delete Internet Gateway
+          # aws ec2 delete-internet-gateway --internet-gateway-id ${{ env.IGW_ID }} || echo "Internet Gateway ${{ env.IGW_ID }} not deleted" >> failed_resources.log
 
-          # Delete Subnets
-          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
-          aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }} || echo "Subnet ${{ env.SUBNET_2_ID }} not deleted" >> failed_resources.log
+          # # Delete Subnets
+          # aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_1_ID }} || echo "Subnet ${{ env.SUBNET_1_ID }} not deleted" >> failed_resources.log
+          # aws ec2 delete-subnet --subnet-id ${{ env.SUBNET_2_ID }} || echo "Subnet ${{ env.SUBNET_2_ID }} not deleted" >> failed_resources.log
 
-          # Delete the VPC
-          aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }} || echo "VPC ${{ env.VPC_ID }} not deleted" >> failed_resources.log
+          # # Delete the VPC
+          # aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }} || echo "VPC ${{ env.VPC_ID }} not deleted" >> failed_resources.log
 
-          # Delete Security Group
-          aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
+          # # Delete Security Group
+          # aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
 
           # Delete the Route 53 record
           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.ZONE_ID }} --change-batch '
