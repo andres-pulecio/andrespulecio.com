@@ -40,7 +40,9 @@ jobs:
           CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
           ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name "andrespulecio.com" --query "HostedZones[0].Id" --output text)
           RECORD_SET_NAME="andrespulecio.com"
+          LB_ARN=$(aws elbv2 describe-load-balancers --filters "Name=tag:Name,Values=my-portfolio" --query "LoadBalancers[*].LoadBalancerArn" --output text)
 
+          echo "LB_ARN=$LB_ARN" >> $GITHUB_ENV
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
