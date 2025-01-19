@@ -60,6 +60,10 @@ resource "aws_security_group" "my-portfolio" {
   }
 }
 
+resource "aws_ecs_cluster" "default" {
+  name = "my-portfolio"
+}
+
 resource "aws_ecs_task_definition" "task" {
   family                 = "my-portfolio"
   container_definitions  = jsonencode([
@@ -157,6 +161,7 @@ resource "aws_lb_listener" "my-portfolio-http" {
 
 resource "aws_ecs_service" "service" {
   name             = "my-portfolio"
+  cluster          = aws_ecs_cluster.default.id
   task_definition  = aws_ecs_task_definition.task.arn
   desired_count    = 1
   launch_type      = "FARGATE"
