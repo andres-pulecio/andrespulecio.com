@@ -119,6 +119,9 @@ jobs:
           # aws ec2 delete-security-group --group-id ${{ env.SG_ID }} || echo "Security Group ${{ env.SG_ID }} not deleted" >> failed_resources.log
 
           # Delete the Route 53 record
+          CanonicalHostedZoneId=$(aws elbv2 describe-load-balancers --names "my-portfolio" --query "LoadBalancers[*].CanonicalHostedZoneId" --output text || true)
+          echo "CanonicalHostedZoneId=$CanonicalHostedZoneId" >> $GITHUB_ENV
+          # Delete the Route 53 record
           aws route53 change-resource-record-sets --hosted-zone-id ${{ env.ZONE_ID }} --change-batch '
           {
             "Comment": "Deleting Record Set",
@@ -128,13 +131,14 @@ jobs:
                 "Name": "andrespulecio.com", 
                 "Type": "A",
                 "AliasTarget": {
-                  "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
+                  "HostedZoneId": "${{ env.CanonicalHostedZoneId }}",
                   "DNSName": "my-portfolio-373534704.us-east-1.elb.amazonaws.com.",
                   "EvaluateTargetHealth": false
                 }
               }
             }]
           }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
+
 
 
 
