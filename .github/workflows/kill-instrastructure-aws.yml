@@ -125,12 +125,10 @@ jobs:
             "Changes": [{
               "Action": "DELETE",
               "ResourceRecordSet": {
-                "Name": "andrespulecio.com", 
+                "Name": "'${{ env.LB_DNS_NAME }}'", 
                 "Type": "A",
                 "ResourceRecords": {
-                  "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
-                  "DNSName": "'${{ env.LB_DNS_NAME }}'",
-                  "EvaluateTargetHealth": false
+                  "Value": "andrespulecio.com"
                 }
               }
             }]
