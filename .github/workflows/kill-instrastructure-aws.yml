@@ -9,7 +9,7 @@ on:
     branches: [main]
     paths: ["deploy/remove/**"]
   schedule:
-    - cron: '30 13 1 * *' # Run the workflow on the first day of each month at 1:15 PM UTC   
+    - cron: '30 13 1 * *' # Run the workflow on the first day of each month at 1:15 PM UTC
 
 jobs:
   destroy-infra-on-AWS:
@@ -123,6 +123,14 @@ jobs:
       - name: Import Route53 Record
         run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_SET_NAME }}_${{ env.RECORD_TYPE }}
         working-directory: deploy/remove
+
+      - name: Stop ECS Tasks  # Step to stop all running tasks in the ECS cluster
+        run: |
+          CLUSTER_NAME=$(aws ecs describe-clusters --clusters my-portfolio --query 'clusters[0].clusterName' --output text)
+          TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --query 'taskArns[0]' --output text)
+          if [ "$TASK_ARN" != "None" ]; then
+            aws ecs stop-task --cluster $CLUSTER_NAME --task $TASK_ARN
+          fi
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
