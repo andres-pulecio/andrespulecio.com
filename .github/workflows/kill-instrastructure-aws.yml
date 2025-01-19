@@ -28,13 +28,119 @@ jobs:
           aws-region: us-east-1
           mask-aws-account-id: 'true'
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+      - name: Set up AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: deploy/remove # Cambia al directorio deploy/remove para inicializar Terraform.
+      - name: Get VPC ID
+        id: vpc_id
+        run: echo "::set-output name=vpc_id::$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-portfolio" --query "Vpcs[0].VpcId" --output text)"
+
+      - name: Get Internet Gateway ID
+        id: igw_id
+        run: echo "::set-output name=igw_id::$(aws ec2 describe-internet-gateways --filters "Name=tag:Name,Values=my-portfolio" --query "InternetGateways[0].InternetGatewayId" --output text)"
+
+      - name: Get Route Table ID
+        id: rtb_id
+        run: echo "::set-output name=rtb_id::$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=my-portfolio" --query "RouteTables[0].RouteTableId" --output text)"
+
+      - name: Get Subnet 1 ID
+        id: subnet1_id
+        run: echo "::set-output name=subnet1_id::$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-1" --query "Subnets[0].SubnetId" --output text)"
+
+      - name: Get Subnet 2 ID
+        id: subnet2_id
+        run: echo "::set-output name=subnet2_id::$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[0].SubnetId" --output text)"
+
+      - name: Get Security Group ID
+        id: sg_id
+        run: echo "::set-output name=sg_id::$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[0].GroupId" --output text)"
+
+      - name: Get ECS Cluster ARN
+        id: ecs_cluster_arn
+        run: echo "::set-output name=ecs_cluster_arn::$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)"
+
+      - name: Get ECS Task Definition ARN
+        id: ecs_task_arn
+        run: echo "::set-output name=ecs_task_arn::$(aws ecs list-task-definitions --family-prefix my-portfolio --query "taskDefinitionArns[0]" --output text)"
+
+      - name: Get Load Balancer ARN
+        id: lb_arn
+        run: echo "::set-output name=lb_arn::$(aws elbv2 describe-load-balancers --names my-portfolio --query "LoadBalancers[0].LoadBalancerArn" --output text)"
+
+      - name: Get Target Group ARN
+        id: tg_arn
+        run: echo "::set-output name=tg_arn::$(aws elbv2 describe-target-groups --names my-portfolio --query "TargetGroups[0].TargetGroupArn" --output text)"
+
+      - name: Get HTTPS Listener ARN
+        id: https_listener_arn
+        run: echo "::set-output name=https_listener_arn::$(aws elbv2 describe-listeners --load-balancer-arn ${{ steps.lb_arn.outputs.lb_arn }} --query "Listeners[?Protocol=='HTTPS'].ListenerArn" --output text)"
+
+      - name: Get HTTP Listener ARN
+        id: http_listener_arn
+        run: echo "::set-output name=http_listener_arn::$(aws elbv2 describe-listeners --load-balancer-arn ${{ steps.lb_arn.outputs.lb_arn }} --query "Listeners[?Protocol=='HTTP'].ListenerArn" --output text)"
+
+      - name: Get Route53 Zone ID
+        id: route53_zone_id
+        run: echo "::set-output name=route53_zone_id::$(aws route53 list-hosted-zones-by-name --dns-name andrespulecio.com --query "HostedZones[0].Id" --output text)"
+
+      - name: Get Route53 Record ID
+        id: route53_record_id
+        run: echo "::set-output name=route53_record_id::$(aws route53 list-resource-record-sets --hosted-zone-id ${{ steps.route53_zone_id.outputs.route53_zone_id }} --query "ResourceRecordSets[?Name=='andrespulecio.com.'].AliasTarget.DNSName" --output text)"
+
+      - name: Import VPC
+        run: terraform import aws_vpc.my-portfolio ${{ steps.vpc_id.outputs.vpc_id }}
+        working-directory: deploy/remove
+
+      - name: Import Internet Gateway
+        run: terraform import aws_internet_gateway.my-portfolio ${{ steps.igw_id.outputs.igw_id }}
+        working-directory: deploy/remove
+
+      - name: Import Route Table
+        run: terraform import aws_route_table.my-portfolio ${{ steps.rtb_id.outputs.rtb_id }}
+        working-directory: deploy/remove
+
+      - name: Import Subnet 1
+        run: terraform import aws_subnet.my-portfolio-1 ${{ steps.subnet1_id.outputs.subnet1_id }}
+        working-directory: deploy/remove
+
+      - name: Import Subnet 2
+        run: terraform import aws_subnet.my-portfolio-2 ${{ steps.subnet2_id.outputs.subnet2_id }}
+        working-directory: deploy/remove
+
+      - name: Import Security Group
+        run: terraform import aws_security_group.my-portfolio ${{ steps.sg_id.outputs.sg_id }}
+        working-directory: deploy/remove
+
+      - name: Import ECS Cluster
+        run: terraform import aws_ecs_cluster.default ${{ steps.ecs_cluster_arn.outputs.ecs_cluster_arn }}
+        working-directory: deploy/remove
+
+      - name: Import ECS Task Definition
+        run: terraform import aws_ecs_task_definition.task ${{ steps.ecs_task_arn.outputs.ecs_task_arn }}
+        working-directory: deploy/remove
+
+      - name: Import Load Balancer
+        run: terraform import aws_lb.my-portfolio ${{ steps.lb_arn.outputs.lb_arn }}
+        working-directory: deploy/remove
+
+      - name: Import Target Group
+        run: terraform import aws_lb_target_group.my-portfolio ${{ steps.tg_arn.outputs.tg_arn }}
+        working-directory: deploy/remove
+
+      - name: Import HTTPS Listener
+        run: terraform import aws_lb_listener.my-portfolio-https ${{ steps.https_listener_arn.outputs.https_listener_arn }}
+        working-directory: deploy/remove
+
+      - name: Import HTTP Listener
+        run: terraform import aws_lb_listener.my-portfolio-http ${{ steps.http_listener_arn.outputs.http_listener_arn }}
+        working-directory: deploy/remove
+
+      - name: Import Route53 Record
+        run: terraform import aws_route53_record.my-portfolio ${{ steps.route53_zone_id.outputs.route53_zone_id }}_andrespulecio.com
+        working-directory: deploy/remove
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
-        working-directory: deploy/remove # Cambia al directorio deploy/remove para destruir la configuración de Terraform.
+        working-directory: deploy/remove
