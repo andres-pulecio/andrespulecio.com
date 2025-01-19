@@ -46,7 +46,7 @@ jobs:
           HTTP_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTP`].ListenerArn' --output text)
           TASK_DEFINITION_ARN=$(aws ecs list-task-definitions --family-prefix my-portfolio --query 'taskDefinitionArns[0]' --output text)
           ECS_CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
-          
+
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
@@ -95,7 +95,7 @@ jobs:
         working-directory: deploy/remove
 
       - name: Import ECS Cluster
-        run: terraform import aws_ecs_cluster.default ${{ env.ECS_CLUSTER_ARN }}
+        run: terraform import aws_ecs_cluster.my-portfolio my-portfolio
         working-directory: deploy/remove
 
       - name: Import ECS Task Definition
