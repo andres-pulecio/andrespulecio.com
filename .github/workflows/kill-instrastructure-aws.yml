@@ -45,6 +45,7 @@ jobs:
           HTTPS_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTPS`].ListenerArn' --output text)
           HTTP_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTP`].ListenerArn' --output text)
           TASK_DEFINITION_ARN=$(aws ecs list-task-definitions --family-prefix my-portfolio --query 'taskDefinitionArns[0]' --output text)
+          ECS_CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
@@ -115,3 +116,9 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
         working-directory: deploy/remove
+
+      - name: Delete ECS Cluster
+        run: aws ecs delete-cluster --cluster ${{ env.ECS_CLUSTER_ARN }}
+
+      - name: Delete VPC
+        run: aws ec2 delete-vpc --vpc-id ${{ env.VPC_ID }}
