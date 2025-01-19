@@ -38,8 +38,8 @@ jobs:
           SG_ID=$(aws ec2 describe-security-groups --filters 'Name=tag:Name,Values=my-portfolio' --query 'SecurityGroups[*].GroupId' --output text)
           ROUTE_TABLE_ID=$(aws ec2 describe-route-tables --filters 'Name=tag:Name,Values=my-portfolio' --query 'RouteTables[*].RouteTableId' --output text)
           ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name 'andrespulecio.com' --query 'HostedZones[0].Id' --output text)
-          RECORD_ID=$(aws route53 list-resource-record-sets --hosted-zone-id $ZONE_ID --query "ResourceRecordSets[?Name == 'andrespulecio.com.'].Name" --output text)
-          RECORD_TYPE=$(aws route53 list-resource-record-sets --hosted-zone-id $ZONE_ID --query "ResourceRecordSets[?Name == 'andrespulecio.com.'].Type" --output text)
+          RECORD_SET_NAME='andrespulecio.com.'
+          RECORD_TYPE='A'
           LB_ARN=$(aws elbv2 describe-load-balancers --names 'my-portfolio' --query 'LoadBalancers[*].LoadBalancerArn' --output text)
           TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups --names 'my-portfolio' --query 'TargetGroups[*].TargetGroupArn' --output text)
           HTTPS_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTPS`].ListenerArn' --output text)
@@ -53,7 +53,7 @@ jobs:
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
           echo "ROUTE_TABLE_ID=$ROUTE_TABLE_ID" >> $GITHUB_ENV
           echo "ZONE_ID=$ZONE_ID" >> $GITHUB_ENV
-          echo "RECORD_ID=$RECORD_ID" >> $GITHUB_ENV
+          echo "RECORD_SET_NAME=$RECORD_SET_NAME" >> $GITHUB_ENV
           echo "RECORD_TYPE=$RECORD_TYPE" >> $GITHUB_ENV
           echo "LB_ARN=$LB_ARN" >> $GITHUB_ENV
           echo "TARGET_GROUP_ARN=$TARGET_GROUP_ARN" >> $GITHUB_ENV
@@ -109,7 +109,7 @@ jobs:
         working-directory: deploy/remove
 
       - name: Import Route53 Record
-        run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_ID }}_${{ env.RECORD_TYPE }}
+        run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_SET_NAME }}_${{ env.RECORD_TYPE }}
         working-directory: deploy/remove
 
       - name: Terraform Destroy
