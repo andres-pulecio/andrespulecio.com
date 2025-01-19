@@ -123,11 +123,7 @@ jobs:
       - name: Import Route53 Record
         run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_SET_NAME }}_${{ env.RECORD_TYPE }}
         working-directory: deploy/remove
-
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
-        working-directory: deploy/remove
-
+        
       - name: Stop ECS Tasks  # Step to stop all running tasks in the ECS cluster
         run: |
           CLUSTER_NAME=$(aws ecs describe-clusters --clusters my-portfolio --query 'clusters[0].clusterName' --output text)
@@ -137,6 +133,10 @@ jobs:
               aws ecs stop-task --cluster $CLUSTER_NAME --task $TASK
             done
           fi
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: deploy/remove
+
 
       - name: Delete ECS Services  # Step to delete the ECS services
         run: aws ecs delete-service --cluster my-portfolio --service my-portfolio --force
