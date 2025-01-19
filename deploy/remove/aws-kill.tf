@@ -60,13 +60,13 @@ resource "aws_security_group" "my-portfolio" {
   }
 }
 
-resource "aws_ecs_cluster" "my-portfolio" {
-  name = "my-portfolio"
-}
+# resource "aws_ecs_cluster" "my-portfolio" {
+#   name = "my-portfolio"
+# }
 
-resource "aws_ecs_cluster" "default" { 
-  name = "my-portfolio" 
-}
+# resource "aws_ecs_cluster" "default" { 
+#   name = "my-portfolio" 
+# }
 
 resource "aws_ecs_task_definition" "task" {
   family                 = "my-portfolio"

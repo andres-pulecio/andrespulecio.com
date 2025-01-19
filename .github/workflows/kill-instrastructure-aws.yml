@@ -96,9 +96,9 @@ jobs:
         run: terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}
         working-directory: deploy/remove
 
-      - name: Import ECS Cluster
-        run: terraform import aws_ecs_cluster.my-portfolio my-portfolio
-        working-directory: deploy/remove
+      # - name: Import ECS Cluster
+      #   run: terraform import aws_ecs_cluster.my-portfolio my-portfolio
+      #   working-directory: deploy/remove
 
       - name: Import ECS Task Definition
         run: terraform import aws_ecs_task_definition.task ${{ env.TASK_DEFINITION_ARN }}
@@ -124,14 +124,22 @@ jobs:
         run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_SET_NAME }}_${{ env.RECORD_TYPE }}
         working-directory: deploy/remove
 
-      - name: Stop ECS Tasks  # Step to stop all running tasks in the ECS cluster
-        run: |
-          CLUSTER_NAME=$(aws ecs describe-clusters --clusters my-portfolio --query 'clusters[0].clusterName' --output text)
-          TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --query 'taskArns[0]' --output text)
-          if [ "$TASK_ARN" != "None" ]; then
-            aws ecs stop-task --cluster $CLUSTER_NAME --task $TASK_ARN
-          fi
-
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
         working-directory: deploy/remove
+
+      - name: Stop ECS Tasks  # Step to stop all running tasks in the ECS cluster
+        run: |
+          CLUSTER_NAME=$(aws ecs describe-clusters --clusters my-portfolio --query 'clusters[0].clusterName' --output text)
+          TASK_ARN=$(aws ecs list-tasks --cluster $CLUSTER_NAME --query 'taskArns' --output text)
+          if [ "$TASK_ARN" != "None" ]; then
+            for TASK in $TASK_ARN; do
+              aws ecs stop-task --cluster $CLUSTER_NAME --task $TASK
+            done
+          fi
+
+      - name: Delete ECS Services  # Step to delete the ECS services
+        run: aws ecs delete-service --cluster my-portfolio --service my-portfolio --force
+
+      - name: Delete ECS Cluster  # Step to delete the ECS cluster
+        run: aws ecs delete-cluster --cluster my-portfolio
