@@ -125,11 +125,11 @@ jobs:
             "Changes": [{
               "Action": "DELETE",
               "ResourceRecordSet": {
-                "Name": "andrespulecio.com",  # Replace with your desired record name
+                "Name": "andrespulecio.com", 
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
-                  "DNSName": "'${{ env.LB_DNS_NAME }}'",  # Add double quotes here
+                  "DNSName": "'${{ env.LB_DNS_NAME }}'",
                   "EvaluateTargetHealth": false
                 }
               }
