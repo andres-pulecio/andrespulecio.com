@@ -40,8 +40,8 @@ jobs:
           CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
           ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name "andrespulecio.com" --query "HostedZones[0].Id" --output text)
           RECORD_SET_NAME="andrespulecio.com"
-          LB_ARN=$(aws elbv2 describe-load-balancers --names "my-portfolio" --query "LoadBalancers[*].LoadBalancerArn" --output text)          
-          
+          LB_DNS_NAME=$(aws elbv2 describe-load-balancers --names "my-portfolio" --query "LoadBalancers[*].DNSName" --output text)     
+
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
@@ -51,7 +51,7 @@ jobs:
           echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
           echo "ZONE_ID=$ZONE_ID" >> $GITHUB_ENV
           echo "RECORD_SET_NAME=$RECORD_SET_NAME" >> $GITHUB_ENV
-          echo "LB_ARN=$LB_ARN" >> $GITHUB_ENV
+          echo "LB_DNS_NAME=$LB_DNS_NAME" >> $GITHUB_ENV
 
 
       - name: Delete Resources
@@ -129,7 +129,7 @@ jobs:
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
-                  "DNSName": "'${{ env.LB_ARN }}'",  # Add double quotes here
+                  "DNSName": "'${{ env.LB_DNS_NAME }}'",  # Add double quotes here
                   "EvaluateTargetHealth": false
                 }
               }
