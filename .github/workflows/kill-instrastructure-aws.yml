@@ -127,12 +127,13 @@ jobs:
               "ResourceRecordSet": {
                 "Name": "'${{ env.LB_DNS_NAME }}'", 
                 "Type": "A",
-                "ResourceRecords": {
+                "ResourceRecords": [{
                   "Value": "andrespulecio.com"
-                }
+                }]
               }
             }]
           }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
+
 
 
 
