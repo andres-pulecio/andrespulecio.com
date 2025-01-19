@@ -122,7 +122,7 @@ jobs:
             "Changes": [{
               "Action": "DELETE",
               "ResourceRecordSet": {
-                "Name": "andrespulecio.com",
+                "Name": "andrespulecio.com",  # Replace with your desired record name
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
