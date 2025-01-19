@@ -125,14 +125,17 @@ jobs:
             "Changes": [{
               "Action": "DELETE",
               "ResourceRecordSet": {
-                "Name": "'${{ env.LB_DNS_NAME }}'", 
+                "Name": "andrespulecio.com", 
                 "Type": "A",
-                "ResourceRecords": [{
-                  "Value": "andrespulecio.com"
-                }]
+                "AliasTarget": {
+                  "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
+                  "DNSName": "my-portfolio-373534704.us-east-1.elb.amazonaws.com.",
+                  "EvaluateTargetHealth": false
+                }
               }
             }]
           }' || echo "Route 53 Record Set not deleted" >> failed_resources.log
+
 
 
 
