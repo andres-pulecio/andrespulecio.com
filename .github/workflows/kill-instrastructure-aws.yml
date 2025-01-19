@@ -45,8 +45,8 @@ jobs:
           HTTPS_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTPS`].ListenerArn' --output text)
           HTTP_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTP`].ListenerArn' --output text)
           TASK_DEFINITION_ARN=$(aws ecs list-task-definitions --family-prefix my-portfolio --query 'taskDefinitionArns[0]' --output text)
-          ECS_CLUSTER_ARN=$(aws ecs list-clusters | jq '.clusterArns[] | select(. | contains("my-portfolio"))' --output text)
-
+          ECS_CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
+          
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
