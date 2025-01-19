@@ -43,6 +43,7 @@ jobs:
           TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups --names 'my-portfolio' --query 'TargetGroups[*].TargetGroupArn' --output text)
           HTTPS_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTPS`].ListenerArn' --output text)
           HTTP_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query 'Listeners[?Protocol==`HTTP`].ListenerArn' --output text)
+          TASK_DEFINITION_ARN=$(aws ecs list-task-definitions --family-prefix my-portfolio --query 'taskDefinitionArns[0]' --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
@@ -56,6 +57,7 @@ jobs:
           echo "TARGET_GROUP_ARN=$TARGET_GROUP_ARN" >> $GITHUB_ENV
           echo "HTTPS_LISTENER_ARN=$HTTPS_LISTENER_ARN" >> $GITHUB_ENV
           echo "HTTP_LISTENER_ARN=$HTTP_LISTENER_ARN" >> $GITHUB_ENV
+          echo "TASK_DEFINITION_ARN=$TASK_DEFINITION_ARN" >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
@@ -85,7 +87,7 @@ jobs:
         working-directory: deploy/remove
 
       - name: Import ECS Task Definition
-        run: terraform import aws_ecs_task_definition.task ${{ env.CLUSTER_ARN }}
+        run: terraform import aws_ecs_task_definition.task ${{ env.TASK_DEFINITION_ARN }}
         working-directory: deploy/remove
 
       - name: Import Load Balancer
