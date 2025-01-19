@@ -2,7 +2,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Declaración de la VPC para que otras referencias funcionen correctamente
 resource "aws_vpc" "my-portfolio" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -45,6 +44,10 @@ resource "aws_security_group" "my-portfolio" {
   count     = 0
   name      = "my-portfolio"
   vpc_id    = aws_vpc.my-portfolio.id
+}
+
+resource "aws_ecs_cluster" "default" {
+  name = "my-portfolio"
 }
 
 resource "aws_ecs_task_definition" "task" {
