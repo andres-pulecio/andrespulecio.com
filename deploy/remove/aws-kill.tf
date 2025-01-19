@@ -13,34 +13,41 @@ resource "aws_vpc" "my-portfolio" {
 }
 
 resource "aws_internet_gateway" "my-portfolio" {
+  count  = 0
   vpc_id = aws_vpc.my-portfolio.id
 }
 
 resource "aws_route_table" "my-portfolio" {
+  count  = 0
   vpc_id = aws_vpc.my-portfolio.id
 }
 
 resource "aws_route_table_association" "my-portfolio" {
-  subnet_id      = aws_subnet.my-portfolio-1.id
+  count         = 0
+  subnet_id     = aws_subnet.my-portfolio-1.id
   route_table_id = aws_route_table.my-portfolio.id
 }
 
 resource "aws_subnet" "my-portfolio-1" {
-  vpc_id      = aws_vpc.my-portfolio.id
-  cidr_block  = "10.0.1.0/24"
+  count          = 0
+  vpc_id         = aws_vpc.my-portfolio.id
+  cidr_block     = "10.0.1.0/24"
 }
 
 resource "aws_subnet" "my-portfolio-2" {
-  vpc_id      = aws_vpc.my-portfolio.id
-  cidr_block  = "10.0.2.0/24"
+  count          = 0
+  vpc_id         = aws_vpc.my-portfolio.id
+  cidr_block     = "10.0.2.0/24"
 }
 
 resource "aws_security_group" "my-portfolio" {
-  name   = "my-portfolio"
-  vpc_id = aws_vpc.my-portfolio.id
+  count     = 0
+  name      = "my-portfolio"
+  vpc_id    = aws_vpc.my-portfolio.id
 }
 
 resource "aws_ecs_task_definition" "task" {
+  count                  = 0
   family                 = "my-portfolio"
   container_definitions  = jsonencode([
     {
@@ -62,6 +69,7 @@ resource "aws_ecs_task_definition" "task" {
 }
 
 resource "aws_lb" "my-portfolio" {
+  count               = 0
   name                = "my-portfolio"
   internal            = false
   load_balancer_type  = "application"
@@ -70,6 +78,7 @@ resource "aws_lb" "my-portfolio" {
 }
 
 resource "aws_lb_target_group" "my-portfolio" {
+  count        = 0
   name         = "my-portfolio"
   port         = 3000
   protocol     = "HTTP"
@@ -87,6 +96,7 @@ resource "aws_lb_target_group" "my-portfolio" {
 }
 
 resource "aws_lb_listener" "my-portfolio-https" {
+  count              = 0
   load_balancer_arn  = aws_lb.my-portfolio.arn
   port               = "443"
   protocol           = "HTTPS"
@@ -101,6 +111,7 @@ resource "aws_lb_listener" "my-portfolio-https" {
 }
 
 resource "aws_lb_listener" "my-portfolio-http" {
+  count              = 0
   load_balancer_arn  = aws_lb.my-portfolio.arn
   port               = "80"
   protocol           = "HTTP"
@@ -116,8 +127,8 @@ resource "aws_lb_listener" "my-portfolio-http" {
 }
 
 resource "aws_ecs_service" "service" {
+  count            = 0
   name             = "my-portfolio"
-  cluster          = aws_ecs_cluster.default.id
   task_definition  = aws_ecs_task_definition.task.arn
   desired_count    = 1
   launch_type      = "FARGATE"
@@ -148,6 +159,7 @@ data "aws_route53_zone" "my-portfolio" {
 }
 
 resource "aws_route53_record" "my-portfolio" {
+  count   = 0
   zone_id = data.aws_route53_zone.my-portfolio.id
   name    = "andrespulecio.com"
   type    = "A"
