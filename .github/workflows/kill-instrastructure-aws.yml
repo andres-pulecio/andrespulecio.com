@@ -126,7 +126,7 @@ jobs:
                 "Type": "A",
                 "AliasTarget": {
                   "HostedZoneId": "Z10425601FS7HZ7BI6L2C",
-                  "DNSName": "'${{ env.LB_ARN }}'",
+                  "DNSName": "'${{ env.LB_ARN }}'",  # Add double quotes here
                   "EvaluateTargetHealth": false
                 }
               }
