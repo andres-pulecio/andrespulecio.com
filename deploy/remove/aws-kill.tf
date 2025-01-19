@@ -163,29 +163,29 @@ resource "aws_lb_listener" "my-portfolio-http" {
   }
 }
 
-resource "aws_ecs_service" "service" {
-  name             = "my-portfolio"
-  cluster          = aws_ecs_cluster.default.id
-  task_definition  = aws_ecs_task_definition.task.arn
-  desired_count    = 1
-  launch_type      = "FARGATE"
+# resource "aws_ecs_service" "service" {
+#   name             = "my-portfolio"
+#   cluster          = aws_ecs_cluster.default.id
+#   task_definition  = aws_ecs_task_definition.task.arn
+#   desired_count    = 1
+#   launch_type      = "FARGATE"
 
-  network_configuration {
-    subnets          = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]
-    security_groups  = [aws_security_group.my-portfolio.id]
-    assign_public_ip = true
-  }
+#   network_configuration {
+#     subnets          = [aws_subnet.my-portfolio-1.id, aws_subnet.my-portfolio-2.id]
+#     security_groups  = [aws_security_group.my-portfolio.id]
+#     assign_public_ip = true
+#   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.my-portfolio.arn
-    container_name   = "my-portfolio"
-    container_port   = 3000
-  }
+#   load_balancer {
+#     target_group_arn = aws_lb_target_group.my-portfolio.arn
+#     container_name   = "my-portfolio"
+#     container_port   = 3000
+#   }
 
-  tags = {
-    Name = "my-portfolio"
-  }
-}
+#   tags = {
+#     Name = "my-portfolio"
+#   }
+# }
 
 data "aws_acm_certificate" "my-portfolio" {
   domain      = "andrespulecio.com"
