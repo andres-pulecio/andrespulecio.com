@@ -37,77 +37,16 @@ jobs:
           SUBNET_2_ID=$(aws ec2 describe-subnets --filters "Name=tag:Name,Values=my-portfolio-2" --query "Subnets[*].SubnetId" --output text)
           SG_ID=$(aws ec2 describe-security-groups --filters "Name=tag:Name,Values=my-portfolio" --query "SecurityGroups[*].GroupId" --output text)
           ROUTE_TABLE_ID=$(aws ec2 describe-route-tables --filters "Name=tag:Name,Values=my-portfolio" --query "RouteTables[*].RouteTableId" --output text)
-          CLUSTER_ARN=$(aws ecs list-clusters --query "clusterArns[?contains(@, 'my-portfolio')]" --output text)
           ZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name "andrespulecio.com" --query "HostedZones[0].Id" --output text)
           RECORD_SET_NAME="andrespulecio.com"
-          LB_DNS_NAME=$(aws elbv2 describe-load-balancers --names "my-portfolio" --query "LoadBalancers[*].DNSName" --output text)
+          LB_ARN=$(aws elbv2 describe-load-balancers --names "my-portfolio" --query "LoadBalancers[*].LoadBalancerArn" --output text)
+          TARGET_GROUP_ARN=$(aws elbv2 describe-target-groups --names "my-portfolio" --query "TargetGroups[*].TargetGroupArn" --output text)
+          HTTPS_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[?Protocol=='HTTPS'].ListenerArn" --output text)
+          HTTP_LISTENER_ARN=$(aws elbv2 describe-listeners --load-balancer-arn $LB_ARN --query "Listeners[?Protocol=='HTTP'].ListenerArn" --output text)
 
           echo "VPC_ID=$VPC_ID" >> $GITHUB_ENV
           echo "IGW_ID=$IGW_ID" >> $GITHUB_ENV
           echo "SUBNET_1_ID=$SUBNET_1_ID" >> $GITHUB_ENV
           echo "SUBNET_2_ID=$SUBNET_2_ID" >> $GITHUB_ENV
           echo "SG_ID=$SG_ID" >> $GITHUB_ENV
-          echo "ROUTE_TABLE_ID=$ROUTE_TABLE_ID" >> $GITHUB_ENV
-          echo "CLUSTER_ARN=$CLUSTER_ARN" >> $GITHUB_ENV
-          echo "ZONE_ID=$ZONE_ID" >> $GITHUB_ENV
-          echo "RECORD_SET_NAME=$RECORD_SET_NAME" >> $GITHUB_ENV
-          echo "LB_DNS_NAME=$LB_DNS_NAME" >> $GITHUB_ENV
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: deploy/remove
-
-      - name: Import VPC
-        run: terraform import aws_vpc.my-portfolio ${{ env.VPC_ID }}
-        working-directory: deploy/remove
-
-      - name: Import Internet Gateway
-        run: terraform import aws_internet_gateway.my-portfolio ${{ env.IGW_ID }}
-        working-directory: deploy/remove
-
-      - name: Import Route Table
-        run: terraform import aws_route_table.my-portfolio ${{ env.ROUTE_TABLE_ID }}
-        working-directory: deploy/remove
-
-      - name: Import Subnet 1
-        run: terraform import aws_subnet.my-portfolio-1 ${{ env.SUBNET_1_ID }}
-        working-directory: deploy/remove
-
-      - name: Import Subnet 2
-        run: terraform import aws_subnet.my-portfolio-2 ${{ env.SUBNET_2_ID }}
-        working-directory: deploy/remove
-
-      - name: Import Security Group
-        run: terraform import aws_security_group.my-portfolio ${{ env.SG_ID }}
-        working-directory: deploy/remove
-
-      - name: Import ECS Cluster
-        run: terraform import aws_ecs_cluster.default ${{ env.CLUSTER_ARN }}
-        working-directory: deploy/remove
-
-      - name: Import Load Balancer
-        run: terraform import aws_lb.my-portfolio ${{ env.LB_DNS_NAME }}
-        working-directory: deploy/remove
-
-      - name: Import Target Group
-        run: terraform import aws_lb_target_group.my-portfolio ${{ env.TG_ARN }}
-        working-directory: deploy/remove
-
-      - name: Import HTTPS Listener
-        run: terraform import aws_lb_listener.my-portfolio-https ${{ env.HTTPS_LISTENER_ARN }}
-        working-directory: deploy/remove
-
-      - name: Import HTTP Listener
-        run: terraform import aws_lb_listener.my-portfolio-http ${{ env.HTTP_LISTENER_ARN }}
-        working-directory: deploy/remove
-
-      - name: Import Route53 Record
-        run: terraform import aws_route53_record.my-portfolio ${{ env.ZONE_ID }}_${{ env.RECORD_SET_NAME }}
-        working-directory: deploy/remove
-
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
-        working-directory: deploy/remove
+          echo "RO
